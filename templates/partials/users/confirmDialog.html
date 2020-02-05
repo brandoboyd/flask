@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <div class="clearfix">
+    <h3 class="pull-left">Warning</h3>
+    <a class="close pull-right"
+       ng-click="dismiss(reason)">×</a></div>
+</div>
+<div class="modal-body">
+    <p>There is an existing user account with the provided email address that has been archived. If you press Yes, the user will be activated and associated with the Account you administer.</p>
+</div>
+<div class="modal-footer">
+<button ng-click="dismiss(reason)" class="btn btn-default">No</button>
+<button ng-click="close(result)" class="btn btn-primary">Yes</button>
+</div>

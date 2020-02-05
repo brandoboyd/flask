@@ -1,0 +1,117 @@
+{% from "./_macros/filter.html"    import filter_intentions,
+filter_date_dropdown,
+filter_topics,
+filter_threshold -%}
+
+<h1>Channels</h1>
+
+<hr/>
+
+<div class="row form-group" style="margin-bottom: 20px;" ng-show="channels && channels.length">
+    <div class="col-md-12">
+        <div class="pull-left">
+            {% if user.is_staff or user.is_admin %}
+            <a href="#/new_channel" class="btn btn-primary" ng-hide="user.is_superuser"><span
+                    class="fonticon icon-add"></span>&nbsp;Add Channel</a>
+            {% endif %}
+        </div>
+        <div class="pull-right">
+            <div class="filter-block">
+                <select class="form-control"
+                        ng-model="filters.platform"
+                        ng-options="value for value in filterOptions.platform">
+                    <option value="">-- All Platforms --</option>
+                </select>
+            </div>
+            <div class="filter-block">
+                <select class="form-control"
+                        ng-model="filters.status">
+                    <option value="">-- All Statuses --</option>
+                    <option>Active</option>
+                    <option>Suspended</option>
+                </select>
+            </div>
+            <div class="filter-block">
+                <date-range-dropdown on-change="loadChannels(dates)"></date-range-dropdown>
+            </div>
+            <div class="filter-block">
+                <search filter="filters.title" placeholder-text="Search by Name or Description"></search>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% raw %}
+<div class="row">
+    <div class="col-md-12 scroll-x">
+        <table class="table table-default" ng-show="channels && channels.length" style="overflow-x: scroll;">
+            <thead>
+            <tr>
+                {% endraw %}
+                {% if user and (user.is_staff or user.is_admin) %}
+                <th style="width:125px">Actions</th>
+                {% endif %}
+                <th sorter="table.sort" data-predicate="title" data-title="Name"></th>
+                <th style="width:80px;" sorter data-predicate="status" data-title="Status"></th>
+                <th sorter data-predicate="description" data-title="Description"></th>
+                <th sorter data-predicate="created_at" data-title="Created"></th>
+                <th sorter data-predicate="platform" data-title="Platform"></th>
+                <th sorter data-predicate="type_name" data-title="Type"></th>
+                <th sorter data-predicate="stats.number_of_posts" data-title="Posts"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="channel in filteredChannels | orderBy: table.sort.predicate: table.sort.reverse" id="{{'channel.id'|ng}}">
+                {% if user and (user.is_staff or user.is_admin) %}
+                <td>
+                    <div class="btn-group btn-group-sm" ng-show="(channel.perm == 's')||(channel.perm=='rw')" style="width:90px">
+                        <button class="btn btn-default btn-sm"
+                                ng-confirm
+                                tooltip-placement="top" tooltip="Delete"
+                                action-text="When you delete a channel all of the data collected for that channel will be lost. <br><br>Are you sure you want to delete?"
+                                action-function="deleteChannel(channel)"
+                                action-button-text="Yes"
+                                cancel-button-text="No">
+                            <span class="fonticon icon-trash"></span>
+                        </button>
+
+                        {% raw %}
+                        <div class="col-sm-4 btn-toolbar" tooltip-placement="top" tooltip="{{channel.status}}">
+                            <ark-switch switch-model="channel.isActive"
+                                    ng-click="toggleChannel(channel)"
+                                    switch-on="Activate"
+                                    switch-off="Suspend"
+                                    switch-id="channel.id"></ark-switch>
+                        </div>
+                        {% endraw %}
+                    </div>
+                </td>
+                {% endif %}
+                {% raw %}
+                <td>
+                    <a href="#/update_channel/{{channel.id}}" class="link"
+                       ng-show="(channel.perm=='s')||(channel.perm=='rw')">{{ channel.title }}</a>
+                    <span ng-hide="(channel.perm=='s')||(channel.perm=='rw')">{{ channel.title }}</span>
+                    <span ng-show="channel.is_compound"><span class="icon-ms"></span> Compound</span>
+                </td>
+                <td>{{ channel.status }}</td>
+                <td>{{ channel.description || 'N/A' }}</td>
+                <td class="nowrap">{{ channel.created_at | date }}</td>
+                <td>{{ channel.platform }}</td>
+
+                <td>{{ channel.type_name }}</td>
+
+                <td><span tooltip-placement="top" tooltip
+                          title="Number of posts"
+                          ng-show="channel.stats.number_of_posts>0">{{ channel.stats.number_of_posts }}</span></td>
+            </tr>
+            </tbody>
+        </table>
+        <div ng-show="!filteredChannels.length" class="alert alert-info text-center">
+            <i class='icon-alert-triangle'></i> No Channels
+        </div>
+    </div>
+</div>
+{% endraw %}
+{% from '_macros/dialogs.html' import render_share_dialog %}
+{{ render_share_dialog(scope="channels") }}

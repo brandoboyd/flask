@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "Test - %s" % user.account.selected_app }}
+{% endblock %}
+
+{% set ngApp = "test" %}
+
+{% block body %}
+<style>
+    .full-screen {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        top: 0;
+        left: 0;
+    }
+
+    .right-half, .left-half {
+        width:10px;
+        height:35px;
+        float:left;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .right-half {
+        margin-right: 2px;
+    }
+
+    .right-half i, .left-half i {
+        position:absolute;
+        top:0;
+    }
+    .left-half i {
+        left: 2px;
+    }
+
+    .right-half i {
+        left:-8px;
+    }
+
+
+</style>
+<div class="container">
+    <div>
+
+        <h3>AGENT MATCHING</h3>
+
+        <div class="row">
+            <div class="col-sm-12"
+                 ng-controller="NavCtrl">
+                <div style="position:relative;">
+                    <ul class="nav nav-tabs"
+                        style="margin-bottom: 5px">
+
+                        <!--<li ng-class="getCurrent('new_agent')">-->
+                        <!--<a href="/test_agents#/new_agent">Create agent</a></li>-->
+                        <li ng-class="getCurrent('list_agents')">
+                            <a href="/test_agents#/list_agents">View agents</a></li>
+                        <!--<li ng-class="getCurrent('new_customer')">-->
+                        <!--<a href="/test_agents#/new_customer">Create customer</a></li>-->
+                        <li ng-class="getCurrent('list_customers')">
+                            <a href="/test_agents#/list_customers">View customers</a></li>
+                        <!--<li ng-class="getCurrent('new_segment')">-->
+                        <!--<a href="/test_agents#/new_segment">Create segment</a></li>-->
+                        <!--<li ng-class="getCurrent('list_segments')">-->
+                        <!--<a href="/test_agents#/list_segments">View segments</a></li>-->
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div ng-view></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/ng-template" id="app/templates/rating.html">
+    <div class="rating">
+        <a ng-repeat="star in stars"
+           ng-mouseover="hover($index)"
+           ng-mouseleave="stopHover()"
+           ng-class="[starColor($index), getStarHalf($index)]"
+           ng-click="setRating($index)">
+            <i ng-class="starClass(star, $index)"></i>
+        </a>
+    </div>
+</script>
+{% endblock %}

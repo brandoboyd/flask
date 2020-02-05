@@ -1,0 +1,84 @@
+{% from "_macros/agents.facets.html" import render_agentsFacets -%}
+{% from "_macros/dynamic.facets.html" import render_dynamicFacets -%}
+
+<div class="col-sm-2 sidebar">
+    {{render_dynamicFacets()}}
+</div>
+
+<div class="spinner-container" style="position:fixed;top:45%;left:50%" ng-show="loading">
+    <div class="spin-circle"></div>
+    <div class="spin-inner-circle"></div>
+</div>
+
+{% raw %}
+<div class="col-sm-10 col-sm-offset-2">
+    <h1>Agents Details</h1>
+
+    <hr/>
+
+    <div class="row form-group" style="margin-bottom: 20px;">
+        <div class="col-md-12">
+            <div class="pull-right btn-icon-group">
+                <div class="filter-block" ng-if="agents.table_data.length && !loading">
+                    <search filter="filters" placeholder-text="Search by First Name"></search>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div infinite-scroll="loadMore()"
+                 infinite-scroll-disabled="loading"
+                 style="margin-bottom: 10px;">
+                <table class="table table-default">
+                    <thead>
+                    <tr>
+                        <th ng-repeat="title in agents.table_header" data-title="{{title}}">{{title}}</th>
+
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat="item in agents.table_data | filter:filters">
+
+                        <td ng-repeat="key in agents.table_header">
+                            <div ng-switch="key">
+                                <div ng-switch-when="agent_skillset">
+                                    <span ng-repeat="i in item[key]">
+
+                                            <span ng-if="$index%2==0">
+                                                <b>{{i}}</b>:
+                                            </span>
+                                            <span ng-if="$index%2!==0">
+                                                {{i}};<br />
+                                            </span>
+
+                                    </span>
+                                </div>
+                                <span ng-switch-when="agent_products">
+                                    <span ng-repeat="i in item[key]">
+                                        <b>{{i}}</b>
+                                    </span>
+                                </span>
+                                <span ng-switch-when="attached_data">
+                                    <span ng-repeat="(key,val) in item[key]">
+                                        <b>{{key}}:{{val}}</b>
+                                    </span>
+                                </span>
+                                <span ng-switch-default>
+                                    {{item[key]}}
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-show="!agents.table_data.length && !loading" class="alert alert-info text-center">
+                <i class='icon-alert-triangle'></i> No Agents
+            </div>
+        </div>
+    </div>
+</div>
+{% endraw %}

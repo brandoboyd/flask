@@ -1,0 +1,76 @@
+{%- macro render_predictorsFacets() -%}
+
+<facet-panel facet-title="Predictors"
+            facet-tooltip="Predictors"
+            facet-is-all="facets.predictors.all"
+            facet-is-multi="false"
+            facet-selected="facets.predictors.selected"
+            facet-update-action="selectPredictor"
+            facet-options="facets.predictors.list">Loading...</facet-panel>
+
+<facet-panel facet-title="Predictor Models"
+            facet-tooltip="Predictor Models"
+            facet-is-all="facets.models.all"
+            facet-is-multi="true"
+            facet-update-action="updateFacets"
+            facet-options="facets.models.list"
+        >Loading...
+</facet-panel>
+
+
+{#--
+<div class="panel panel-default facet-panel">
+    <div class="panel-heading">
+        <div class="panel-title row">
+            <div class="col-sm-11 checkbox">
+                <label class="checkbox">
+                    <input type="checkbox"
+                           ng-model="facets.ab_testing.is_predicted"
+                           class="ark-checkbox"/>
+                    <span></span>
+                    A/B Testing
+                    <span data-original-title="Is Predicted?"
+                          ui-jq="tooltip"
+                          class="icon-iw-active-circle-question"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+--#}
+
+
+
+
+
+<h3 style="margin-bottom:20px;"
+    ng-hide="_.isEmpty(facets.context_vector)">
+    Context Features (Customer)
+</h3>
+
+
+<div ng-repeat="(feature, options) in facets.context_vector">
+    <facet-panel facet-title={{
+    "{{options.id}}" }}
+    facet-tooltip={{ "{{options.description}}" }}
+    facet-is-all="options.all"
+    facet-is-multi="true"
+    facet-update-action="updateFacets"
+    facet-options="options.list">Loading</facet-panel>
+</div>
+<h3 style="margin-bottom:20px;"
+    ng-hide="_.isEmpty(facets.action_vector)">
+    Action Features (Agent)
+</h3>
+
+
+<div ng-repeat="(feature, options) in facets.action_vector">
+    <facet-panel facet-title={{
+    "{{options.id}}" }}
+    facet-tooltip={{ "{{options.description}}" }}
+    facet-is-all="options.all"
+    facet-is-multi="true"
+    facet-update-action="updateFacets"
+    facet-options="options.list">Loading</facet-panel>
+</div>
+{% endmacro %}

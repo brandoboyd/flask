@@ -1,0 +1,27 @@
+{% macro render_dt_field(field) %}
+    <dt>{{ field.label }}
+    <dd>{{ field(**kwargs)|safe }}
+    {% if field.errors %}
+        <ul>
+        {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+    {% endif %}
+    </dd>
+{% endmacro %}
+
+{% macro render_field(field, form_readonly=False, no_label=False) %}
+    {% if not no_label %}
+        {{ field.label }}
+    {% endif %}
+
+    {% if form_readonly %}
+        {% do kwargs.update(dict(disabled='disabled', readonly='readonly')) %}
+    {% endif %}
+
+    {{ field(**kwargs)|safe }}
+    {% if field.errors %}
+    <ul class="errors">
+        {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+{% endmacro %}

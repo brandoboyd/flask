@@ -1,0 +1,102 @@
+{% raw %}
+<div class="configure-schema-header">
+    <h3 style="margin-left: 30px;">
+      {{ entityName ? "Update " + "&ldquo;" + entityName + "&rdquo;" + " Event Type" : "New Event Type" }}
+    </h3>
+    <a href="#/event_types">
+      <button class="btn btn-default btn-xs"
+              style="position: absolute;top:0"
+              tooltip-placement="top"
+              tooltip="All Event Types">
+        <span class="fonticon icon-arrow-left"></span>
+      </button>
+    </a>
+    <div ng-show="entityName!==null" class="topright-status">
+      <span class="icon-alert-octo error" ng-show="entity.sync_status!='IN_SYNC'"></span>
+      <span class="icon-alert-octo success" ng-show="entity.sync_status=='IN_SYNC'"></span>
+      &nbsp;{{entity.status_display}}
+    </div>
+</div>
+
+<hr />
+
+<div class="configure-schema">
+<form class="form-horizontal" name="EventTypeForm">
+  <fieldset>
+    <div class="row">
+      <div class="col-sm-6"
+         ng-class="{'has-error': EventTypeForm.name.$error.required && EventTypeForm.name.$dirty}">
+        <label class="col-sm-4 control-label"
+               for="event_type">
+          Name <span class="asterisk">*</span>
+        </label>
+
+        <div class="col-sm-8">
+          <input type="text" class="form-control"
+                name="name" id="entity_name"
+                ng-model="entity.name"
+                ng-required="true"
+                ng-disabled="entityName!==null"
+                ng-minlength="2"
+                placeholder="Event type name must be at least 2 characters long">
+          <span ng-show="EventTypeForm.name.$error.minlength && EventTypeForm.name.$dirty"
+                class="help-block error">Event type name must be at least 2 characters long
+          </span>
+          <span ng-show="EventTypeForm.name.$error.required && EventTypeForm.name.$dirty"
+                class="help-block error">Event type name must not be empty
+          </span>
+        </div>
+      </div>
+
+      <div class="col-sm-6" ng-class="{'has-error': EventTypeForm.channel_type.$error.required && EventTypeForm.channel_type.$dirty}">
+        <label class="col-sm-4 control-label" for="channel_type">
+          Channel Type <span class="asterisk">*</span>
+        </label>
+
+        <div class="col-sm-8">
+          <select class="form-control" name="channel_type" id="channel_type"
+                  ng-model="entity.platform"
+                  ng-options="d.name as d.name for d in channelTypes"
+                  ng-disabled="entity.is_locked || entityName!==null"
+                  ng-required="true">
+            <option value="" disabled>-- choose a channel type --</option>
+          </select>
+          <span ng-show="EventTypeForm.channel_type.$error.required && EventTypeForm.channel_type.$dirty"
+                class="help-block error">Channel type must not be empty
+          </span>
+        </div>
+      </div>
+
+      <div class="col-sm-12"><hr/></div>
+    </div>
+  </fieldset>
+</form>
+
+<form class="form-horizontal" ng-if="entityName===null">
+    <div class="form-group form-actions">
+        <div class="col-sm-6 col-sm-offset-2">
+            <button class="btn btn-primary"
+                    style="margin-right:5px"
+                    ng-disabled="EventTypeForm.$invalid"
+                    ng-click="onCreateEntity()">Create
+            </button>
+        </div>
+    </div>
+</form>
+
+<div ng-if="entityName">
+    <nav class="navbar navbar-switch-default" role="navigation">
+        <ul class="nav navbar-nav" data-tabs="tabs" id="tabs">
+            <li ng-repeat="tab in schemaTabs" ng-class="{'active': tab.active}" ng-click="onSelectTab(tab)">
+                <a data-target="#{{tab.name}}" data-toggle="tab">{{tab.name}}</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="tab-content">
+        <div class="tab-pane" ng-repeat="tab in schemaTabs" ng-class="{'active': tab.active}" id="{{tab.name}}">
+            <div ng-include="tab.templateUrl"></div>
+        </div>
+    </div>
+</div>
+</div>
+{% endraw %}

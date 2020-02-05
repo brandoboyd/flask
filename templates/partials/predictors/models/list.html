@@ -1,0 +1,211 @@
+<h3 style="margin-left: 30px" ng-cloak>
+    Models of <span ng-bind-html="'&ldquo;' + predictor.name + '&rdquo;'"></span> Predictor
+</h3>
+<a ng-href="#/predictors_v2/{{'{{predictor.id}}'}}">
+    <button class="btn btn-default btn-xs"
+            style="position: absolute;top:0"
+            tooltip-placement="top"
+            tooltip="Update Predictor">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+
+<hr/>
+
+<div class="row form-group" style="margin-bottom: 20px;">
+    <div class="col-md-12">
+        {% if user.is_staff or user.is_admin %}
+        <div class="pull-left">
+            <a class="btn btn-primary"
+               ng-click="create()"><span class="fonticon icon-add">&nbsp;Add Predictor Model</span></a>
+
+            <div class="pull-right btn-icon-group no-responsiveness" style="margin-left: 10px;">
+                <button class="btn btn-default btn-icon"
+                        ng-disabled="!selectedModels.length"
+                        ng-confirm
+                        tooltip="Delete the model"
+                        tooltip-placement="top"
+                        action-text="The model will be removed from database. Are you sure you want to delete?"
+                        action-function="delete()"
+                        action-button-text="Yes"
+                        cancel-button-text="No">
+                    <span class="fonticon icon-trash"></span>
+                </button>
+                <button class="btn btn-default btn-icon"
+                        ng-disabled="!shouldActivate()"
+                        ng-click="activate()"
+                        tooltip-placement="top"
+                        tooltip="Activate the model">
+                    <span class="fonticon icon-24-control-play success"></span>
+                </button>
+                <button class="btn btn-default btn-icon"
+                        ng-disabled="!shouldDeactivate()"
+                        ng-click="deactivate()"
+                        tooltip-placement="top"
+                        tooltip="Suspend the model">
+                    <span class="fonticon icon-24-control-pause error"></span>
+                </button>
+                <button class="btn btn-icon btn-default"
+                        ng-show="selectedModels.length == 1 && selectedModels[0].feedback_counter"
+                        ng-click="resetClassifier(selectedModels[0])"
+                        tooltip-placement="top"
+                        tooltip="Reset classifier to a clean state">Reset
+                </button>
+                <span ng-show="item.task_data && item.task_data.status != 'idle'">RT {{'item.task_data.progress'|ng}}%</span>
+                <button class="btn btn-icon btn-default one"
+                        ng-hide="selectedModels.length == 0 ||
+                                 selectedModels.length > 1  ||
+                                 selectedModels[0].task_data &&
+                                 selectedModels[0].task_data.status != 'idle' ||
+                                 getRetrainLabel(selectedModels[0]) === ''"
+
+                        ng-click="retrainClassifier(selectedModels[0])"
+                        tooltip-placement="top"
+                        tooltip="{{'{{getRetrainLabel(selectedModels[0])}}'}} the classifier model">
+
+                    <span ng-bind="getRetrainLabel(selectedModels[0])"></span>
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        <div class="pull-right">
+            <div class="filter-block">
+                <search filter="filters.display_name" placeholder-text="Search by Display Name"></search>
+            </div>
+            <div class="filter-block">
+                <select class="form-control"
+                        ng-model="filters.status">
+                    <option value="">-- All Statuses --</option>
+                    <option>ACTIVE</option>
+                    <option>INACTIVE</option>
+                </select>
+            </div>
+            <div class="filter-block">
+                <select class="form-control"
+                        ng-model="filters.state">
+                    <option value="">-- All States --</option>
+                    <option>NEW</option>
+                    <option>TRAINED</option>
+                    <option>LOCKED</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<h1 ng-show="!items.length">No predictor models</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-default">
+            <thead>
+            <tr>
+                {% if user.is_staff or user.is_admin %}
+                <th style="width:47px;"><!--Actions--></th>
+                {% endif %}
+                <th sorter data-predicate="display_name" data-title="Name"></th>
+                <th style="width:80px;" sorter data-predicate="status" data-title="Status"></th>
+                <th style="width:80px;" sorter data-predicate="state" data-title="State"></th>
+                <th sorter data-predicate="feedback_counter" data-title="Rows"></th>
+                {% raw %}
+                <th sorter data-predicate="quality.measure" data-title="{{items[0].quality.measure || 'Quality'}}" question-tooltip="{{qualityDescr}}"></th>
+                {% endraw %}
+                <th sorter data-predicate="last_run" data-title="Last Run"></th>
+                <th sorter data-predicate="version" data-title="Version"></th>
+                <th sorter data-predicate="weight" data-title="Mix" question-tooltip="The relative ratio of traffic to be scored with this (active) model vs other active models. An active model will receive traffic in a round-robin fashion according with volume split in proportion to its mix value / the sum of mix values"></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr ng-repeat="item in items | filter:filters.predicate | orderBy: table.sort.predicate: table.sort.reverse">
+                {% if user.is_staff or user.is_admin %}
+                <td>
+                    <label class="checkbox">
+                        <input type="checkbox"
+                               class="ark-checkbox"
+                               ng-model="item.selected"
+                               ng-change="selectRow(item)"><span></span>
+                    </label>
+                </td>
+                {% endif %}
+                <td>
+                    <a tooltip="{{'item.description'|ng}}"
+                       tooltip-placement="top"
+                       class="link"
+                       ng-show="!item.is_active"
+                       ng-href="{{ 'editPath(item)' |ng}}"
+                       ng-bind-html="item.display_name||item.id"></a>
+
+                    <div ng-show="item.is_active" style="cursor: not-allowed">
+                        <span class="fonticon icon-locked" style="color:grey"></span>
+                        <span ng-bind="item.display_name"></span>
+
+                    </div>
+                </td>
+                <td style="text-align: center">
+                    {% raw %}
+                    {{ item.status }}
+                    {% endraw %}
+                </td>
+                <td style="text-align: center">
+                    {% raw %}
+                    <span ng-hide="item.task_data.status != 'idle' && item.task_data.progress < 100">
+                        {{ item.state }}
+                    </span>
+                    <div ng-show="item.task_data.status != 'idle' && item.task_data.progress < 100"
+                         round-progress
+                         max="100"
+                         current="item.task_data.progress"
+                         color="#45ccce"
+                         bgcolor="#eaeaea"
+                         radius="8"
+                         stroke="4"
+                         semi="false"
+                         rounded="false"
+                         clockwise="false"
+                         responsive="false"
+                         duration="800"
+                         iterations="1"
+                         animation="easeInOutQuart"></div>
+                    {% endraw %}
+                </td>
+                <td ng-bind-html="item.training_data_length"></td>
+                <td>
+                    {% raw %}
+                    <ul style="list-style-type: none; padding:0">
+                        <li ng-repeat="q in item.quality">
+                            <strong>{{q.measure}}</strong>: {{q.score | number:2}}
+                        </li>
+                    </ul>
+
+                    {% endraw %}
+                </td>
+                <td ng-bind-html="item.last_run | date:'medium'"></td>
+                <td ng-bind-html="item.version"></td>
+                <td>
+                    {% raw %}
+                    <input type="number"
+                           name="model_weight"
+                           class="link form-control inline-editable-input"
+                           ng-change="onChangeModelMix(item)"
+                           ng-model="item.weight" />
+                    <span ng-show="item.weight_error" class="error">Should be within 0 - 100000</span>
+                    {% endraw %}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    (function () {
+        var els = angular.element('[tooltip]').toArray();
+        _.each(els, function (each) {
+            var el = angular.element(each);
+            el.on('mouseenter', function () {
+                el.tooltip('destroy');
+            });
+        })
+    })();
+</script>

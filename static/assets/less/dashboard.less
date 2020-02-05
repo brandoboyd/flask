@@ -1,0 +1,222 @@
+/* dashboard styles */
+/* widget styles */
+
+.widget-container {
+  float:left;
+  display: inline-block;
+  padding-bottom: 1em;
+  background-color: #fdfdfd;
+  border: 1px solid #e6ebf1;
+  box-sizing: border-box;
+}
+
+.widget {
+  padding: 0 0 0 0 !important;
+  background-color: white;
+  position: relative;
+  height:100%;
+}
+
+.widget-controls {
+  position: relative;
+  height: 24px;
+  margin-top: 7px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.widget-title {
+  margin: 0 24px;
+  padding-top: 1px;
+  border-top: 2px solid #484f57;
+  color: #484f57;
+  font-size: 16px;
+  height: 30px !important;
+}
+
+.widget-action {
+  float: right;
+  padding-right: 25px;
+}
+.widget-content {
+  height: -moz-calc(~'100% - 62px') !important;
+  height: -webkit-calc(~'100% - 62px') !important;
+  height: calc(~'100% - 62px') !important;
+  width: auto !important;
+  padding: 16px 24px;
+}
+
+.legendLabel {
+  padding-right: 10px;
+}
+
+.gradient-bottom-up, .gradient-top-down {
+  position: absolute;
+  height: 30px;
+  background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: 11;
+  width: 95%;
+}
+
+.gradient-top-down {
+  top:0;
+}
+
+.gradient-bottom-up {
+  bottom:0;
+}
+
+.widget-header {
+
+  .label {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .fonticon {
+    cursor: pointer;
+    opacity: 0.5;
+  }
+
+  .glyphicon:hover {
+    opacity: 1;
+  }
+
+  .widget-title {
+    vertical-align: middle;
+  }
+}
+
+.widget-alert-success {
+  color: #444a52;
+  background-color: #FFFEE7;
+  border-color: #FFFBD3;
+}
+
+/* layout styles */
+
+.tabs-item {
+  -webkit-transition-property: max-width, margin-right, margin-top;
+  transition-property: max-width, margin-right, margin-top;
+  -webkit-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+}
+
+.tabs-icon {
+  margin: -4px 5px 0 -8px;
+  padding: 0;
+  border-radius: 100px;
+  float: left;
+  font-size: 15px;
+  color: #98a7b8;
+}
+
+.tabs-title {
+  display: inline-block;
+  width: 95px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tabs-popover-button {
+  position: absolute;
+  right: 10px;
+  top: 4px;
+  font-size: 15px;
+}
+
+// Circle each point on the nvd3 stacked chart
+.nvd3 .nv-groups .nv-point {
+  stroke-opacity: 0.7 !important;
+  stroke-width: 2px;
+  cursor: pointer;
+}
+
+// Toggle facet filters
+.dashboard-facet-area {
+  display: block;
+}
+
+.dashboard-facet-area.ng-hide-add, .dashboard-facet-area.ng-hide-remove {
+  transition: all linear 1.5s;
+}
+
+.dashboard-facet-area.ng-hide {
+  display: none !important;
+}
+
+// WORKAROUND FOR TAP-1069
+.gridster-item {
+  z-index: auto;
+}
+
+// Journey Dashboard (Crossfilter)
+.mixed-dashboard {
+  .nv-pie path, .nv-group rect {
+    cursor: pointer;
+  }
+}
+.deselected {
+  fill: #808080 !important;
+  pointer-events: none;
+}
+.deselected.clickable {
+  pointer-events: auto;
+}
+.selected {
+  path {
+    stroke: #ccc !important;
+    stroke-width: 2px !important;
+  }
+}
+
+// Labels on Journey Dashboard Widgets
+.nv-label text, .labels text, .nvd3 .nv-discretebar .nv-groups text {
+  font-size: 12px;
+  fill: rgba(0, 0, 0, 0.8) !important;
+}
+
+// Hide second yAxis in "NPS Trends" wdiget (linePlusBarChart)
+.nv-linePlusBar .nv-y2 {
+  display: none;
+}
+
+.nps-trends-box {
+  float: right;
+  width: 50px;
+  height: 48px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  border: 1px solid gray;
+  margin: 20px 0 0;
+}
+
+// Breadcrumbs on journey dashboard
+.dashboard-breadcrumbs {
+  padding: 10px 15px;
+
+  .clear-filter-button {
+    position: absolute;
+    right: 15px;
+  }
+
+  .breadcrumbs-group {
+    float: left;
+    margin-right: 15px;
+    ul {
+      border:none;
+      background: transparent none;
+      box-shadow:none;
+      -webkit-box-shadow: none;
+    }
+  }
+
+  .not-clickable {
+    pointer-events: none;
+  }
+}

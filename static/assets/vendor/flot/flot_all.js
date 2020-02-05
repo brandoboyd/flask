@@ -1,0 +1,8 @@
+//@codekit-append "jquery.flot.js"
+//@codekit-append "jquery.flot.time.js"
+//@codekit-append "jquery.flot.resize.js"
+//@codekit-append "jquery.flot.stack.js"
+//@codekit-append "jquery.flot.pie.patched.js"
+//@codekit-append "jquery.flot.crosshair.js"
+//@codekit-append "jquery.flot.selection.js"
+//@codekit-append "jquery.flot.axislabels.js"

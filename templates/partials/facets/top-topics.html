@@ -1,0 +1,12 @@
+{% from "_macros/facets.html"           import facet_topics,
+                                               facet_languages,
+                                               selected_facet   -%}
+
+{%- from "_macros/filter.html"          import smart_tags_filter with context -%}
+
+{{ facet_languages() }}
+{{ smart_tags_filter() }}
+
+<div ng-hide="tab_options.type == 'topics'">
+{{ facet_topics() }}
+</div>

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "JOBS - %s" % user.account.selected_app }}
+{% endblock %}
+
+
+{% set  ngApp="jobs"  %}
+{% block body %}
+
+{%- from "jobs/partials/jobs.facets.html" import render_jobs_facets -%}
+
+{% raw %}
+<div class="container-fluid" ng-controller="JobMainCtrl as vm">
+
+  <div class="row">
+    <ul class="nav nav-tabs fixed-nav" style="left: 0;">
+      <li ng-repeat="tab in vm.menuTabs" ui-sref-active="active" style="cursor: pointer;">
+        <a ui-sref="{{tab.sref}}">
+          <span class="fonticon {{tab.class}}"></span>&nbsp;&nbsp;{{tab.name}}
+        </a>
+      </li>
+    </ul>
+
+    <div class="fixed-nav" style="right: 25px;">
+      <div class="pull-left" ng-hide="vm.currentTab=='details'">
+        <button ng-click="vm.widget.remove()"
+                ng-cloak
+                class="btn btn-xs btn-default pull-right"
+                ui-jq="tooltip"
+                ng-show="vm.widget.item"
+                data-original-title="Cancel widget edit mode">
+          <span class="icon-small-close" style="font-size:15px"></span>
+        </button>
+        <button widget-dialog
+                ng-cloak
+                ng-show="vm.widget.item"
+                data-widget="vm.widget.item"
+                data-settings="vm.widget.getParams()"
+                ui-jq="tooltip"
+                data-original-title="Update: {{ vm.widget.item.title }}"
+                class="btn btn-xs btn-warning pull-right">
+          <i class="icon-dash" style="font-size:15px"></i>
+        </button>
+        <button widget-dialog
+                ng-cloak
+                ng-hide="vm.widget.item"
+                data-widget="vm.widget.item"
+                data-settings="vm.widget.getParams()"
+                ui-jq="tooltip"
+                data-original-title="Add to Dashboard"
+                class="btn btn-xs btn-default"><i class="icon-dash" style="font-size:15px"></i>
+        </button>
+      </div>
+      <div>
+        <date-range-dropdown current-date="vm.dateRangeName" />
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 40px">
+    <span class="fonticon icon-circle-arrow-up to-top-scroller" to-top-scroller style="display: none"></span>
+
+    <div class="col-md-12">
+      <div class="tab-content"
+            style="overflow: visible;">
+        <div class="tab-pane active">
+          <div class="col-sm-2 sidebar" style="background-color:#fff">
+            {% endraw %}
+            {{ render_jobs_facets() }}
+            {% raw %}
+          </div>
+
+          <div class="col-md-10 col-md-offset-2">
+          
+            <!-- Replace the view with respective route views -->
+            <ui-view></ui-view>
+            <!-- END -->
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endraw %}
+
+{% endblock %}

@@ -1,0 +1,76 @@
+// Stylesheets for sankey chart
+svg {
+  .node rect {
+    cursor: pointer;
+    fill-opacity: .9;
+    shape-rendering: crispEdges;
+  }
+
+  .node text {
+    pointer-events: none;
+    text-shadow: 0 1px 0 #fff;
+  }
+
+  .link {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .2;
+  }
+
+  .link:hover {
+    stroke-opacity: .5;
+  }
+
+  [ng-show='noFlowData'] {
+    width: 100%;
+    height: 300px;
+  }
+
+  [ng-show='noFlowData'] > h3 {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 180px;
+  }
+}
+
+// Stylesheets for funnel chart
+.funnel-chart {
+  .nv-legend-text {
+    font-size: 12px !important;
+  }
+  .nvd3 text {
+    font-size: 14px;
+  }
+  .labels text {
+    font-size: 16px;
+    cursor: default;
+  }
+  .nv-bar {
+    cursor: pointer;
+  }
+  .nv-bar.selected {
+    fill-opacity: 1;
+  }
+  g.labels text.selected {
+    font-size: 18px;
+  }
+}
+
+.stacked-bar-chart.clickable-x-axis {
+  .nv-x .tick.zero {
+    pointer-events: visiblePainted;
+    cursor: pointer;
+  }
+  .nv-x .tick.zero rect {
+    fill: #fff;
+    stroke: #000;
+    cursor: pointer;
+  }
+  .nv-x .tick.zero.selected rect {
+    fill: #6aa4df;
+    stroke: none;
+  }
+  .nv-x .tick.zero.selected text {
+    fill: #fff;
+  }
+}

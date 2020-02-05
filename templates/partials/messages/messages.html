@@ -1,0 +1,145 @@
+<h1>Messages</h1>
+<hr/>
+
+<div class="row form-group" style="margin-bottom: 20px;">
+    <div class="col-md-12">
+        {% if user.is_admin or user.is_staff or user.is_agent %}
+        <div class="pull-left">
+            <button ng-click="createMessage()" class="btn btn-primary"><span class="fonticon icon-add"></span>&nbsp;Add Message</button>
+
+            <div class="pull-right btn-icon-group" style="margin-left: 10px;">
+                <button class="btn btn-icon btn-default"
+                        ng-confirm
+                        tooltip-placement="top" tooltip="Delete"
+                        action-text="Are you sure you want to delete?"
+                        action-function="remove(message)"
+                        action-button-text="Yes"
+                        cancel-button-text="No"><span class="fonticon icon-trash"></span>
+                </button>
+                <button class="btn btn-icon btn-default"
+                        ng-click="activate()"><span class="fonticon icon-24-control-play success"></span></button>
+                <button class="btn btn-icon btn-default"
+                        ng-click="deactivate()"><span class="fonticon icon-24-control-pause error"></span></button>
+                <button class="btn btn-default btn-icon" tooltip-placement="top" tooltip="Refresh"
+                        ng-click="refresh()"><span class="fonticon icon-refresh"></span></button>
+                <button class="btn btn-default btn-icon icon-more-btn" toggle-responsive-menu="#message-btns">
+                    <span class="fonticon icon-more"></span>
+                    <ul class="dropdown-menu nav-tabs-dropdown-menu dropdown-menu-pull-left" id="message-btns" role="menu" style="left: 16%;top:40px;">
+                        <li class="dropdown" ng-disabled="!selected.length">
+                            <a role="menuitem" tabindex="-1"
+                               ng-click="remove(message)"><span class="fonticon icon-trash"></span>&nbsp;Delete
+                            </a>
+                        </li>
+                        <li class="dropdown" ng-disabled="!selected.length">
+                            <a role="menuitem" tabindex="-1"
+                               ng-click="activate()"><span class="fonticon icon-24-control-play success"></span>&nbsp;Deactivate</a>
+                        </li>
+                        <li class="dropdown" ng-disabled="!selected.length">
+                            <a role="menuitem" tabindex="-1"
+                               ng-click="deactivate()"><span class="fonticon icon-24-control-pause error"></span>&nbsp;Activate</a>
+                        </li>
+                        <li class="dropdown" ng-disabled="!selected.length">
+                            <a role="menuitem" tabindex="-1"
+                               ng-click="refresh()"><span class="fonticon icon-refresh"></span>&nbsp;Refresh</a>
+                        </li>
+                    </ul>
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        <div class="pull-right">
+            <div class="filter-block">
+                <select class="form-control"
+                        ng-model="filters.channel"
+                        ng-options="o.id as o.title for o in channels"
+                        ng-change="refresh({redirect: true})">
+                </select>
+            </div>
+            <div class="filter-block">
+                <select class="form-control"
+                        ng-model="filters.status"
+                        ng-change="refresh()">
+                    <option value="">-- All Statuses --</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+            <div class="filter-block">
+                <search filter="filters.creative" placeholder-text="Search by Creative"></search>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-default" ng-show="messages.length">
+            <thead>
+            <tr>
+                {% if user.is_admin or user.is_agent or user.is_staff %}
+                <th style="width:47px;" class="text-center">
+                    <label class="checkbox">
+                        <input type="checkbox"
+                               class="ark-checkbox"
+                               value="all"
+                               ng-model="all_selected"
+                               ng-init="all_selected=false"
+                               ng-change="selectAll()" /><span></span>
+                    </label>
+                </th>
+                {% endif %}
+                <th>Creative</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Clicked</th>
+                <th>Sent</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="message in messages | filter:filterPredicate">
+                {% if user.is_admin or user.is_agent or user.is_staff %}
+                {% raw %}
+                <td class="td-small text-center" style="position:relative;">
+                    <label class="checkbox">
+                        <input type="checkbox"
+                               class="ark-checkbox"
+                               ng-checked="all_selected"
+                               ng-model="message.is_selected" ng-change="selectRow(message)"/><span></span>
+                    </label>
+                </td>
+                {% endraw %}
+                {% endif %}
+                <td><a ng-click="edit(message)" class="link" ng-bind="message.creative"></a></td>
+                <td>{{"message.status"|ng}}</td>
+                <td><span ng-bind="message.created_at | date" style="white-space: nowrap"></span></td>
+                <td><span ng-bind="message.clicks"></span></td>
+                <td><span ng-bind="message.impressions"></span></td>
+            </tr>
+            </tbody>
+        </table>
+        <div ng-show="!messages.length" class="alert alert-info text-center">
+            <i class='icon-alert-triangle'></i> No Messages
+        </div>
+        <div class="center" ng-show="messages.length">
+            <div>
+                <ul class="pagination pagination-sm">
+                    <li ng-class="{disabled: filters.currentPage == 0}">
+                        <a href ng-click="prevPage()">« Prev</a>
+                    </li>
+                    <li ng-repeat="n in range(pages)"
+                        ng-class="{active: n == filters.currentPage}"
+                        ng-click="setPage()">
+                        <a href ng-bind="n + 1">1</a>
+                    </li>
+                    <li ng-class="{disabled: filters.currentPage == pages-1}">
+                        <a href ng-click="nextPage()">Next »</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% from '_macros/dialogs.html' import render_share_dialog %}
+{{ render_share_dialog(scope="matchable") }}

@@ -1,0 +1,150 @@
+/* Ad-hoc CSS for the SmartTags form, since we need different styles if form is modal or not */
+.description-label-non-modal {
+    margin-left: 0px;
+}
+.keyword-label-non-modal {
+    margin-left: 0px;
+    width: 100px;
+}
+.skipword-label-non-modal {
+    margin-left: 120px;
+    width: 50px;
+}
+.watchword-label-non-modal {
+    margin-left: 100px;
+    width: 150px;
+}
+.description-label-modal {
+    margin-left: 0px;
+    width: 105px !important;
+}
+.keyword-label-modal {
+    width: 98px;
+}
+.skipword-label-modal {
+    width: 100px;
+}
+.watchword-label-modal {
+    width: 100px;
+}
+.keyword-input-non-modal {
+    margin-left: 0em;
+    width: 100%;
+    font-family: Arial;
+    font-size: 12px;
+}
+.skipword-input-non-modal {
+
+}
+.watchword-input-non-modal {
+
+}
+.keyword-input-modal {
+    margin-left: 0em;
+    width: 100%;
+    font-family: Arial;
+    font-size: 12px;
+}
+.skipword-input-modal {
+    margin-left: 0em;
+    width: 100%;
+    font-family: Arial;
+    font-size: 12px;
+}
+.watchword-input-modal {
+    margin-left: 0em;
+    width: 100%;
+    font-family: Arial;
+    font-size: 12px;
+}
+.alarmsicon-input-non-modal {
+    position: absolute;
+    right: 345px;
+    top: 5px;
+}
+.alarmsicon-input-modal {
+    position: absolute;
+    right: 269px;
+    top: 5px;
+}
+.outer-div{
+    position: relative;
+    clear: both;
+}
+.left-div{
+    position: relative;
+    float: left;
+}
+.right-div{
+    padding-left: 5px;
+    width: 50px;
+    position: relative;
+    float: left;
+}
+.channel-selector{
+    width: 377px;
+}
+.channel-name{
+    width: 365px;
+}
+.channel-description{
+    width: 365px;
+}
+
+.animate-show {
+    -webkit-transition:all linear 0.5s !important;; 
+    transition:all linear 0.5s !important;;
+    line-height:20px !important;;
+    opacity:1 !important;;
+    padding:10px !important;;
+    background:white !important;;
+}
+
+.animate-show.ng-hide-add.ng-hide-add-active,
+.animate-show.ng-hide-remove.ng-hide-remove-active {
+  -webkit-transition:all linear 5.5s;
+  transition:all linear 5.5s;
+}
+
+.animate-show.ng-hide {
+    display:block  !important;
+    line-height:0  !important;
+    opacity:0      !important;
+    padding:0 10px !important;
+
+}
+.account-name{
+    float: left;
+    width: 160px;
+    padding-top: 5px;
+    /*text-align: right;*/
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: strong;
+    line-height: 18px;
+}
+.account-key{
+    float: left;
+    width: 290px;
+    padding-top: 5px;
+    /*text-align: right;*/
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: strong;
+    line-height: 18px;
+}
+
+.customer-admin-first-name{
+    width: 95px !important;
+}
+.customer-admin-last-name{
+    width: 95px !important;
+}
+.account-notes{
+    width: 390px;
+}
+.smart-tag-emails li.select2-search-field {
+    width: 100%;
+}

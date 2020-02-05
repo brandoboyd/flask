@@ -1,0 +1,67 @@
+{% raw %}
+<h3 style="margin-left: 10%;">
+    {{title === 'Create' ? 'New' : 'Update'}} Contact label
+</h3>
+{% endraw %}
+<a class="btn btn-default btn-xs" style="position: absolute; top:0" href="#/labels/all" tooltip-placement="top" tooltip="All Contact Labels"><span class="fonticon icon-arrow-left"></span></a>
+<hr />
+<div class="alert alert-success" ng-show="formState.isSaved">
+  Thanks, the contact label settings have been saved.
+</div>
+
+<form name="form" class="form-horizontal">
+    <fieldset>
+        {% raw %}
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="sTitle">Name <span class="asterisk">*</span></label>
+            <div class="col-sm-4">
+                <input type="text"
+                       ng-model="item.title"
+                       name="sTitle"
+                       style="width: 530px;"
+                       ng-disabled="item.perm == 'r'"
+                       placeholder="Titles need to be unique"
+                       class="form-control"
+                       required />
+
+                <!--<span ng-hide="form.sTitle.$dirty && form.sTitle.$invalid"
+                      class="help-block">Titles need to be unique.</span>-->
+
+                <span ng-show="form.sTitle.$dirty && form.sTitle.$invalid"
+                      class="help-block error">Name is required</span>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Users <span class="asterisk">*</span></label>
+            <div class="col-sm-4">
+                <input name="sUsers"
+                       ng-model="item.users"
+                       style="width: 545px;"
+                       ng-disabled="item.perm == 'r'"
+                       s2-readonly="item.perm == 'r'"
+                       ui-select-tag-users 
+                       placeholder="Add twitter users that you want to use to filter the posts"
+                       class="form-control"
+                       required
+                       />
+
+                <span ng-show="form.sUsers.$dirty && form.sUsers.$error.required"
+                      class="help-block error">At least one twitter user needs to be configured</span>
+            </div>
+        </div>
+        <div class="form-horizontal">
+          <div class="form-group form-actions">
+            <div class="col-sm-offset-2 col-sm-4">
+              <button type="button"
+                    class="btn btn-primary"
+                    ng-disabled="!form.$valid || item.perm == 'r'"
+                    ng-click="save()">{{title}}</button>
+            </div>
+          </div>
+        </div>
+        {% endraw %}
+    </fieldset>
+</form>
+
+

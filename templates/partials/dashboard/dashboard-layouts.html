@@ -1,0 +1,46 @@
+<div scrolling-tabs-wrapper style="width:100%">
+    <ul ui-sortable="sortableOptions" ng-model="layouts" class="nav nav-tabs layout-tabs">
+        <li ng-repeat="layout in layouts" ng-class="{ active: layout.active }" class="tabs-item nav-tabs-layout">
+            <a ng-click="makeLayoutActive(layout)" ng-init="addTooptip()">
+                <span ng-if="layout.locked" class="tabs-icon fonticon icon-secure"></span>
+                <span ng-if="layout.type === 'widget'" class="tabs-icon fonticon icon-dashtab-dash"></span>
+                <span ng-if="layout.type === 'expand'" class="tabs-icon fonticon icon-dashtab-xwidget"></span>
+                <span class="tabs-title" ng-if="{{'layout.showTooltip'}}" tooltip-placement="bottom" tooltip="{{ '{{layout.title}}' }}" tooltip-popup-delay="500">{{ "{{layout.title}}" }}</span>
+                <span class="tabs-title" ng-if="{{ '!layout.showTooltip' }}">{{ "{{layout.title}}" }}</span>
+            </a>
+            <div class="nav-tabs-collapse">
+                <ul class="nav">
+                    <li class="ark-dropdown dropdown">
+                        <a ng-if="!layout.active" ng-click="makeLayoutActive(layout)" class="ark-dropdown-toggle nav-tabs-dropdown"><i class="icon-more"></i></a>
+                        <a ng-if="layout.active" href="#" role="button" class="ark-dropdown-toggle nav-tabs-dropdown"><i class="icon-more"></i></a>
+                        <ul ng-if="layout.active" class="dropdown-menu nav-tabs-dropdown-menu dropdown-menu-pull-left" role="menu" dropdown-menu menu="layoutList.list" layout-actions="layoutList.actions" default-layout-actions="defaultLayoutActions" style="top: 91%;left: 6px;"></ul>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <a ng-click="createNewLayout()" class="tabs-add-button">
+                <span class="fonticon icon-add"></span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div ng-if="!selectedLayout.isTypeDefault" class="dashboard-controls">
+    <div>
+        <date-range-dropdown class="pull-right" current-date="currentDate"></date-range-dropdown>
+    </div>
+    <a ng-click="switchViewMode()"
+       class="btn btn-sm btn-default pull-right">
+        <span class="font-icon icon-24-graph-grid" ng-if="selectedLayout.isDetailView"> Widgets</span>
+        <span class="font-icon icon-book-open-details" ng-if="!selectedLayout.isDetailView"> Details</span>
+    </a>
+    <a ng-click="toggleFilters()" class="btn btn-sm btn-default pull-right">
+        <span ng-if="selectedLayout.isFilterShown">Hide Filters</span>
+        <span ng-if="!selectedLayout.isFilterShown">Show Filters</span>
+    </a>
+    <div style="clear:both"></div>
+</div>
+<div ng-repeat="layout in layouts | filter:isActive">
+    <div ng-if="layout.type === 'widget'" dashboard="layout.dashboard" template-url="/partials/dashboard/dashboard"></div>
+    <div ng-if="layout.type === 'expand'"expand-to-tab="layout.dashboard" template-url="src/dashboard/template/expand-to-tab.html"></div>
+</div>

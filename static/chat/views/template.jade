@@ -1,0 +1,41 @@
+doctype html
+html(ng-app="chat")
+   head
+      block title
+         title Default tile
+
+      // bootstrap v3:css
+      link(rel="stylesheet", href="/chat/public/vendor/bootstrap/css/bootstrap.min.css")
+      link(rel="stylesheet", href="/chat/public/vendor/font-awesome/css/font-awesome.min.css")
+      link(rel="stylesheet", href="/assets/vendor/jquery-ui/themes/ui-lightness/jquery-ui.min.css")
+      link(rel="stylesheet", href="/chat/public/css/app.css")
+
+      block css
+         link(rel="stylesheet", href="/chat/public/css/app.css")
+
+      script(type="text/javascript", src="/chat/public/vendor/jquery/dist/jquery.js")
+      script(type="text/javascript", src="/chat/public/vendor/angular/angular.min.js")
+      //script(type="text/javascript", src="/chat/public/vendor/bootstrap/js/bootstrap.min.js")
+      script(type="text/javascript", src="/chat/public/vendor/angular-bootstrap/ui-bootstrap-tpls-modified.js")
+      script(type="text/javascript", src="/assets/vendor/angular-ui-router/angular-ui-router.min.js")
+      script(type="text/javascript", src="/assets/vendor/angular-sanitize/angular-sanitize.js")
+      script(type="text/javascript", src="/assets/vendor/jquery-ui/jquery-ui.js")
+      script(type="text/javascript", src="/chat/public/vendor/angular-ui-slider/slider.js")
+      script(type="text/javascript", src="/chat/public/vendor/angular-gridster/angular-gridster.js")
+      script(type="text/javascript", src="/assets/vendor/lodash/lodash.compat.js")
+
+
+      script(type="text/javascript", src="/chat/public/vendor/dist/select.js")
+
+   body
+      block body
+         div Something
+
+      script(type="text/javascript", src="/socket.io/socket.io.js")
+      script(type="text/javascript", src="/chat/public/js/app.js")
+      script(type="text/javascript", src="/chat/public/js/directives.js")
+      script(type="text/javascript", src="/chat/public/js/services.js")
+      script(type="text/javascript", src="/chat/public/js/api-services.js")
+
+      block scripts
+         script(type="text/javascript", src="/chat/public/js/services.js")

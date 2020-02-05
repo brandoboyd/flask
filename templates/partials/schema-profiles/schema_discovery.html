@@ -1,0 +1,78 @@
+{% raw %}
+<div ng-controller="SchemaProfileDiscoveryCtrl" class="row discovery-tab">
+  <div class="col-md-12">
+    <div class="alert alert-info" ng-show="!profile">
+      <i class='icon-alert-triangle'></i> You have not created a schema yet.&nbsp;
+      <button
+        ng-click="showUploadDialog(false)"
+        class="btn btn-primary">Create Schema
+      </button>
+    </div>
+
+    <div class="alert alert-info" ng-if="!!profile && profile.sync_status==='IN_SYNC'">
+      <i class='icon-alert-triangle'></i> You can add more data to the schema.&nbsp;
+      <button
+        ng-click="showUploadDialog(true)"
+        class="btn btn-primary">Append Data
+      </button>
+    </div>
+  </div>
+
+  <div ng-if="!!profile" class="col-md-12">
+
+    <div class="row form-group">
+      <div class="col-md-12">
+        <div class="filter-block pull-right">
+          <search filter="flags.search" placeholder-text="Search"></search>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <table class="table table-default">
+        <thead>
+          <tr>
+            <!-- <th style="width:40px;">
+              <label class="checkbox">
+                <input type="checkbox" class="ark-checkbox" ng-model="flags.selectedAll" ng-click="onSelectRow()"><span></span>
+              </label>
+            </th> -->
+            <th sorter="table.sort" data-predicate="name" data-title="Field Name"></th>
+            <th sorter="table.sort" data-predicate="type" data-title="Type"></th>
+            <th sorter="table.sort" data-predicate="cardinality" data-title="Cardinality"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="field in profile.discovered_schema | filter:flags.search | orderBy: table.sort.predicate: table.sort.reverse">
+            <!-- <td>
+              <label class="checkbox">
+                <input type="checkbox" class="ark-checkbox" ng-model="field.selected" ng-click="onSelectRow(field)"><span></span>
+              </label>
+            </td> -->
+            <td>
+              <span ng-if="schemaFields.indexOf(field.name) === -1">{{field.name}}</span>
+              <a    ng-if="schemaFields.indexOf(field.name) > -1" class="link" ng-click="showData(field.name)">{{field.name}}</a>
+              <span class="id_mark"
+                    ng-if="field.is_id">
+                    {{field.is_id ? 'ID field ' : ''}}
+              </span>
+            </td>
+            <td>
+              <span>{{field.type | toTitleCase}}</span>
+            </td>
+            <td>
+              <a class="link"
+                 ng-if="!!profile.cardinalities[field.name].values"
+                 ng-click="showDetails(field.name, profile.cardinalities[field.name].values)"
+                 >{{profile.cardinalities[field.name].display_count}}</a>
+              <span
+                ng-if="!profile.cardinalities[field.name].values"
+                >{{profile.cardinalities[field.name].display_count}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endraw %}

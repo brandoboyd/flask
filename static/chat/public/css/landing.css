@@ -1,0 +1,241 @@
+a.logo {
+	display:block;
+	font-size: 1.2em;
+	font-weight: 700;
+	color: #fff;
+	padding:10px 20px 12px 32px;
+	text-decoration: none;
+	float:left;
+}
+
+#tabs ul {
+
+}
+
+#tabs ul.tabs li {
+	list-style: none;
+    float: left;
+    border: 1px solid #999;
+    border-bottom-width: 0;
+    margin: 3px 3px 0px 3px;
+    padding: 5px 5px 0px 5px;
+    background-color: #CCC;
+    color: #696969;
+    cursor:pointer;
+}
+#tabs #mainView {
+	clear: both;
+	padding: 0 1em;
+}
+#tabs ul.tabs li.active {
+    background-color: #FFF;
+    color: #000;
+}
+
+.product-info {
+	padding-top:30px;
+	padding-left:30px;
+}
+
+#prodInfo.product-info img {
+	max-width: 100%;
+}
+
+	#tabs .product-info ul {
+		padding-left:40px;
+	}
+
+	#tabs .product-info ul.searchFaqResult {
+		padding-left: 0;
+	}
+
+		#tabs .product-info ul.searchFaqResult li {
+			list-style: none;
+			margin: 20px 0;
+		}
+
+a {
+	cursor: pointer;
+}
+
+#chatApp {
+
+}
+
+	#chatApp .navbar-inner {padding-right:0;}
+
+.navbar .brand {
+    background-image: url("/assets/img/genesys-sign.png");
+}
+
+#chatApp .chatbox-article ,
+#chatApp .chatbox-rating {
+	width:100%;
+	max-height:300px;
+	overflow-y:auto;
+	background: #fff;
+}
+
+	#chatApp .chatbox-rating li {
+		list-style:none;
+		padding:5px;
+	}
+
+	#chatApp .chatbox-rating .rating a {
+		width: 10px;
+		overflow: hidden;
+		display: inline-block;
+		position: relative;
+		height: 20px;
+	}
+
+		#chatApp .chatbox-rating .rating a i {
+			position: absolute;
+			top: 4px;
+		}
+
+			#chatApp .chatbox-rating .rating a.left-half i {
+				left: 1px;
+			}
+
+			#chatApp .chatbox-rating .rating a.right-half i {
+				right: 1px;
+			}
+
+#chatApp .modal-footer {
+	padding:8px 15px;
+}
+.journeyTracker {
+	position: relative;
+}
+
+.journeyTracker img {
+	width: 32px;
+	position: absolute;
+	top: 5px;
+	right: 90px;
+}
+
+.journeyTracker .userInfo {
+
+}
+
+
+#surveyModalBody h5 {
+	padding-bottom: 5px;
+	border-bottom: 1px solid #E5E5E5;
+}
+
+#surveyModalBody font {
+	color: red;
+}
+
+#surveyModalBody li {
+	list-style: none;
+	padding: 10px;
+}
+
+#surveyModalBody .sliderBox {
+	border:1px solid #999999;
+	margin-top: 5px;
+	padding: 20px;
+	margin: 10px 0;
+}
+
+#surveyModalBody .ui-widget-content {
+	border: 0;
+}
+
+#surveyModalBody .ui-corner-all {
+	border-radius: 0;
+}
+
+#surveyModalBody .ui-slider-horizontal {
+	height: 20px;
+	margin-bottom: 7px;
+}
+
+#surveyModalBody .ui-widget-header {
+	background: #6d9d14;
+}
+
+#surveyModalBody .ui-slider-horizontal .ui-slider-handle {
+	top: 0;
+}
+
+#surveyModalBody .ui-state-default, 
+#surveyModalBody .ui-widget-content .ui-state-default, 
+#surveyModalBody .ui-widget-header .ui-state-default {
+	border: 0;
+	background: #555555;
+}
+
+#surveyModalBody .ui-slider .ui-slider-handle {
+	height: 20px;
+}
+
+#surveyModalBody .btn {
+	margin: 15px 0 0 5px;
+}
+
+#surveyModalBody textarea.form-control {
+	margin: auto;
+	min-height: 80px;
+	border: 1px solid #999999;
+	border-radius: 0;
+	max-width: 96.6%;
+}
+
+.modal-backdrop {
+	width: 100%;
+	height: 100%;
+}
+
+p.feedback {
+	color: #888;
+}
+	p.feedback a {
+		margin-left: 10px;
+	}
+
+#list {
+	margin-top: 50px;
+}
+	
+	#list li {
+		list-style: none;
+		cursor: pointer;
+		color: #555;
+	}
+
+	#list li:hover {
+		color: #000;
+	}
+
+.product-info li {
+	list-style: none;
+	cursor: pointer;
+}
+
+.product-info input[type="radio"] {
+	margin-top: 20px;
+	cursor: pointer;
+}
+
+.product-info li p {
+	font-weight: normal;
+	cursor: pointer;
+}
+
+.product-info li span {
+	font-size: 1.5em;
+}
+
+.product-info .row.sale h3 {
+	margin: 2px 0;
+}
+
+img.banner {
+	width: 100%;
+	margin-bottom: 30px;
+}

@@ -1,0 +1,79 @@
+<h1>Customer Segments</h1>
+
+<hr/>
+
+<div class="row form-group" style="margin-bottom: 20px;">
+    <div class="col-md-12">
+        <div class="pull-left">
+            {% if user.is_admin or user.is_staff %}
+            <a href="#/customer_segments/edit" class="btn btn-primary"><span
+                    class="fonticon icon-add"></span> Add Customer Segment</a>
+
+            <div class="pull-right btn-icon-group no-responsiveness" style="margin-left: 10px;">
+                <button class="btn btn-default btn-icon"
+                        ng-confirm
+                        tooltip-placement="top" tooltip="Delete"
+                        ng-disabled="!selected.length"
+                        action-text="Are you sure you want to delete the customer segment(s)?"
+                        action-function="remove()"
+                        action-button-text="Yes"
+                        cancel-button-text="No">
+                    <span class="fonticon icon-trash"></span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+        <div class="pull-right">
+            <div class="filter-block">
+                <date-range-dropdown on-change="loadByDates(dates)"></date-range-dropdown>
+            </div>
+            <div class="filter-block">
+                <search filter="filters.display_name" placeholder-text="Search by Name"></search>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-bottom: 20px">
+    <div class="col-md-12">
+        <table class="table table-default">
+            <thead>
+            <tr>
+                {% if user.is_admin or user.is_staff %}
+                <th style="width:47px;"><!--Actions--></th>
+                {% endif %}
+                <th sorter data-predicate="display_name" data-title="Name"></th>
+                <th sorter data-predicate="locations" data-title="Locations"></th>
+                <th sorter data-predicate="age_range" data-title="Age"></th>
+                <th sorter data-predicate="account_balance_range" data-title="Account Balance"></th>
+                <th sorter data-predicate="num_calls_range" data-title="Number of Calls"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in items | filter:filters | orderBy: table.sort.predicate: table.sort.reverse">
+                {% if user.is_admin or user.is_staff %}
+                <td>
+                    <label class="checkbox">
+                        <input type="checkbox" class="ark-checkbox" ng-model="item.selected"
+                               ng-change="selectRow(item)"><span></span>
+                    </label>
+                </td>
+                {% endif %}
+                <td>
+                    <a class="link" tooltip-placement="top" tooltip="{{'item.description'|ng}}" ng-href="#/customer_segments/edit/{{'item.id'|ng}}"
+                       ng-bind-html="item.display_name"></a>
+                </td>
+                <td ng-bind-html="item.locations.join('<br>')"></td>
+                <td ng-bind-html="item.age_range.join(' - ')"></td>
+                <td ng-bind-html="item.account_balance_range.join(' - ')"></td>
+                <td ng-bind-html="item.num_calls_range.join(' - ')"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div ng-show="!items.length" class="alert alert-info text-center">
+            <i class='icon-alert-triangle'></i> No Customer Segments
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,11 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'user_flash' %}
+                <div slr-info-modal="{{ message }}"></div>
+            {% else %}
+                <div class="alert alert-{{ category }}">{{ message|safe }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}

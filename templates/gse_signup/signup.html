@@ -1,0 +1,246 @@
+{% extends "gse_signup/base.html" %}
+
+{% block body %}
+<style>
+    .red {
+        color: red;
+        margin-top: 10px;
+    }
+
+    .btn-ark {
+        border: #2e69db;
+        color: #fdfdfd;
+        background: #2e69db;
+        cursor: pointer;
+        font-family: Roboto, Arial, sans-serif;
+        padding: 4px 24px;
+        margin-bottom: 0;
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 1.66666667;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    h2 {
+        font-family: Roboto, Arial, sans-serif !important;
+        color: #444A52;
+        font-size: 18px;
+        line-height: 24px;
+        font-weight: 300;
+    }
+
+    .btn-ark:hover {
+        background-color: #3963b8;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+
+        <div class="row" ng-hide="showVerificationMsg" ng-cloak>
+            <div class="col-sm-12">
+                <div style="text-align: center">
+                    <h2>Setup your Social Engagement Software</h2>
+                </div>
+            </div>
+        </div>
+
+        <section ng-app="wizard-signup" style="margin-top: 40px;" ng-hide="showVerificationMsg">
+            <form class="form form-horizontal" role="form" name="passwordResetForm">
+
+                <div class="form-group">
+                    <label class="col-sm-2">First Name</label>
+                    <div class="col-sm-4 form-inline" ng-class="{ 'has-error': showErr && !passwordChanging }">
+                        <input type="text"
+                               name="name"
+                               style="width:100%;"
+                               ng-disabled="passwordChanging"
+                               class="form-control"
+                               ng-model="account.first_name"
+                               placeholder="First Name"/>
+                    </div>
+                    <label class="col-sm-2 control-label">Last Name</label>
+                    <div class="col-sm-4 form-inline" ng-class="{ 'has-error': showErr && !passwordChanging }">
+                        <input type="text"
+                               name="name"
+                               style="width:100%;"
+                               ng-disabled="passwordChanging"
+                               class="form-control"
+                               ng-model="account.last_name"
+                               placeholder="Last Name"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="CompanyName" class="col-sm-2">Company/Org. Name</label>
+                    <div class="col-sm-10" ng-class="{ 'has-error': (showErr || passwordResetForm.company.$error.maxlength) && !passwordChanging }">
+                        <input type="text"
+                               name="company"
+                               ng-model="account.company_name"
+                               ng-maxlength="30"
+                               class="form-control"
+                               ng-disabled="passwordChanging"
+                               id="CompanyName"
+                               placeholder="Name of company or org. that has purchased this software"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Email" class="col-sm-2">Email Address</label>
+                    <div class="col-sm-10" ng-class="{ 'has-error': (showErr || emailErr) && !passwordChanging }">
+                        <input type="text"
+                               name="email"
+                               ng-model="account.email"
+                               class="form-control"
+                               ng-disabled="passwordChanging"
+                               id="Email"
+                               placeholder="Corporate email address is required."
+                        />
+                    </div>
+                </div>
+
+                {# if not show_password %}
+                <div class="form-group">
+                    <label for="IdNumber"
+                           class="col-sm-2"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Please type the 3 digit number (example version 3.3.3) of Genesys Social Engagement that you will be using">
+                        Version <span style="white-space: nowrap">Number <span class="icon-question-sign"
+                                             style="padding: 10px;"></span>
+                        </span>
+                    </label>
+
+                    <div class="col-sm-10" ng-class="{ 'has-error': (showErr && !passwordChanging) || idErrMsg }">
+                        <input type="text"
+                               name="id"
+                               ng-model="account.identification_number"
+                               class="form-control"
+                               ng-disabled="passwordChanging"
+                               id="IdNumber"
+                               placeholder="Software version number"
+                        />
+                    </div>
+                </div>
+                {% endif #}
+
+                {% if show_password %}
+                <div class="form-group"
+                     ng-class="{'has-error' : (  passwordResetForm.password.$error.minlength
+                                                          || passwordResetForm.password.$error.maxlength
+                                                          || passwordResetForm.password.$error.strongpassword )}">
+                    <label for="Password" class="col-sm-2">Password</label>
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="password"
+                                       class="form-control"
+                                       id="password"
+                                       placeholder="Password"
+                                       ng-model="account.password"
+                                       name="password"
+                                       ng-minlength="8"
+                                       ng-maxlength="18"
+                                       required
+                                       strongpassword
+                                       autofocus/>
+                            </div>
+                            <div class="col-sm-6">
+                            <span class="help-block"
+                                  ng-show="passwordResetForm.password.$error.minlength">
+                                        <span class="icon-exclamation-sign"></span> Password must be at least 8 characters long.</span>
+                                    <span class="help-block"
+                                          ng-show="passwordResetForm.password.$error.maxlength">
+                                        <span class="icon-exclamation-sign"></span> Max password length is 18 characters.</span>
+                                    <span class="help-block"
+                                          ng-show="passwordResetForm.password.$error.strongpassword">
+                                        <span class="icon-exclamation-sign"></span> The password is weak.
+                                        <a href=""
+                                           popover-html-unsafe="Your password should contain at least 8 characters from at least 3 of 4 character sets
+                                                                <ul><li>lower case letters a..z</li>
+                                                                <li>upper case letters A..Z</li>
+                                                                <li>digits 0..9</li>
+                                                                <li>special characters _!@#$%^&amp;*()-+{}[]</li></ul>
+                                                                Examples:<ul>
+                                                                <li>asd@123D</li>
+                                                                <li>{3qweasd</li>
+                                                                </ul>"
+                                           popover-title="Secure Password Policy"
+                                           popover-append-to-body="true">Details.</a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group"
+                     ng-class="{'has-error' : pwdNotEqual }">
+                    <label for="password_confirm" class="col-sm-2">Confirm Password</label>
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="password"
+                                       class="form-control"
+                                       id="password_confirm"
+                                       name="password_confirm"
+                                       placeholder="Confirm Password"
+                                       ng-model="account.password_confirm"
+                                       equalsto="account.password"
+                                       required/>
+                            </div>
+                            <div class="col-sm-6">
+                            <span class="help-block"
+                                  ng-show="pwdNotEqual">
+                                        <span class="icon-exclamation-sign"></span> Passwords are not equal.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+
+                {% raw %}
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="red pull-left has-error" style="padding-left: 50%" ng-cloak>
+                            <span class="help-block" ng-if='showErr'><span class="icon-exclamation-sign"> Please fill in all the fields</span><br/></span>
+                            <span class="help-block" ng-if='idErrMsg'><span
+                                class="icon-exclamation-sign"> {{idErrMsg}} </span><br/></span>
+                            <span class="help-block" ng-if='emailErr'><span
+                                class="icon-exclamation-sign"> {{emailErr}} </span><br/></span>
+                            <span class="help-block" ng-if='signupErr'><span
+                                class="icon-exclamation-sign"> {{signupErr}} </span><br/></span>
+                            <span class="help-block" ng-if='passwordResetForm.company.$error.maxlength'><span
+                                class="icon-exclamation-sign"> Company name must not be greater than 30 chars long</span><br/></span>
+                        </div>
+                        <button ng-click="submitForm()" class="btn-ark pull-right">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+                {% endraw %}
+            </form>
+        </section>
+        <section ng-show="showVerificationMsg" ng-cloak id="confirmation">
+
+            {% raw %}
+            <p>We have sent the verification email to <a style="color:#2e69db;">{{account.email}}</a> </p>
+            <p>
+                Please check your inbox and find the message from ‘Genesys Social Engagement’ and proceed with the next steps of the setup. Note, it may be necessary to check your spam folder.
+            </p>
+            {% endraw %}
+
+        </section>
+    </div>
+</div>
+
+{% if user_json %}
+<script>
+    var User = {{user_json | safe}}
+</script>
+{% endif %}
+
+{% endblock %}

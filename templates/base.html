@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org" id="top">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="/static/assets/img/gen_logomark_16px_col.ico">
+    <!-- Le styles -->
+
+    {% include 'assets/css.html' ignore missing %}
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script>
+        var _gaq = _gaq || [];
+        _gaq.push(['setAccount', 'UA-40721236-1']);
+        _gaq.push(['setDomainName', 'socialoptimizr.com']);
+        _gaq.push(['setAllowLinker', true]);
+        _gaq.push(['trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <script>
+        var HOST_DOMAIN = "{{config.HOST_DOMAIN}}";
+    </script>
+</head>
+
+<body ng-app="{{ngApp}}"
+      id="{{ngApp}}">
+
+<div id="loading" class="alert alert-info">
+    <i class="icon-refresh icon-spin"></i> Loading...
+</div>
+
+<div slr-alert></div>
+
+<div class="navbar navbar-default navbar-fixed-top"
+     style="min-width: 768px;">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+            {% if not session.is_angel %}
+                <span class="fonticon ng-scope icon-special-g-brandmark"></span>
+                {% if user.account.selected_app == 'GSE' %}
+                    <span>Social Admin</span>
+                {% else %}
+                    <span>{{ user.account.selected_app }}</span>
+                {% endif %}
+            {% endif %}
+            </a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                    {%- set u = user if user else None -%}
+                    {%- set is_voc = u.current_account.account_type == "Skunkworks" -%}
+                    {%- set is_omni = u.current_account.account_type == "OmniChannel" -%}
+
+                    {%- set is_gse = u.account.selected_app == "GSE" -%}
+                    {% set navigation_bar = [
+                        ('/dashboard',          'dashboard',  'Dashboard',    True, True,  False,  True,  True,  False),
+                        ('/reports',            'reports',    'Reports',      True, True,  False,  True,  True,  False),
+                        ('/predictors',         'predictors', 'Predictors',   True, True,  False,  True,  True,  False),
+                        ('/inbox',              'inbox',      'Inbox',        True, True,  True,   False, False, False),
+                        ('/voc',                'voc',        'NPS',          True, True,  True,   True,  False, False),
+                        ('/omni/customers',     'customers',  'Customers',    True, True,  True,   True,  False, False),
+                        ('/omni/agents',        'agents',     'Agents',       True, True,  True,   True,  False, False),
+                        ('/omni/journeys',      'journeys',   'Journeys',     True, True,  True,   True,  False, False)
+                    ] %}
+
+                    {%- set available_apps = user.account.available_apps.keys() if user.account else [] %}
+                    {%- set available_sections = user.account.available_apps[user.account.selected_app] if user.account else [] %}
+                    {%- for href, id, caption, for_staff, for_admin, for_agent, for_analyst, for_reviewer, for_gse in navigation_bar %}
+                        {% if  (for_staff    and u.is_staff    )
+                            or (for_admin    and u.is_admin    )
+                            or (for_analyst  and u.is_analyst  )
+                            or (for_agent    and u.is_agent    )
+                            or (for_reviewer and u.is_reviewer ) -%}
+                            {% if not is_gse or is_gse and for_gse %}
+                                {% if (user.account.selected_app and id in available_sections) %}
+                                    <li {% if id == top_level %} class="active" {% endif%} >
+                                        <a href="{{ href | e }}"><span>{{ caption | e }}</span></a>
+                                    </li>
+                                {% endif %}
+                            {%- endif -%}
+                        {%- endif -%}
+                    {%- endfor -%}
+                    {% if u.is_staff %}
+                        <li class="dropdown {% if id == top_level %} 'active' {% endif%}">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown">Test <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/test">Content Matching</a></li>
+                                <li><a href="/test_agents#/list_agents">Agents Matching</a></li>
+                            </ul>
+                        </li>
+                        <li {% if 'jobs' == top_level %} class="active" {% endif%} >
+                        <a href="/jobs"><span>Jobs</span></a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                {% set accounts = u.available_accounts %}
+
+
+            <ul class="nav navbar-nav navbar-right" id="accounts">
+
+                <li><a target="_blank" href="https://docs.genesys.com/Documentation/ES/latest/SMSolution/DepCloudDrivers">Help</a></li>
+                {% if not session.is_angel %}
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-user"></i> {{ u.email }}<b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li role="presentation" class="dropdown-header">Actions</li>
+                        <li><a href="/users/{{ u.email }}/password">User Profile</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+                <li class="dropdown {% if 'configure' == top_level %} active {% endif%}">
+                    <a href=""
+                       class="dropdown-toggle"
+                       data-toggle="dropdown">
+                        <i class="fonticon icon-settings-gear"></i>
+                        <b class="caret"></b>
+                    </a>
+                    <ul slr-accounts-list></ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div style="margin-top:40px;">
+    {% block body %} {% endblock %}
+</div><!-- /wrapper -->
+
+{% include 'assets/js.html' ignore missing %}
+
+{% block extra_scripts %}{% endblock %}
+
+
+
+</body>
+</html>

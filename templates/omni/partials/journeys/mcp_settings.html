@@ -1,0 +1,39 @@
+{% raw %}
+<span class="icon-close close modal-dialog-close" data-dismiss="modal" ng-click="$dismiss('cancel')"></span>
+<div class="modal-header">
+  <h1 class="modal-title">Configure Metrics</h1>
+</div>
+<div class="modal-body">
+  <table class="table table-default">
+    <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Min</th>
+      <th>Max</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="m in mcp_settings">
+      <td>{{m.label}}</td>
+      <td>
+        <label class="checkbox">
+          <input type="checkbox" class="ark-checkbox" ng-model="m.minselected"/><span></span>
+        </label>
+      </td>
+      <td>
+        <label class="checkbox">
+          <input type="checkbox" class="ark-checkbox" ng-model="m.maxselected"/><span></span>
+        </label>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="$dismiss('cancel')">Cancel</button>
+
+  <div class="pull-right">
+    <button type="button" class="btn btn-primary pull-right" ng-click="$close(mcp_settings)" style="margin-right:10px">Save</button>
+  </div>
+</div>
+{% endraw %}

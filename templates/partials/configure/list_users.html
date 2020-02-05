@@ -1,0 +1,104 @@
+{% macro user_management() %}
+{% from './_macros/dialogs.html' import render_password_reset_dialog, render_agent_setup_dialog with context %}
+<h1>{{"currentAccount.name"|ng}} Users</h1>
+
+<hr/>
+
+{% if user.is_staff or user.is_admin %}
+<div ng-controller="PasswordCtrl">
+    {{ render_password_reset_dialog() }}
+    {{ render_agent_setup_dialog() }}
+</div>
+{% endif %}
+
+<div class="alert alert-info" ng-show="usersResolved && !users.length">No users found</div>
+{% if user.is_staff %}
+
+<div class="form-inline">
+    <div class="form-group">
+        <label for="id_current_acct pull-left"> Current account:</label>
+        <select id="id_current_acct"
+                class="form-control"
+                ng-options="acct.name for acct in accounts|orderBy:'name'"
+                ng-model="currentAccount"
+                ng-change="switchCurrentAccount()"></select>
+    </div>
+</div>
+
+<hr/>
+
+{% endif %}
+
+<div class="row form-group">
+    <div class="col-md-12">
+        <div class="pull-left">
+            {% if user.is_staff or user.is_admin %}
+                <button class="btn btn-primary" tooltip-placement="top" tooltip="Add user to account" ng-click="edit('')">
+                    <span class="fonticon icon-add"></span> Add User
+                </button>
+            {% endif %}
+        </div>
+        <div class="pull-right">
+            <div class="filter-block">
+                <search filter="filters.searchQuery" placeholder-text="Search name or email"></search>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-default">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                {# {% if user.is_staff %}#}
+                {#
+                <th>Account</th>
+                #}
+                {# {% endif %}#}
+                <th>Password</th>
+                {#
+                <th>Contact</th>
+                #}
+                <!--{% if user.is_admin %}
+                <th>Delete</th>
+                <th>Remove</th>
+                {% endif %}-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="u in users">
+                {% raw %}
+                <td>{{ u.name }}</td>
+                <td>
+                    <a ng-show="u.perms == 'w'" class="link" ng-click="edit(u.email)">{{ u.email }}</a>
+                    <span ng-show="u.perms == 'r'">{{ u.email }}</span>
+                </td>
+                <td><span ng-repeat="name in u.full_roles"> {{ name }} </span></td>
+                <td><button class="btn btn-default"
+                       ng-click="resetPassword(u.email)"
+                       ng-hide="u.perms == 'r'">
+                       <i class="icon-key"></i> Reset Password</button></td>
+                {% endraw %}
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="center" ng-show="users.length>0">
+            <pagination class="pagination-sm"
+                        ng-model="pagination.currentPage"
+                        ng-change="pagination.setPage()"
+                        total-items="pagination.totalItems"
+                        items-per-page="pagination.limit"
+                        max-size="pagination.maxSize"
+                        boundary-links="true"
+                        num-pages="pagination.pages">
+            </pagination>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+{{ user_management() }}

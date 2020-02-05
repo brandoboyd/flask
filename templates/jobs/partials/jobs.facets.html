@@ -1,0 +1,37 @@
+{%- macro render_jobs_facets() -%}
+{% raw %}
+
+<!-- `is-multi` field should also be metadata-driven -->
+<facet-panel ng-repeat="(key, facet) in vm.facets"
+      facet-title="{{ facet.title }}"
+      facet-tooltip="{{ facet.original_title }}"
+      facet-is-all="facet.all"
+      facet-is-multi="true"
+      facet-update-action="vm.onFacetsChange"
+      facet-options="facet.list"
+>
+      Loading...
+</facet-panel>
+<!-- <facet-panel facet-title="{{ vm.facets.accounts.title }}"
+            facet-tooltip="{{ vm.facets.accounts.original_title }}"
+            facet-is-all="vm.facets.accounts.all"
+            facet-is-multi="true"
+            facet-update-action="vm.onFacetsChange"
+            facet-options="vm.facets.accounts.list">Loading...</facet-panel>
+
+<facet-panel facet-title="{{ vm.facets.names.title }}"
+            facet-tooltip="{{ vm.facets.names.original_title }}"
+            facet-is-all="vm.facets.names.all"
+            facet-is-multi="true"
+            facet-update-action="vm.onFacetsChange"
+            facet-options="vm.facets.names.list">Loading...</facet-panel>
+
+<facet-panel facet-title="{{ vm.facets.status.title }}"
+            facet-tooltip="{{ vm.facets.status.original_title }}"
+            facet-is-all="vm.facets.status.all"
+            facet-is-multi="true"
+            facet-update-action="vm.onFacetsChange"
+            facet-options="vm.facets.status.list">Loading...</facet-panel> -->
+
+{% endraw %}
+{% endmacro %}

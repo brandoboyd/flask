@@ -1,0 +1,68 @@
+{% raw %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4>Posts
+        <a ng-href="#/threads/{{user_id}}" class="btn btn-success pull-right">Back to Threads</a>
+        </h4>
+    </div>
+</div>
+<div ng-repeat="item in thread"
+     class="response-wrap">
+
+    <table class="response ng-cloak"
+           style="background-color:#fff; width:100%">
+        <tbody>
+        <tr>
+            <td style="padding:5px">
+
+            <span class="label" ng-repeat="i in item.intentions"
+                  ng-class="i.type | lowercase"
+                  position="{{$index}}"
+                  ng-bind-template="{{ i.type}} : {{ i.score }}"
+                  vote-intention intention="{{i.type}}">...Loading</span>
+
+            </td>
+            <td style="border-left: 1px solid #ddd"></td>
+        </tr>
+        <tr>
+            <td class="td-post">
+                <div class="tweet">
+                    <div class="content">
+                        <div class="stream-item-header">
+                            <small class="time">
+                                <span class="_timestamp js-short-timestamp"
+                                      ng-bind="item.created_at | date:'medium'"></span>
+                            </small>
+                            <a class="account-group"
+                               ng-click="getUserProfile(item)">
+                                <img class="avatar"
+                                     ng-src="{{ item.user.profile_image_url || default_profile_url }}"
+                                     alt="{{ item.user.name }}">
+                                <strong class="fullname" ng-bind-html="item.user.screen_name || '<br />'"></strong>
+                            </a>
+                        </div>
+                        <div class="post-content">
+
+                            <p vote-topics='item'></p>
+
+
+                        </div>
+                        <a ng-href="{{item.url}}" ng-show="item.url" target="_blank">Post</a>
+
+                    </div>
+                </div>
+            </td>
+            <td class="td-response" style="width: 50%;border-left: 1px solid #ddd">
+                <div style="padding:5px 10px">
+                    <p ng-bind-html="item.response.match.matchable.creative | linky2"
+                       class="responseText">
+                    </p>
+                </div>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+{% endraw %}

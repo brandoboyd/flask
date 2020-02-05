@@ -1,0 +1,149 @@
+{% from "_macros/journeys.facets.html" import render_journeysFacets -%}
+{% from "_macros/journeys.facets.html" import render_dashoardFacets -%}
+
+<div ng-class="{'default-dashboard': layout.isTypeDefault,
+                'mixed-dashboard': !layout.isTypeDefault}">
+    <div ng-if="!layout.isTypeDefault"
+         ng-show="layout.isFilterShown"
+         class="dashboard-facet-area">
+        {{render_dashoardFacets()}}
+    </div>
+    <div ng-show="!selectedLayout.isDetailView"
+         class="dashboard-content-area"
+         ng-class="{'filter-shown': !layout.isTypeDefault && layout.isFilterShown}">
+        <!--  gridster layout START -->
+        <div ng-include="'partials/dashboard/breadcrumbs'"></div>
+        <div gridster="gridsterOpts" class="dashboard-widget-area">
+            <ul class="widgets">
+                <li gridster-item="widget" ng-repeat="widget in widgets"
+                    ng-style="widget.containerStyle"
+                    class="widget-container"
+                    data-sizex="widget.sizeX"
+                    data-sizey="widget.sizeY"
+                    data-min-sizex="widget.maxSizeX"
+                    data-max-sizey="widget.maxSizeY">
+
+                    <!-- START: Widget Container -->
+
+                    <div class="widget">
+                        <div class="widget-controls">
+                            <div class="widget-drag-button">
+                                <span class="fonticon icon-grab widget-anchor"></span>
+                            </div>
+                            <div class="nav-tabs-collapse" ng-hide="widget.attrs.isAddWidget">
+                                <ul class="nav">
+                                    <li class="ark-dropdown dropdown">
+                                        <a role="button" class="ark-dropdown-toggle nav-tabs-dropdown"><i
+                                                class="icon-more"></i></a>
+                                        <ul class="dropdown-menu nav-tabs-dropdown-menu dropdown-menu-pull-left" style="top: 91%;left: 6px;" role="menu"
+                                            dropdown-menu menu="widgetList.list" widget-actions="widgetList.actions"
+                                            widget-data="widget" default-widget-actions="defaultWidgetActions"></ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="widget-title">
+                            <div class="widget-name-text">{{ '{{widget.attrs.description}}' }}</div>
+                            <div class="widget-title-text">
+                                <a href="" ng-bind="widget.title" ng-click="openWidgetTab(widget)"></a>
+                            </div>
+                        </div>
+
+                        <div class="widget-content">
+                            <div widget='widget' ng-hide="loading" style="height:100%"></div>
+                            <div class="spinner-container fast-spinner widget-spinner" ng-show="loading">
+                                <div class="spin-circle"></div>
+                                <div class="spin-inner-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END: Widget Container -->
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div ng-if="selectedLayout.isDetailView"
+         class="dashboard-content-area details-view"
+         ng-class="{'filter-shown': !layout.isTypeDefault && layout.isFilterShown}">
+         <div ng-include=" 'partials/dashboard/breadcrumbs' "></div>
+        <div ng-include=" 'partials/dashboard/dashboard-details-view' "></div>
+    </div>
+
+    <div style="clear:both"></div>
+</div>
+
+<style>
+    .dashboard-facet-area {
+        background-color: #f5f5f5;
+        border-right: 1px solid #eee;
+        padding: 20px 20px 0 20px;
+        float: left;
+        width: 300px;
+        height: 85vh;  /* Workaround: Safari doesn't support calc */
+        height: calc(100vh - 120px); /* Use height: calc(100vh ~"-" 50px) for less */
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    .dashboard-content-area {
+        float: left;
+        width: 100%;
+        background-color: #e6ebf1;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 0;
+    }
+    .dashboard-content-area.filter-shown {
+        width: calc(100% - 300px);
+    }
+    .dashboard-content-area.details-view {
+        background-color: #fff;
+    }
+    .scrtabs-tabs-movable-container {
+        z-index: 1000;
+    }
+    .scrtabs-tab-scroll-arrow {
+        z-index: 1001;
+    }
+    .add-widget-container a {
+        display:block;
+        position:relative;
+        top:50%;
+        transform:translateY(-50%);
+    }
+    .dashboard-controls {
+        position: fixed;
+        z-index: 999;
+        top: 81px;
+        width: 100%;
+        background-color: #5e99ff;
+        padding: 5px 0;
+        border-bottom: 1px solid #e3e9ef;
+    }
+    .dashboard-controls div {
+        margin-right: 5px;
+    }
+    .dashboard-controls a {
+        margin-right: 10px;
+    }
+    .default-dashboard, .mixed-dashboard {
+        width: 100%;
+        min-width: 1068px;
+    }
+    .default-dashboard {
+        position: fixed;
+        top: 81px;
+    }
+    .mixed-dashboard {
+        position: fixed;
+        top: 121px;
+    }
+    .default-dashboard .dashboard-content-area {
+        height: 85vh;
+        height: calc(100vh - 80px);
+    }
+    .mixed-dashboard .dashboard-content-area {
+        height: 85vh;
+        height: calc(100vh - 120px);
+    }
+</style>

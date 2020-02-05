@@ -1,0 +1,161 @@
+{% raw %}
+<div id="newDashboard" class="carousel slide" style="min-height:300px;" data-ride="carousel" data-interval="false">
+    <div class="carousel-inner" role="listbox">
+
+        <span class="fonticon icon-close" ng-click="$dismiss();"
+              style="position: absolute;top:0;right:0;cursor:pointer;font-size: 14px;"></span>
+
+        <div class="item active">
+            <div class="modal-body" style="margin-top: 15%;">
+                <h1 style="text-align: center">Create a New Dashboard from</h1>
+
+                <div class="col-xs-9 col-xs-offset-3" style="margin-top: 50px;">
+                    <div class="col-xs-5">
+                        <button class="btn btn-lg red-pill" ng-click="fromShared()" data-target="#newDashboard"
+                                role="button" data-slide="next">shared dashboards
+                        </button>
+                    </div>
+                    <div class="col-xs-5">
+                        <button class="btn btn-lg blue-pill" ng-click="fromGallery()" data-target="#newDashboard"
+                                role="button" data-slide="next">widget gallery
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item" ng-if="flags.isGallery">
+            <form class="form-horizontal" role="form" name="createForm" ng-keypress="keyPressed($event)">
+                <div class="modal-header">
+                    <h1 style="text-align: left;">Choose Gallery:</h1>
+                </div>
+
+                <div class="spinner-container" style="margin:auto" ng-hide="flags.isFetched">
+                    <div class="spin-circle"></div>
+                    <div class="spin-inner-circle"></div>
+                </div>
+
+                <div class="modal-body" style="margin-top: 15px;" ng-show="flags.isFetched">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+
+                            <div class="col-sm-4" style="padding-left: 0;">
+                                <input type="text" ng-model="dashboardTitle" class="form-control" placeholder="Enter Dashboard Name">
+                            </div>
+
+                            <div class="filter-container pull-right" style="margin-bottom: 15px;">
+                                <div class="input-container">
+                                    <input type="text" ng-model="galleryFilters.display_name"
+                                           class="form-control filter-search-box"
+                                           placeholder="Search by Type">
+                                    <span class="icon-search search-box-icon"></span>
+                                    <span class="icon-close search-box-cancel"
+                                          ng-click="galleryFilters.display_name = ''"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                            <div class="col-sm-12">
+                                <table class="table table-default">
+                                    <thead>
+                                    <tr>
+                                        <th width="80px;"></th>
+                                        <th>Type</th>
+                                        <th>Name</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="type in dashboardTypes | filter:galleryFilters">
+                                        <td>
+                                            <label class="checkbox">
+                                                <input type="checkbox" class="ark-checkbox" ng-model="type.selected" ng-change="selectType(type)"><span></span>
+                                            </label>
+                                        </td>
+                                        <td>{{type.type}}</td>
+                                        <td>{{type.display_name}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-default pull-left" data-target="#newDashboard" role="button"
+                            data-slide="prev" ng-click="back()">Back
+                    </button>
+                    <button class="btn btn-primary pull-right" ng-click="buildFromGallery(dashboardTitle)"
+                            ng-disabled="!(selectedType && dashboardTitle)">Create
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="item" ng-if="flags.isShared" style="margin-top: 15px;">
+            <div class="modal-header">
+                <h1 style="text-align: left;">Shared Dashboards</h1>
+            </div>
+
+            <div class="spinner-container" style="margin:auto" ng-hide="flags.isFetched">
+                <div class="spin-circle"></div>
+                <div class="spin-inner-circle"></div>
+            </div>
+
+            <div class="modal-body" ng-show="flags.isFetched">
+
+                <div class="col-sm-4" style="padding-left: 0;">
+                    <input type="text" ng-model="dashboardTitle" class="form-control" placeholder="Enter Dashboard Name">
+                </div>
+
+                <div class="filter-container pull-right" style="margin-bottom: 15px;">
+                    <div class="input-container">
+                        <input type="text" ng-model="sharedFilters.title"
+                               class="form-control filter-search-box"
+                               placeholder="Search by Type">
+                        <span class="icon-search search-box-icon"></span>
+                                    <span class="icon-close search-box-cancel"
+                                          ng-click="sharedFilters.title = ''"></span>
+                    </div>
+                </div>
+
+                <table class="table table-default" style="margin-bottom: 10%;">
+                    <thead>
+                        <tr>
+                            <th width="80px;"></th>
+                            <th>Name</th>
+                            <th>Owner</th>
+                            <th>Owner email</th>
+                            <th>Created</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="dashboard in sharedDashboards | filter:sharedFilters">
+                        <td>
+                            <label class="checkbox">
+                                <input type="checkbox" class="ark-checkbox" ng-model="dashboard.selected" ng-change="selectShared(dashboard)"><span></span>
+                            </label>
+                        </td>
+                        <td>{{dashboard.title}}</td>
+                        <td>{{dashboard.owner_name}}</td>
+                        <td>{{dashboard.owner_email}}</td>
+                        <td>{{dashboard.created * 1000 | date}}</td>
+                        <td>{{dashboard.type}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default pull-left" data-target="#newDashboard" role="button" data-slide="prev"
+                        ng-click="back()">Back
+                </button>
+                <button class="btn btn-primary pull-right" ng-click="buildFromShared(dashboardTitle)" ng-disabled="!chosenShared.selected">
+                    Create
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endraw %}

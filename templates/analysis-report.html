@@ -1,0 +1,134 @@
+<style>
+    g.tick.zero text {
+        text-anchor: end !important;
+    }
+    .nvd3 rect[height="1"] {
+        display: none !important;
+    }
+</style>
+{% raw %}
+<div class="row">
+    <!--Reports List-->
+    <div style="position:fixed;border-right: 1px solid #e4e9f0;">
+        <div class="side-tabs-container" style="position:relative;padding-left: 10px;">
+            <h2 style="margin-top: 10px;padding-left: 10px;">Reports</h2>
+            <ul class="nav nav-side-tabs" ng-style="{height: getScrollHeight() + 'px'}" slimscroll="layout.slimscroll">
+                <li ng-repeat="r in reports track by $index" class="report-card" ng-click="viewReport(r)" ng-class="{'active': r.selected}">
+                    <span ng-click="removeReport(r)" ng-if="!report" class="icon-close" style="position:absolute;right:5px"></span>
+                    <h5>
+                        <span class="fonticon icon-doc-report-b"></span>&nbsp;&nbsp;
+                        <span>{{r.title}}</span>
+                    </h5>
+                        <span class="small-body" style="color: #8A8A8A">
+                          {{ r.created_at | date:'MMM d, y HH:mm a' }}&nbsp;&#8226;&nbsp;{{r.analyzed_metric}}
+                        </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pull-left" ng-if="reports.length && ready" id="report-body"
+         style="margin:10px 0 20px 13%;padding:0 4%">
+        <!--Header-->
+        <div class="col-sm-12">
+            <h1>{{report.title}}</h1>
+
+            <div style="position:absolute;top:20px;right:10px;">
+                <span ng-if="report.analysis_type === 'classification'">
+                    <b>Classes:</b>&nbsp;&nbsp;
+                    {{metric_buckets.join(' | ').toString()}}
+                </span>
+                <span ng-if="report.analysis_type === 'regression'">
+                    <b>Range:</b>&nbsp;&nbsp;
+                    {{report.metric_values.join(' - ')}}
+                </span>
+                <br/>
+                <b>Created:</b> {{ report.created_at | date:'MMM d, y HH:mm a' }}
+                <br/>
+                <div class="pull-right" style="margin-top: 30px;position:relative;z-index:10">
+                    <button class="btn btn-default" ng-click="removeReport(report)">Delete</button>
+                    <button class="btn btn-primary" style="margin-right: 10px;" ng-click="exportTable()">Export</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!--Metadata-->
+        <div class="col-sm-12" style="margin-top:40px;">
+            <div class="col-sm-9 no-sides-padding">
+                <span ng-repeat="f in report.parsedFilters">
+                <span style="padding-right:15px;" ng-if="f.value">
+                    <b style="padding-left: 5px;">{{f.key.toLowerCase()}}:</b> {{f.value}}
+                </span>
+            </span>
+            </div>
+            <hr style="margin-top: 40px;"/>
+        </div>
+
+        <!--Visualizations-->
+        <div class="col-sm-12">
+            <nav class="navbar navbar-switch-default" role="navigation">
+                <ul class="nav navbar-nav" data-tabs="tabs" id="tabs">
+                    <li ng-repeat="tab in tabs" ng-class="{'active': tab.active}" ng-click="selectFeature(tab)"
+                        onclick="angular.element(this).tab();">
+                        <a data-target="#{{tab.name}}" data-toggle="tab">{{tab.name}}</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="tab-content">
+                <div class="tab-pane" ng-repeat="tab in tabs" ng-class="{'active': tab.active, 'height400': _.isEmpty(metricData)}" id="{{tab.name}}">
+                    <div class="col-xs-12 no-sides-padding" style="width: {{report.width + 'px'}}">
+                        <h2 style="margin-bottom: 20px;">{{selectedFeature}}&nbsp;&nbsp;<span class="badge" ng-if="selectedFeature !== 'Overall'" tooltip-placement="top" tooltip="{{feature_order_label}}" ng-class="feature_order >= 0.7 ? 'success-back': 'error-back'">{{feature_order}}</span></h2>
+
+                        <div style="margin-bottom:10px">
+                            <button class="btn btn-default btn-sm"
+                                    tooltip="{{flags.showTable ? 'Chart' : 'Table'}}" tooltip-placement="top"
+                                    ng-click="switchView()">
+                                <span class="fonticon" ng-class="flags.showTable ? 'icon-app-chart' : 'icon-app-table'"></span>
+                            </button>
+                            <button class="btn btn-default btn-sm"
+                                    tooltip="{{flags.showBar ? 'Scatter' : 'Bar'}}" tooltip-placement="top"
+                                    ng-show="flags.showSwitchBtns && flags.showCharts"
+                                    ng-click="switchChart()">
+                                <span class="fonticon" ng-class="flags.showBar ? 'icon-scrubber' : 'icon-bar-graph-variable-2'"></span>
+                            </button>
+                        </div>
+
+                        <div class="analysis-card pull-left"
+                             ng-repeat="chart in charts" ng-class="chart.class"
+                             style="height:420px; width: {{chart.width}}%;"
+                             ng-show="flags.showCharts"
+                             ng-if="chart.settings.visible">
+                            <div ng-if="chart.full_data.length">
+                                <h5 class="pull-left" style="margin:5px 10px 10px 10px">{{chart.page}} - {{chart.data.length}} / {{chart.full_data.length}}</h5>
+                                <button class="btn btn-default btn-xs" ng-click="paginate('left', chart)"><span class="fonticon icon-chevron-left"></span></button>
+                                <button class="btn btn-default btn-xs" ng-click="paginate('right', chart)"><span class="fonticon icon-chevron-right"></span></button>
+                            </div>
+                            <h3>{{chart.header}}</h3>
+                            <chart chart-data="chart.data" settings="chart.settings"></chart>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Table-->
+        <div class="col-sm-12" style="margin-top:20px" ng-show="flags.showTable">
+            <!--<div id="classification-results" ng-if="report.analysis_type == 'classification'"></div>-->
+            <!--<div id="regression-results" ng-if="report.analysis_type == 'regression'"></div>-->
+            <div id="table-results"></div>
+        </div>
+
+    </div>
+
+    <h2 ng-show="!reports.length" style="margin-left: 50%;">
+        No Reports
+    </h2>
+
+</div>
+<div class="spinner-container" style="position:fixed;top:45%;left:50%" ng-hide="ready || !reports.length">
+    <div class="spin-circle"></div>
+    <div class="spin-inner-circle"></div>
+</div>
+{% endraw %}

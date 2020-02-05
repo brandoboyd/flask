@@ -1,0 +1,28 @@
+{% raw %}
+<div class="row">
+    <div class="col-sm-12">
+        <h4>Threads
+            <a ng-href="/contacts" class="btn btn-success pull-right">Back to Users</a>
+        </h4>
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="alert" ng-cloak ng-hide="threads.length">There are no posts by this user</div>
+        <table class="table table-striped">
+            <thead></thead>
+            <tbody>
+            <tr ng-repeat="thread in threads">
+                <td><a ng-href="#/threads/{{user_id}}/{{thread.id}}">
+                    {{thread.root_post.text}}</a>
+                    <span class="pull-right">{{ thread.last_modified|date:"medium" }}</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endraw %}

@@ -1,0 +1,103 @@
+{% raw %}
+<h3 style="margin-left: 10%;">
+    {{title === 'Create' ? 'New' : 'Update'}} Message
+</h3>
+{% endraw %}
+<button class="btn btn-default btn-xs"
+        style="position: absolute;top:0"
+        ng-click="redirectAllMessages()" tooltip-placement="top" tooltip="All Messages"><span class="fonticon icon-arrow-left"></span></button>
+<hr/>
+<form name="form" class="form-horizontal" novalidate>
+    <fieldset>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="creative">Creative&nbsp;<span class="asterisk">*</span></label>
+            <div class="col-sm-7">
+                <textarea id="creative"
+                          rows="3"
+                          class="form-control"
+                          placeholder="Enter the creative"
+                          ng-disabled="matchable.perm == 'r'"
+                          ng-model="matchable.creative"
+                          required>
+                </textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="messageTags">Topics</label>
+            <div class="col-sm-7">
+                {# <input id="messageTags"
+                       name="messageTags"
+                       class="form-control"
+                       placeholder="Enter the topics"
+                       ng-disabled="matchable.perm == 'r'"
+                       s2-readonly="matchable.perm == 'r'"
+                       message-tags
+                       ng-model="matchable.topics"/> #}
+                <input id="messageTags"
+                       class="form-control"
+                       placeholder="Select the topics"
+                       ng-disabled="tagItem.perm == 'r'"
+                       s2-readonly="matchable.perm == 'r'"
+                       ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                       ng-model="matchable.topics"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="messageIntentions">Intentions</label>
+            <div class="col-sm-7">
+                {% raw %}
+                <ui-select id="messageIntentions" multiple ng-model="chosenIntentions" theme="select2" ng-disabled="matchable.perm=='r'"
+                           class="form-control" on-select="addIntention($item)" on-remove="removeIntention($item)">
+                    <ui-select-match placeholder="Select the intentions">{{$item.display}}</ui-select-match>
+                    <ui-select-choices repeat="o in fullIntentions | propsFilter: {label: $select.search, display: $select.search}">
+                        <div ng-bind-html="o.display | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                {% endraw %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="channels">Channel&nbsp;<span class="asterisk">*</span></label>
+            <div class="col-sm-7">
+                {% raw %}
+                <ui-select id="channels" ng-model="chosenChannel" theme="select2" ng-disabled="matchable.perm=='r'"
+                           class="form-control" on-select="addChannel($select.selected)">
+                    <ui-select-match placeholder="Select the channels">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="o in fullChannelList | propsFilter: {id: $select.search, title: $select.search}">
+                        <div ng-bind-html="o.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                {% endraw %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="language">Language</label>
+            <div class="col-sm-7">
+                {% raw %}
+                <ui-select id="language" ng-model="chosenLang" theme="select2" ng-disabled="matchable.perm=='r'"
+                           class="form-control" on-select="addLang($select.selected)">
+                    <ui-select-match placeholder="Select the languages">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="o in fullLanguages | propsFilter: {code: $select.search, title: $select.search}">
+                        <div ng-bind-html="o.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                {% endraw %}
+            </div>
+        </div>
+
+        <div class="form-group form-actions">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="button"
+                        class="btn btn-primary"
+                        ng-disabled="saveButtonDisabled()"
+                        ng-click="save()">{{"title"|ng}}</button>
+            </div>
+        </div>
+
+    </fieldset>
+</form>

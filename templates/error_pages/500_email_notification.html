@@ -1,0 +1,18 @@
+<html>
+
+There was an unhandled error in production. We got unhandled error:
+<body>
+    <b>{{ error_message }}</b>
+    <br/>
+    Please check production logs for full stacktrace.
+    <br/>
+
+    {% if system_info %}
+        <br/>
+        System information at the time of the failure:
+        <br/>
+        {{ system_info|safe }}
+    {% endif %}
+</body>
+
+</html>

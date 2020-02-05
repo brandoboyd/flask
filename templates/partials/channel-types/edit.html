@@ -1,0 +1,131 @@
+{% raw %}
+<div class="configure-schema-header">
+    <h3 style="margin-left: 30px;">
+      {{ entityName ? "Update " + "&ldquo;" + entityName + "&rdquo;" + " Channel Type" : "New Channel Type" }}
+    </h3>
+    <a href="#/channel_types">
+      <button class="btn btn-default btn-xs"
+              style="position: absolute;top:0"
+              tooltip-placement="top"
+              tooltip="All Channel Types">
+        <span class="fonticon icon-arrow-left"></span>
+      </button>
+    </a>
+</div>
+
+<hr />
+
+<div class="configure-schema">
+<form class="form-horizontal" name="ChannelTypeForm">
+  <fieldset>
+    <div class="row form-group">
+      <div class="col-sm-6"
+         ng-class="{'has-error': ChannelTypeForm.name.$error.required && ChannelTypeForm.name.$dirty}">
+        <label class="col-sm-3 control-label"
+               for="channel_type">
+          Name <span class="asterisk">*</span>
+        </label>
+
+        <div class="col-sm-9">
+          <input type="text" class="form-control"
+                name="name" id="entity_name"
+                ng-model="entity.name"
+                ng-required="true"
+                ng-minlength="2"
+                placeholder="Channel type name must be at least 2 characters long">
+          <span ng-show="ChannelTypeForm.name.$error.minlength && ChannelTypeForm.name.$dirty"
+                class="help-block error">Channel type name must be at least 2 characters long
+          </span>
+          <span ng-show="ChannelTypeForm.name.$error.required && ChannelTypeForm.name.$dirty"
+                class="help-block error">Channel type name must not be empty
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-sm-6">
+        <label class="col-sm-3 control-label"
+               for="channel_description">
+          Description
+        </label>
+
+        <div class="col-sm-9">
+          <textarea class="form-control"
+                    ng-model="entity.description"
+                    id="channel_description"
+                    placeholder="Short description to better identify the channel type"
+                    rows="3">
+          </textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group" style="margin-top:20px">
+
+      <div class="col-sm-12">
+        <div class="lead">
+          Attributes
+          <!-- <span class="icon-iw-active-circle-question" style="font-size:12px" tooltip="Channel Type Attributes" tooltip-placement="top"></span> -->
+        </div>
+        <hr/>
+      </div>
+
+      <div class="form-group"
+           ng-show="entity.schema.length"
+           style="margin-bottom:5px;">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2">Display Name</div>
+        <div class="col-sm-2">Type</div>
+      </div>
+
+      <div class="form-group"
+           ng-repeat="attribute in entity.schema track by $index">
+        <div class="col-sm-1">
+          <span class="fonticon icon-circle-close pull-right" style="font-size: 18px;"
+            ng-click="onRemoveAttribute($event, $index)"
+            ng-disabled="entity.is_locked"
+            ng-show="!entity.is_locked"></span>
+        </div>
+        <div class="col-sm-2"
+              ng-class="{'has-error': !attribute.name && hasError}">
+          <input  class="form-control"
+                  ng-model="attribute.name"
+                  ng-disabled="entity.is_locked" />
+        </div>
+        <div class="col-sm-2"
+              ng-class="{'has-error': !attribute.type && hasError}">
+          <select class="form-control"
+                  ng-model="attribute.type"
+                  ng-disabled="entity.is_locked"
+                  ng-options="d.value as d.text for d in attributeTypes">
+            <option value="" disabled>-- attribute type --</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-4 col-sm-offset-1">
+          <button class="btn btn-default"
+                  ng-click="onAddAttribute($event)"
+                  ng-disabled="entity.is_locked">
+            Add New Attribute
+          </button>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+</form>
+
+<form class="form-horizontal">
+    <div class="form-group form-actions">
+        <div class="col-sm-offset-1 col-sm-4">
+            <button class="btn btn-primary"
+                    style="margin-right:5px"
+                    ng-disabled="ChannelTypeForm.$invalid"
+                    ng-click="onSaveEntity()">{{ entityName ? "Update" : "Create" }}
+            </button>
+        </div>
+    </div>
+</form>
+{% endraw %}

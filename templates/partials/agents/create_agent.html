@@ -1,0 +1,125 @@
+<style>
+    input[type='text'] {
+        width: 345px !important;
+    }
+</style>
+<div class="row" style="margin-top: 20px">
+    <div class="span7">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Channel:</label>
+                <div class="controls">
+                    <select ng-model="channel" ng-options="c.title for c in channels">
+                        <option>Loading...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="first_name">First Name:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="agent.first_name" id="first_name"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="last_name">Last Name:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="agent.last_name" id="last_name"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="age">Age:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="agent.age" id="age"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="sex">Sex:</label>
+                <div class="controls">
+                    <select id="sex"
+                            ng-model="agent.sex"
+                            class="input-block-level">
+                        <option value="M">M</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="seniority">Seniority:</label>
+                <div class="controls">
+                    {% raw %}
+                    <select id="seniority"
+                            ng-model="agent.seniority"
+                            class="input-block-level">
+                        <option value="{{ o.id }}"
+                                ng-repeat="o in options.agent_seniority">{{ o.title }}</option>
+                    </select>
+                    {% endraw %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="occupancy">Occupancy:</label>
+                <div class="controls">
+                    <input type="checkbox"
+                           ng-checked="agent.occupancy"
+                           id="occupancy"
+                           ng-model="agent.occupancy">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="english_fluency">English fluency:</label>
+                <div class="controls">
+                    {% raw %}
+                    <select id="english_fluency"
+                            ng-model="agent.english_fluency"
+                            class="input-block-level">
+                        <option value="{{ o.id }}"
+                                ng-repeat="o in options.english_fluency">{{ o.title }}</option>
+                    </select>
+                    {% endraw %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="location">Location:</label>
+                <div class="controls">
+                    {% raw %}
+                    <select id="location"
+                            ng-model="agent.location"
+                            class="input-block-level">
+                        <option value="{{ o.id }}"
+                                ng-repeat="o in options.location_labels">{{ o.title }}</option>
+                    </select>
+                    {% endraw %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="products">Products:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="agent.products" id="products"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="skills">Skills:</label>
+                <div class="controls">
+                    {% raw %}
+                    <select id="skills"
+                            ui-select2
+                            ng-model="agent.skills"
+                            multiple="multiple"
+                            class="input-block-level">
+                        <option value="{{ o.id }}" ng-repeat="o in options.intent">{{ o.title }}</option>
+                    </select>
+                    {% endraw %}
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <a class="btn btn-default"
+                       ng-click="createAgent()">Create</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+

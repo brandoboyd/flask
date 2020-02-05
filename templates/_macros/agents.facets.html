@@ -1,0 +1,13 @@
+{%- macro render_agentsFacets() -%}
+
+<div>
+    <facet-panel facet-title="All Age Groups"
+                facet-tooltip="View data by all or a selection of age groups"
+                facet-is-all="facets.age_groups.all"
+                facet-is-multi="true"
+                facet-update-action="updateFacets"
+                facet-options="facets.age_groups.list">Loading</facet-panel>
+</div>
+{% endmacro %}
+
+

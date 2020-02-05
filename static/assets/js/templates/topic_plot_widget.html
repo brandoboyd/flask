@@ -1,0 +1,25 @@
+<div>
+<div ng-repeat="item in items" class="barRow">
+    <span class="barL"> {{ item.name }} ({{ item.width }}%)</span>
+    <div class="barR">
+        <span style="text-align: right;">{{ item.count }}</span>
+        <button class="btn btn-xs btn-default pull-right"
+                ng-show="item.sub != null"
+                ng-click="toggleSub()"
+                style="margin-left:10px"><i ng-class="{false : 'icon-plus', true : 'icon-minus'}[isSubVisible]"></i></button>
+    </div>
+    <div class="progress">
+        <div class="bar" topic-plot-bar="item"></div>
+    </div>
+    <div class="subTopicBar clearfix" style="margin-left:50px" ng-show="isSubVisible">
+        <div ng-repeat="sub in item.sub" class="clearfix">
+            <span class="barL"> {{ sub.name }} ({{ sub.width }}%)</span>
+            <span class="barR" style="text-align: left;">{{ sub.count }}</span>
+
+            <div class="progress">
+                <div class="bar bar-warning" topic-plot-bar="item"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

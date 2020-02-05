@@ -1,0 +1,74 @@
+{% raw %}
+<div class="modal-header">
+  <div class="clearfix">
+    <h3 class="pull-left">Discover Schema</h3>
+    <a class="close pull-right" ng-click="cancel()">
+      <span class="icon-close"></span>
+    </a>
+  </div>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" name="uploadForm">
+    <div class="form-group">
+      <label class="control-label col-sm-4">
+        Separator <span class="asterisk">*</span>
+      </label>
+      <div class="col-sm-8">
+        <select class="form-control" name="separator" id="separator"
+          ng-model="form.separator"
+          ng-options="item.value as item.text for item in separtors"
+          ng-required="true">
+          <option value="" disabled>-- choose a separator --</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-4">
+        Source File <span class="asterisk">*</span>
+      </label>
+      <div class="col-sm-8">
+        <div ng-if="!form.selectedFile">
+          <button
+            class="btn btn-default" tooltip="Import" tooltip-placement="top"
+            ngf-select="onImportFile($files)"
+            accept=".csv">
+                Select File
+          </button>
+        </div>
+        <div ng-if="form.selectedFile" style="padding-top:5px">
+          <div
+             ng-if="uploadingFile"
+             round-progress
+             max="100"
+             current="progress"
+             color="#45ccce"
+             bgcolor="#eaeaea"
+             radius="8"
+             stroke="4"
+             semi="false"
+             rounded="false"
+             clockwise="false"
+             responsive="false"
+             duration="800"
+             iterations="1"
+             animation="easeInOutQuart"
+             style="vertical-align:middle">
+          </div>
+          <span ng-if="uploadingFile">Uploading now...</span>
+          <span ng-if="!uploadingFile">{{form.selectedFile.name}}</span>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button ng-click="onCloseDialog()" class="btn btn-default">Cancel</button>
+  <button
+    class="btn btn-primary"
+    ng-disabled="uploadingFile || (!uploadingFile && (!form.separator || !form.selectedFile))"
+    ng-click="onUploadFile()">
+        Upload
+  </button>
+</div>
+{% endraw %}

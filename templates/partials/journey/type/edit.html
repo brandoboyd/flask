@@ -1,0 +1,275 @@
+{% macro journey_type_form(form='journeyTypeForm') %}
+<form name="{{ form }}" class="form-horizontal" novalidate>
+    <fieldset>
+        <div class="form-group"
+             ng-class="{'has-error': {{ form }}.id_name.$dirty && {{ form }}.id_name.$invalid || {{ form }}.id_name.$overflow}">
+            <label class="col-sm-2 control-label"
+                   for="id_name">Name <span class="asterisk">*</span></label>
+            <div class="col-sm-8">
+                <input type="text"
+                       placeholder="Journey type name"
+                       ng-model="item.display_name"
+                       my-maxlength="40"
+                       id="id_name"
+
+                       class="form-control"
+                       ng-required="true" />
+
+                <span ng-show="{{ form }}.id_name.$dirty && {{ form }}.id_name.$error.required"
+                      class="help-block error">Journey type name is required</span>
+                <span ng-show="{{ form }}.id_name.$overflow"
+                      class="help-block error">Journey type name is too long</span>
+
+            </div>
+        </div>
+
+        <div class="form-group"
+             ng-class="{'has-error': {{ form }}.id_desc.$dirty && {{ form }}.id_desc.$invalid}">
+            <label class="col-sm-2 control-label"
+                   for="id_desc">Description </label>
+            <div class="col-sm-8">
+                <textarea ng-model="item.description"
+                          id="id_desc"
+                          class="form-control"
+                          placeholder="Short description to better identify the journey">
+                </textarea>
+            </div>
+        </div>
+
+        {% raw %}
+        <div class="row form-group"
+             style="margin-top:20px" ng-if="item.id">
+
+            <div class="col-sm-12">
+                <div class="lead">
+                    Journey Attributes
+                </div>
+                <hr/>
+            </div>
+            <div class="form-group"
+                 style="margin-bottom:5px;">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-2">Label</div>
+                <div class="col-sm-2">Type</div>
+                <div class="col-sm-5">
+                    Expression
+                    &nbsp;<span class="icon-iw-active-circle-question"
+                                tooltip="Define expression using arithmetic operations (+, -, *, /), Python 2.7 built-in functions and fields accessing by @ hotkey"
+                                tooltip-placement="top"></span>
+                </div>
+            </div>
+            <div class="form-group"
+                 ng-repeat="feature in item['journey_attributes_schema'] track by $index">
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-sm-1">
+                        <span class="fonticon icon-circle-close pull-right" style="font-size: 18px;"
+                              ng-click="onRemoveFeature($event, item['journey_attributes_schema'], $index)"></span>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text"
+                                class="form-control"
+                                ng-model="feature.label"
+                        >
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control"
+                                ng-model="feature.type"
+                                ng-options="d.id as d.text for d in fieldTypes">
+                            <option value="" disabled>-- feature type --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-5">
+
+                        <!--Expression builder-->
+                        <textarea class="form-control"
+                                  rows="1"
+                                  id="expression_builder"
+                                  mentio
+                                  mentio-id="'expression_bldr'+$index"
+                                  mentio-typed-term="typedTerm"
+                                  ng-model="feature.field_expr"
+                        ></textarea>
+
+                        <mentio-menu mentio-for="'expression_bldr'+$index"
+                                     mentio-trigger-char="'@'"
+                                     mentio-items="_availableFields"
+                                     mentio-template-url="/expressions.tpl"
+                                     mentio-search="searchExpressions(term)"
+                                     mentio-select="getTextRaw(item)"></mentio-menu>
+
+                        <script type="text/ng-template" id="/expressions.tpl" ng-if="feature.type!=='label'">
+                            <ul class="list-group fields-search" ng-if="items" style="height: 300px;overflow-y: scroll;">
+                                <li mentio-menu-item="exp" ng-repeat="exp in items" class="list-group-item">
+                                    <span ng-bind-html="exp | mentioHighlight:typedTerm:'menu-highlighted' | unsafe"></span>
+                                </li>
+                            </ul>
+                        </script>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <button class="btn btn-default" ng-click="onAddFeature($event, 'journey_attributes_schema')" >
+                        Add New Attribute
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endraw %}
+
+
+        {% raw %}
+        <div class="row form-group"
+             style="margin-top:20px"
+             ng-if="item.id">
+
+            <div class="col-sm-12">
+                <div class="lead">
+                    Journey Stages
+                </div>
+                <hr/>
+            </div>
+            <div class="form-group"
+                 style="margin-bottom:5px;">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-2">Name</div>
+                <div class="col-sm-2">Status</div>
+                <div class="col-sm-5">
+                    Expression
+                    &nbsp;<span class="icon-iw-active-circle-question"
+                                tooltip="Define expression using arithmetic operations (+, -, *, /), Python 2.7 built-in functions and fields accessing by @ hotkey"
+                                tooltip-placement="top"></span>
+                </div>
+            </div>
+            <div ng-repeat="st in stage.items track by $index">
+
+                <div ng-class-odd="'odd'" ng-class-even="'even'">
+                    <div class="row">
+
+                        <div class="col-sm-1">
+                            <span class="fonticon icon-circle-close pull-right" style="font-size: 18px;"
+                                  ng-click="stage.removeStage($event, st, $index)"></span>
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="form-control"
+                                   ng-model="st.display_name" />
+                        </div>
+                        <div class="col-sm-2">
+                            <select ng-model="st.status"
+                                    ng-options="opt.id as opt.text for opt in options.stageStatuses"
+                                    name="id_status"
+                                    class="form-control"
+                                    tabindex="1"
+                                    required ></select>
+                        </div>
+                        <div class="col-sm-5">
+
+                            <!--Expression builder-->
+                            <textarea class="form-control"
+                                      rows="1"
+                                      id="expression_builder"
+                                      mentio
+                                      mentio-id="'expression_builder'+$index"
+                                      mentio-typed-term="typedTerm"
+                                      ng-model="st.match_expression"
+                            ></textarea>
+
+                            <mentio-menu mentio-for="'expression_builder'+$index"
+                                         ng-if="feature.type!=='label'"
+                                         mentio-trigger-char="'@'"
+                                         mentio-items="_availableFields"
+                                         mentio-template-url="/expressions.tpl"
+                                         mentio-search="searchExpressions(term)"
+                                         mentio-select="getTextRaw(item)"></mentio-menu>
+
+                            <script type="text/ng-template" id="/expressions.tpl" ng-if="feature.type!=='label'">
+                                <ul class="list-group fields-search" ng-if="items" style="height: 300px;overflow-y: scroll;">
+                                    <li mentio-menu-item="exp" ng-repeat="exp in items" class="list-group-item">
+                                        <span ng-bind-html="exp | mentioHighlight:typedTerm:'menu-highlighted' | unsafe"></span>
+                                    </li>
+                                </ul>
+                            </script>
+
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:20px">
+                        <div class="col-sm-3" style="text-align: right">
+                            <label>Events</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <ng-form name="eventsSubForm">
+                                <ui-select multiple
+                                           tagging
+                                           tagging-label="false"
+                                           ng-model="st.event_types"
+                                           name="stageEvents"
+                                           ng-required="true"
+                                           theme="select2"
+                                           class="form-control"
+                                           title="Choose an event type">
+                                    <ui-select-match placeholder="Select events...">
+                                        <a href="" ng-click="showEventTypeModal($item)">{{$item.platform}}.{{$item.name}}</a>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="et in options.eventTypes | filter:$select.search">
+                                        {{et.display_name}}
+                                    </ui-select-choices>
+                                </ui-select>
+
+                                <span ng-show="eventsSubForm.stageEvents.$dirty && eventsSubForm.stageEvents.$invalid"
+                                      class="help-block error">Event type name must be at least 2 characters long</span>
+                            </ng-form>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="form-group" style="margin-top:20px">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <button class="btn btn-default" ng-click="onAddStage($event, 'attributes')">
+                        Add New Stage
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endraw %}
+
+
+        <div class="form-group form-actions">
+            <div class="col-sm-offset-2 col-sm-4">
+            <button type="button"
+                    class="btn btn-primary"
+                    ng-click="save()"
+                    ng-disabled="!{{ form }}.$valid">{{'title'|ng}}</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+{% endmacro %}
+
+
+{% raw %}
+<h3 style="margin-left: 30px;">
+    {{ item ? "Update " + "&ldquo;" + item.display_name + "&rdquo;" : "New " }} Journey Type
+</h3>
+{% endraw %}
+
+
+
+
+<a href="#/journey_types/">
+    <button class="btn btn-default btn-xs" style="position: absolute;top:0"
+            tooltip-placement="top"
+            tooltip="All Journey Types">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+
+<hr>
+
+
+{{ journey_type_form() }}

@@ -1,0 +1,67 @@
+<div style="margin-top:5px;">
+    <div class="row form-group"><div class="col-md-3">
+        <div class="pull-left" style="margin-top:-70px">
+            <span style="line-height: 25px">View topics by</span>
+            <select class="form-control" ng-model="options.cloud_type">
+                <option value="none" label="Most Popular"></option>
+                <option value="delta" label="Trending"></option>
+            </select>
+        </div>
+    </div></div>
+    <div class="alert alert-info text-center"
+         ng-show="!hotTopics.length">
+        <i class="icon-alert-circle"></i>
+        No Data Available
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <ul class="tagcloud maincloud"
+                ng-show="hotTopics.length"
+                ng-cloak>
+                {% raw %}
+
+                <li ng-repeat="item in hotTopics | filter:search | orderBy:'topic':reverse"
+                    ng-click="activate(item, false); getPunks(item)"
+                    ng-class="[item.active]"
+                    ng-style="getTopicSize(item.term_count)['log']">
+                    <i class="icon-circle-add"
+                       ng-show="item.term_count != item.topic_count && !item.active"
+                       style="font-size:12px; vertical-align: middle"></i>
+                    <i class="icon-agent-status-busy"
+                       ng-show="item.term_count != item.topic_count && item.active"
+                       style="font-size:12px; vertical-align: middle"></i>
+                    <i class="icon-checkbox-tick"
+                       ng-show="getSelectedClass(item) == 'selected'"
+                       style="font-size:12px; vertical-align: middle"></i>
+                    <span style="cursor:pointer"
+                          ng-bind="item.topic">
+                    </span>
+                </li>
+
+                {% endraw %}
+            </ul>
+        </div>
+        <div class="col-sm-6">
+            <ul class="tagcloud subcloud"
+                ng-show="punks.length > 0"
+                ng-cloak>
+                {% raw %}
+
+                <li ng-repeat="item in punks | filter:search"
+                    style="color:#d62b72"
+                    ng-style="getTopicSize(item.term_count)['log']">
+                    <i class="icon-checkbox-tick"
+                       ng-show="getSelectedClass(item) == 'selected'"
+                       style="font-size:12px; vertical-align: middle"></i>
+                    <span ng-click="activate(item, false)"
+                          style="cursor:pointer"
+                          ng-bind="item.topic"
+                          ng-class="{node_term: (item.term_count != item.topic_count) }"></span>
+                </li>
+
+                {% endraw %}
+            </ul>
+        </div>
+
+    </div>
+</div>

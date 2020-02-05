@@ -1,0 +1,99 @@
+{% extends "omni/partials/journeys/_template.html" %}
+
+{% block journeys_tpl_title %}
+Journeys Flow
+{% endblock %}
+
+{% block journeys_tpl_right_filter %}
+<div class="col-sm-4">
+  <span style="line-height: 25px;">Labeling Strategy</span><br />
+  <select ng-model="labeling.strategy"
+          id="labelingStrategy"
+          class="form-control">
+    <option value="default" label="Default">Default</option>
+    <option value="channel" label="By Platform">By Platform</option>
+    <option value="event" label="By Event Type">By Event Type</option>
+  </select>
+</div>
+
+<div class="col-sm-4">
+  <span style="line-height: 25px;">Group By</span><br />
+  <select ng-model="sankeyGroup"
+          id="sankeyGroups"
+          class="form-control"
+          ng-options="item.type for item in sankeyGroupings">
+    <option value="" ng-if="false"></option>
+  </select>
+</div>
+
+{% endblock %}
+
+{% block journeys_tpl_body %}
+<div id="modeHint" ng-show="sankeyMode">
+  Shift+Click: Drill Down Mode
+</div>
+<div class="analysis-card"
+     drag-scroll
+     style="margin-bottom:100px;
+            overflow:auto;
+            height:100%;
+            max-height:550px;">
+
+    <chart style="cursor: -webkit-grab;
+                  cursor: -moz-grab;
+                  cursor: grab;"
+           chart-data='data'
+           settings='extra_settings'>
+    </chart>
+</div>
+
+<style>
+  html, body {
+    height: 100%
+  }
+
+  text.nodeLabel {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 10px;
+    fill: #fff;
+    text-shadow: 1px 1px 0 #000 !important;
+  }
+
+  text.nodeValue {
+    text-shadow: 0 1px 0 #fff;
+    font-size: 12px;
+    text-transform: capitalize;
+  }
+
+  .node.dimmed {
+    opacity: 0.3;
+  }
+
+  svg .node.dimmed rect {
+    cursor: not-allowed;
+  }
+
+  svg {
+    display: block;
+  }
+
+  svg .highlight {
+    fill: orange !important;
+    fill-opacity: 0.5;
+  }
+
+  #modeHint {
+    position: fixed;
+    right: 17px;
+    top: 10%;
+    background-color: #f5f5f5;
+    color: #333;
+    font-size: 16px;;
+  }
+
+  .link.link-selected {
+    stroke-opacity: 1 !important;
+  }
+</style>
+{% endblock %}

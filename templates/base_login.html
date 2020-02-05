@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{config.PLATFORM_TITLE or "Social Analytics"}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/static/assets/img/gen_logomark_16px_col.ico">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100,300' rel='stylesheet' type='text/css'>
+    <!-- Le styles -->
+
+    {% include 'assets/css.html' ignore missing %}
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src="/static/assets/vendor/angular/angular.min.js"></script>
+</head>
+
+<body ng-app="appLogin">
+
+<div class="ark-login" style="margin-top:5%">
+    <div class="container">
+        <div class="branding">
+            <img src="/static/assets/img/genesys-logo.png" class="logo"/>
+        </div>
+        <div class="well">
+
+                <div class="form-group">
+                    <h2 style="visibility: hidden">{{config.PLATFORM_TITLE or "Social Analytics"}}</h2>
+                    {% block body %} {% endblock%}
+                </div>
+
+        </div>
+    </div>
+</div>
+
+<footer genesys-logo-link="/static/assets/img/genesys-logo.png" class="ark-footer" style="position: absolute; bottom:0">
+    <div class="large-footer">
+        <div class="copyright">@ 2016 Genesys</div>
+        <div class="rsection">
+            <div class="version">
+                v {{config.PLATFORM_VERSION}}
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<script>
+    angular.module('appLogin', [])
+        .controller('loginCtrl', function ($scope) {
+            $scope.is_privacy = true;
+            $scope.hash_url = window.location.hash;
+        });
+</script>
+</body>
+</html>

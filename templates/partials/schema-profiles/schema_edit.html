@@ -1,0 +1,181 @@
+{% raw %}
+<div ng-controller="SchemaProfileEditCtrl" class="row edit-tab">
+  <div class="col-md-12">
+    <div class="alert alert-warning text-center" ng-if="!profile">
+      <i class='icon-alert-triangle'></i> Please upload data source and derive the schema.
+    </div>
+
+    <div class="alert alert-warning text-center" ng-if="profile.sync_status=='IMPORTING'">
+      <i class='icon-alert-triangle'></i> Please wait until loading data gets finished.
+    </div>
+
+    <div class="alert alert-info text-center" ng-if="profile.sync_status=='SYNCED'">
+      <span ng-if="!rowsLost">{{profile.items_synced}} rows have been synchronized.</span>
+      <span ng-if="rowsLost > 0">{{profile.items_synced}} rows have been synchronized, {{rowsLost}} rows have been dismissed due to type mismatch.</span>
+      <span class="q-sign"
+           ng-if="rowsLost > 0"
+           tooltip-placement="right"
+           tooltip-trigger="mouseenter"
+           tooltip="Show synchronization errors"
+           ng-click="onShowErrors()">
+          <i class="icon-iw-active-circle-question"></i>
+      </span>
+      <br/>
+      <br/>
+      <button
+          ng-click="onAcceptSchema()"
+          ng-disabled="dataset.items_synced < 1"
+          class="btn btn-default">Accept Schema
+      </button>
+      <button
+          ng-click="onCancelSchema()"
+          class="btn btn-default">Cancel Schema
+      </button>
+    </div>
+  </div>
+
+  <div class="alert alert-info text-center" ng-if="profile.schema.length > 0 && !wrapper.id_field">
+    <i class='icon-alert-triangle'></i> Please mark a field as ID_Field to be able to save a schema. This field will be treated as a unique identifier for the profile data
+  </div>
+
+  <div class="col-md-12" ng-if="profile">
+    <form class="form-horizontal" name="ProfileEditForm">
+      <fieldset>
+        <div class="form-group" style="margin-bottom:5px;">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-1"></div>
+          <div class="col-sm-3">Label
+            <span class="q-sign"
+                 tooltip-placement="right"
+                 tooltip-trigger="mouseenter"
+                 tooltip="Type a new label or select from list">
+                <i class="icon-iw-active-circle-question"></i>
+            </span>
+          </div>
+          <div class="col-sm-2">Type</div>
+          <div class="col-sm-5">
+            Expression
+            <span class="icon-iw-active-circle-question"
+                  tooltip="Define expression using arithmetic operations (+, -, *, /), Python 2.7 built-in functions and fields accessing by @ hotkey"
+                  tooltip-placement="top">
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group" ng-repeat="field in profile.schema track by $index">
+          <div class="col-sm-2">
+
+            <span class="fonticon icon-circle-close pull-left" style="font-size: 16px; color:#777; margin-left:10px"
+              ng-click="onRemoveField($event, $index)"></span>
+
+            <div class="pull-right">
+            <label class="radio">
+              <span class="id_mark pull-left" ng-style="!field.is_id && {'color':'#ccc', 'border-color':'#ccc'}" style="margin-right:5px">ID_FIELD</span>
+              <input type="radio"
+                     ng-disabled="!field.name"
+                     class="ark-radiobtn ng-pristine ng-valid"
+                     ng-model="wrapper.id_field"
+                     ng-value="field.name"
+                     name="id_field"><span></span>
+              <span></span>
+
+            </label>
+            </div>
+
+          </div>
+
+
+
+          <div class="col-sm-3">
+            <input
+                ng-if="field.name"
+                class="form-control"
+                ng-model="field.name"
+                ng-disabled="profile.is_locked || !field.is_expression" />
+            <ui-select
+                class="field-{{$index}} form-control"
+                ng-if="!field.name"
+                ng-model="field.name"
+                ng-disabled="profile.is_locked"
+                reset-search-input="false" tagging tagging-label="('new')" theme="select2"
+                title="Type a new field name or select from list" class="form-control"
+                on-select="onFieldNameInput($index)">
+                <ui-select-match placeholder="Type and Press Enter">{{$select.selected}}</ui-select-match>
+                <ui-select-choices repeat="name in availableFields | filter:$select.search">
+                  <span ng-bind-html="name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+          </div>
+          <div class="col-sm-2"
+            ng-class="{'has-error': !field.type && hasError}">
+            <select class="form-control"
+                    ng-model="field.type"
+                    ng-disabled="profile.is_locked"
+                    ng-options="d.id as d.text for d in fieldTypes">
+              <option value="">-- field type --</option>
+            </select>
+          </div>
+          <div class="col-sm-4"
+              ng-if="field.is_expression"
+              ng-class="{'has-error': field.is_expression && !field.expression && hasError}">
+            <textarea
+                    class="form-control"
+                    rows="1"
+                    ng-model="field.expression"
+                    ng-disabled="profile.is_locked"
+                    id="expression_builder"
+                    mentio
+                    mentio-id="'expression_builder'"
+                    mentio-typed-term="typedTerm"
+            ></textarea>
+
+            <mentio-menu mentio-for="'expression_builder'"
+                         ng-if="field.is_expression"
+                         mentio-trigger-char="'@'"
+                         mentio-items="_availableFields"
+                         mentio-template-url="/expressions.tpl"
+                         mentio-search="searchExpressions(term)"
+                         mentio-select="getTextRaw(item)" ></mentio-menu>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:20px">
+          <div class="col-sm-4 col-sm-offset-2">
+            <button class="btn btn-default"
+                    ng-disabled="profile.sync_status=='IMPORTING'"
+                    ng-click="onAddField($event)">
+              Add New Field
+            </button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+    <form class="form-horizontal">
+      <div class="form-group form-actions">
+        <div class="col-sm-6">
+          <button
+              ng-click="onApplySchema()"
+              ng-if="profile.sync_status==='OUT_OF_SYNC' && wrapper.id_field && hasSchema"
+              class="btn btn-default">Sync Schema
+          </button>
+        </div>
+        <div class="col-sm-4">
+          <button class="btn btn-primary pull-left"
+                  ng-disabled="profile.is_locked || !wrapper.id_field"
+                  ng-click="onSaveSchema()">Save Schema
+          </button>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/ng-template" id="/expressions.tpl">
+  <ul class="list-group fields-search" ng-if="items" style="height: 300px;overflow-y: scroll;">
+    <li mentio-menu-item="exp" ng-repeat="exp in items" class="list-group-item">
+      <span ng-bind-html="exp | mentioHighlight:typedTerm:'menu-highlighted' | unsafe"></span>
+    </li>
+  </ul>
+</script>
+{% endraw %}

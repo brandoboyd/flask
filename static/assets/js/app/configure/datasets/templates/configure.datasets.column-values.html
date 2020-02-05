@@ -1,0 +1,40 @@
+<span class="icon-close close modal-dialog-close" data-dismiss="modal" ng-click="$dismiss('cancel')"></span>
+
+<div class="modal-header">
+  <h1 class="modal-title"
+      id="myModalLabel"
+      ng-bind="data.title"
+      ></h1>
+</div>
+
+<div class="modal-body" style="height:500px">
+  <!-- setting more than 90% scroll height will prevent clickability in Close button -->
+  <div class="form-group" slimscroll="{height: '90%'}">
+    <table class="table table-default">
+      <thead>
+      </thead>
+      <tbody>
+        <tr ng-repeat="v in data.values track by $index">
+          <th>{{ v === null ? 'null' : v }}</th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="center" ng-show="data.values.length>0 && pagination.setPage">
+      <pagination class="pagination-sm"
+                  ng-model="pagination.currentPage"
+                  ng-change="pagination.setPage()"
+                  total-items="pagination.totalItems"
+                  items-per-page="pagination.limit"
+                  max-size="pagination.maxSize"
+                  boundary-links="true"
+                  num-pages="pagination.pages">
+      </pagination>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$close()">Close</button>
+</div>

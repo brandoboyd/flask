@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "Conversations - %s" % user.account.selected_app }}
+{% endblock %}
+
+{% from "_macros/filter.html"    import filter_intentions,
+filter_date_dropdown,
+filter_topics,
+filter_threshold -%}
+
+{% set ngApp = "conversations" %}
+
+{% block body %}
+
+<div class="container">
+    <div id="graphArea">
+        <div class="row">
+            <div class="span5">
+                <div class="input-prepend"
+                     ng-controller="ServiceChannelsListCtrl">
+                <span class="add-on"
+                      style="margin-right:-10px; padding-right:10px; min-width:90px;font-weight:bold">CHANNEL</span>
+                    <select ng-model="channel"
+                            ng-options="c.title for c in channels"
+                            ng-change="channelSelected()"
+                            style="max-width: 200px"></select>
+                </div>
+            </div>
+            <div class="span7">
+                <div ng-controller="SettingsCtrl" class="pull-right">
+
+                    {{ filter_date_dropdown() }}
+
+                </div>
+            </div>
+        </div>
+        <div class="row"
+             id="term_stats"
+             ng-controller="GraphStatsCtrl">
+            <div class="span6">
+                <div plotter="data.volume" style="height:300px"></div>
+            </div>
+            <div class="span6">
+                <div plotter="data.latency" style="height:300px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

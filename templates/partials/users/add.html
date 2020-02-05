@@ -1,0 +1,44 @@
+{%- macro user_add() %}
+    <form class="form-horizontal" name="emailForm">
+        <fieldset>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="email">Email <span class="asterisk">*</span></label>
+                <div class="col-sm-4">
+                    <input type="email"
+                           id="email"
+                           name="email"
+                           ng-model="user.email"
+                           class="form-control"
+                           placeholder="Add email of existing staff user" required>
+                   <span ng-show="emailForm.email.$error.required && emailForm.email.$dirty">required</span>
+                   <span ng-show="!emailForm.email.$error.required && emailForm.email.$error.email && emailForm.email.$dirty">invalid email</span>
+                </div>
+            </div>
+
+            <div class="form-actions form-group">
+              <div class="col-sm-offset-2 col-sm-4">
+                <button type="button" class="btn btn-default"
+                        ng-click="list()">Cancel</button>
+                <button type="button" class="btn btn-primary" 
+                        ng-click="save()"
+                        ng-disabled="emailForm.$invalid">Create</button>
+              </div>
+            </div>
+        </fieldset>
+    </form>
+{% endmacro -%}
+
+
+{% raw %}
+<h3 style="margin-left: 10%;">
+    New User
+</h3>
+{% endraw %}
+<a class="btn btn-xs btn-default" style="position:absolute; top:0" ng-click="list()" tooltip-placement="top" tooltip="All Users"><span class="fonticon icon-arrow-left"></span></a>
+<hr />
+
+<div>
+    {{ user_add() }}
+</div>
+

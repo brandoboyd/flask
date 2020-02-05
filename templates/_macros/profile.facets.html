@@ -1,0 +1,19 @@
+{%- macro render_predictorsFacets() -%}
+
+
+<h3 style="margin-bottom:20px;">
+    Dynamic Facets
+</h3>
+
+
+<div ng-repeat="(feature, options) in facets.dynamic">
+    <facet-panel facet-title={{
+    "{{options.id}}" }}
+    facet-tooltip={{ "{{options.description}}" }}
+    facet-is-all="options.all"
+    facet-is-multi="true"
+    facet-update-action="updateFacets"
+    facet-options="options.list">Loading</facet-panel>
+</div>
+
+{% endmacro %}

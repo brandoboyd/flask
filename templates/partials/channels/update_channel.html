@@ -1,0 +1,171 @@
+{% from "./_macros/configure.html" import configure_filters, channels_form %}
+
+<h3 style="margin-left:30px">Update &ldquo;<span ng-bind="channel.title"></span>&rdquo; Channel</h3>
+<a href="#/channels">
+    <button class="btn btn-default btn-xs" style="position: absolute;top:0" tooltip-placement="top" tooltip="All Channels">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+<hr/>
+
+<form class="form-horizontal" name="ChannelForm">
+    <fieldset>
+        {% raw %}
+        <!--<div class="control-group" ng-hide="channel.type == 'EnterpriseTwitterChannel' || channel.type == 'FollowerTrackingChannel' || channel.type == 'TwitterServiceChannel'">
+            <label class="control-label" for="channelType">Status</label>
+            <div class="controls">
+                <div ng-hide="channel.status.toLowerCase()=='suspended'" ui-channel-progress channel="{{channel}}"></div>
+                <div class="alert alert-danger" ng-show="channel.status.toLowerCase()=='suspended'">{{ channel.status }}</div>
+            </div>
+        </div>-->
+        <div class="form-group" ng-show="accounts && accounts.length>1">
+            <label class="col-sm-2 control-label" for="account">Account</label>
+            <div class="col-sm-4">
+                <input class="form-control" type="text" id="account" readonly
+                    ng-model="channel.account"
+                >
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="channelType">Channel Type <span class="asterisk">*</span></label>
+            <div class="col-sm-4">
+                <input class="form-control"
+                       type="text"
+                       ng-model="channel.platform" 
+                       ng-readonly="channel.platform" 
+                       id="channelType" />
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': ChannelForm.channelName.$error.minlength && ChannelForm.channelName.$dirty || ChannelForm.channelName.$error.required && ChannelForm.channelName.$dirty}">
+            <label class="col-sm-2 control-label" for="channelName">Channel Name <span class="asterisk">*</span></label>
+            <div class="col-sm-4">
+                <input class="form-control"
+                       name="channelName"
+                       ng-required="true"
+                       ng-minlength="2" 
+                       type="text"
+                       ng-minlength="2"
+                       ng-disabled="account.is_locked"
+                       ng-model="channel.title" 
+                       id="channelName">
+                <span class="help-block error"
+                      ng-show="ChannelForm.channelName.$error.minlength && ChannelForm.channelName.$dirty">Channel name must be at least 2 characters long</span>
+                <span class="help-block error"
+                      ng-show="ChannelForm.channelName.$error.required && ChannelForm.channelName.$dirty">Channel name is required</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="channelId">Channel ID</label>
+            <div class="col-sm-4">
+                <input class="form-control"
+                      type="text"
+                      ng-model="channel.id"
+                      id="channelId"
+                      readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="textarea">Description</label>
+            <div class="col-sm-4">
+                <textarea class="form-control"
+                        ng-model="channel.description"
+                        id="textarea" 
+                        ng-disabled="account.is_locked"
+                        rows="3"></textarea>
+                                      </div>
+        </div>
+        <div class="form-group">
+        <div class="col-sm-4 col-sm-push-2">
+          <button class="btn btn-default"
+                  ng-click="showImportDialog()">
+            Import data
+          </button>
+        </div>
+</div>
+
+        {% endraw %}
+    </fieldset>
+</form>
+
+<div ng-if="!channel.is_dynamic">
+  {{ channels_form('update', user) }}
+  {#{{ configure_filters('update') }}#}
+</div>
+
+{% raw %}
+<form ng-if="channel.is_dynamic" class="form-horizontal" name="SchemaForm">
+  <!-- Derived from channel type schema -->
+  <div  class="form-group"
+        ng-if="!!channelTypeSchema"
+        ng-repeat="field in channelTypeSchema">
+      <label class="col-sm-2 control-label">{{field.name}} <span class="asterisk">*</span></label>
+      <div class="col-sm-4">
+          <label class="checkbox" ng-if="field.type=='boolean'">
+              <input  type="checkbox"
+                      class="ark-checkbox"
+                      ng-model="channel[field.name]"
+                      ng-disabled="account.is_locked"
+              />
+              <span></span>
+          </label>
+          <input type="number"
+                  ng-if="field.type=='integer'"
+                  class="form-control"
+                  name="{{field.name}}"
+                  ng-model="channel[field.name]"
+                  ng-disabled="account.is_locked"
+                  ng-required="true"
+                  id="input-{{field.name}}"
+          />
+          <input type="text"
+                  ng-if="field.type=='label'"
+                  class="form-control"
+                  name="{{field.name}}"
+                  ng-model="channel[field.name]"
+                  ng-disabled="account.is_locked"
+                  ng-required="true"
+                  id="input-{{field.name}}"
+          />
+          <textarea
+                  ng-if="field.type=='string'"
+                  class="form-control"
+                  name="{{field.name}}"
+                  ng-model="channel[field.name]"
+                  ng-disabled="account.is_locked"
+                  ng-required="true"
+                  id="input-{{field.name}}"
+          ></textarea>
+          <input type="datetime"
+                  ng-if="field.type=='timestamp'"
+                  class="form-control"
+                  name="{{field.name}}"
+                  ng-model="channel[field.name]"
+                  ng-disabled="account.is_locked"
+                  ng-required="true"
+                  id="input-{{field.name}}"
+          />
+      </div>
+
+      <br />
+  </div>
+
+  <!-- end of derived channel type schema -->
+</form>
+
+
+
+<form class="form-horizontal">
+    <div class="form-group form-actions">
+        <div class="col-sm-offset-2 col-sm-4"
+             ng-show="channel.type && (channel.type != 'EnterpriseTwitterChannel' || channel.twitter_handle)">
+            <button class="btn btn-primary" 
+                    ng-disabled="ChannelForm.$invalid || ChannelUpdateForm.$invalid || SchemaForm.$invalid || !isChannelTypeValid() || account.is_locked"
+                    ng-click="update()">Update
+            </button>
+            <!--<a class="btn btn-primary"
+               ng-click="update()">Update &amp; proceed
+                <span class="icon-arrow-right"></span></a>-->
+        </div>
+    </div>
+</form>
+{% endraw %}

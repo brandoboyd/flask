@@ -1,0 +1,4 @@
+
+{% from './_macros/dialogs.html' import render_default_outbound_channels_dialog %}
+{# account is populated from url path #}
+{{ render_default_outbound_channels_dialog(account=None, ui_modal=False) }}

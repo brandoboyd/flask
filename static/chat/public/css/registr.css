@@ -1,0 +1,10 @@
+.navbar .brand {
+    background-image: url("/assets/img/genesys-sign.png");
+}
+
+.registrForm {
+    border: 1px solid;
+    border-radius: 5px;
+    min-height: 300px;
+    padding: 5% 10%;
+}

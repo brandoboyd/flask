@@ -1,0 +1,344 @@
+{% raw %}
+
+  <h3 style="margin-left: 30px;">
+    {{ predictorId ? "Update " + "&ldquo;" + predictor.name + "&rdquo;" : "New " }} Predictor
+    <span>
+    <a class="btn btn-primary btn-xs"
+       style="margin: 0 1em"
+       ng-if="!!predictorId"
+       ng-href="#/predictors/{{predictor.id || predictorId}}/models">Models</a>
+  </span>
+  </h3>
+
+
+<a href="#/predictors">
+  <button class="btn btn-default btn-xs"
+          style="position: absolute;top:0"
+          tooltip-placement="top"
+          tooltip="All Predictors">
+    <span class="fonticon icon-arrow-left"></span>
+  </button>
+</a>
+
+<hr />
+
+<form class="form-horizontal" name="PredictorForm">
+  <fieldset>
+    <div class="row">
+      <div class="col-sm-6"
+         ng-class="{'has-error': PredictorForm.name.$error.required && PredictorForm.name.$dirty}">
+        <label class="col-sm-3 control-label"
+               for="predictor_type">
+          Name <span class="asterisk">*</span>
+        </label>
+
+        <div class="col-sm-9">
+          <input type="text" class="form-control"
+                name="name" id="predictor_name"
+                ng-model="predictor.name"
+                ng-required="true"
+                ng-minlength="2"
+                placeholder="Predictor name must be at least 2 characters long">
+          <span ng-show="PredictorForm.name.$error.minlength && PredictorForm.name.$dirty"
+                class="help-block error">Predictor name must be at least 2 characters long
+          </span>
+          <span ng-show="PredictorForm.name.$error.required && PredictorForm.name.$dirty"
+                class="help-block error">Predictor name must not be empty
+          </span>
+        </div>
+      </div>
+      <div class="col-sm-6" ng-class="{'has-error': PredictorForm.dataset.$error.required && PredictorForm.dataset.$dirty}">
+        <label class="col-sm-3 control-label" for="dataset">
+          Dataset <span class="asterisk">*</span>
+        </label>
+
+        <div class="col-sm-9">
+          <select class="form-control" name="dataset" id="dataset"
+                  ng-model="predictor.dataset"
+                  ng-options="d.id as d.name for d in datasets"
+                  ng-change="onSelectDataset()"
+                  ng-disabled="predictor.is_locked"
+                  ng-required="true">
+            <option value="" disabled>-- choose a dataset --</option>
+          </select>
+          <span ng-show="PredictorForm.dataset.$error.required && PredictorForm.dataset.$dirty"
+                class="help-block error">Dataset must not be empty
+          </span>
+        </div>
+      </div>
+      <div class="col-sm-12"><hr/></div>
+    </div>
+
+    <div class="row" ng-show="selectedDataset" style="padding:0 15px;">
+      <div class="col-sm-12">
+        <label class="control-label">
+          <span ng-class="selectedDataset.sync_status === 'IN_SYNC' ? 'icon-alert-checkmark success' : 'icon-alert-octo error'"></span>
+          Dataset daterange:
+        </label>
+        <span>{{ selectedDataset.from_dt * 1000 | moment: 'MM/DD/YYYY' }} &mdash; {{ selectedDataset.to_dt * 1000 | moment: 'MM/DD/YYYY' }}</span>
+      </div>
+      <div class="col-sm-12" id="daterange-filter">
+
+        <svg></svg>
+
+      </div>
+      <div class="col-sm-12">
+        <label class="control-label">
+          <span ng-class="predictor.status === 'IN SYNC' ? 'icon-alert-checkmark success' : predictor.status === 'GENERATING DATA' ? 'icon-alert-octo error' : 'icon-clock wait'"></span>
+          Predictor daterange:
+        </label>
+        <span>
+          <span animate-on-change='predictor.from_dt'>{{ predictor.from_dt * 1000 | moment: 'MM/DD/YYYY' }}</span>
+          &mdash;
+          <span animate-on-change='predictor.to_dt'>{{ predictor.to_dt * 1000 | moment: 'MM/DD/YYYY' }}</span>
+        </span>
+        <button class="btn btn-default pull-right"
+                ng-click="onClickPurge($event)"
+                ng-disabled="!predictorId || predictor.status === 'NO DATA'">Purge</button>
+        <button class="btn btn-default pull-right" style="margin-right: 10px"
+                ng-click="onClickGenerate($event)"
+                ng-disabled="(!predictorId)
+                              || flags.generating
+                              || predictor.status === 'IN SYNC'">Generate</button>
+      </div>
+      <div class="col-sm-12"><hr /></div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-sm-6" ng-class="{'has-error': PredictorForm.metric.$error.required && PredictorForm.metric.$dirty}">
+        <label class="col-sm-3 control-label">
+          Metric
+          <span class="icon-iw-active-circle-question" tooltip="The KPI to be predicted and optimized." tooltip-placement="top"></span>
+          <span class="asterisk">*</span>
+        </label>
+
+        <div class="col-sm-9">
+          <ui-select 
+                    name="metric"
+                    theme="select2"
+                    class="form-control"
+                    ng-model="predictor.metric"
+                    ng-change="generateAvailableFields()"
+                    ng-disabled="predictor.is_locked"
+                    ng-required="true">
+            <ui-select-match placeholder="Select a metric...">{{$select.selected}}</ui-select-match>
+            <ui-select-choices repeat="metric in metricFields | filter:$select.search">
+              {{metric}}
+            </ui-select-choices>
+          </ui-select>
+          <span ng-show="PredictorForm.metric.$error.required && PredictorForm.metric.$dirty"
+                class="help-block error">Metric must not be empty
+          </span>
+        </div>
+      </div>
+
+      <div class="col-sm-6" ng-class="{'has-error': PredictorForm.action_id.$error.required && PredictorForm.action_id.$dirty}">
+        <label class="col-sm-3 control-label">
+          Action ID
+          <span class="icon-iw-active-circle-question" tooltip="The unique identifier for the action under consideration (e.g. agent employee id for routing)." tooltip-placement="top"></span>
+          <span class="asterisk">*</span>
+        </label>
+
+        <div class="col-sm-9">
+          <ui-select 
+                    theme="select2"
+                    name="action_id"
+                    class="form-control"
+                    ng-model="predictor.action_id_expression"
+                    ng-change="generateAvailableFields()"
+                    ng-disabled="predictor.is_locked"
+                    ng-required="true">
+            <ui-select-match placeholder="Select an action ID...">{{$select.selected}}</ui-select-match>
+            <ui-select-choices repeat="field in actionIDFields | filter:$select.search">
+              {{field}}
+            </ui-select-choices>
+          </ui-select>
+          <span ng-show="PredictorForm.action_id.$error.required && PredictorForm.action_id.$dirty"
+                class="help-block error">Action ID must not be empty
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-sm-6" ng-class="{'has-error': PredictorForm.dataset.$error.required && PredictorForm.dataset.$dirty}">
+        <label class="col-sm-3 control-label" for="dataset">
+          Action type <span class="asterisk">*</span>
+        </label>
+
+        <div class="col-sm-9">
+          <select class="form-control" name="action_type" id="action_type"
+                  ng-model="predictor.action_type"
+                  ng-options="entry.k as entry.l for entry in action_types"
+                  ng-disabled="predictor.is_locked"
+                  ng-required="true">
+          </select>
+          <span ng-show="PredictorForm.dataset.$error.required && PredictorForm.dataset.$dirty"
+                class="help-block error">You must select an action type
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row form-group">
+      <div class="col-sm-6">
+        <label class="col-sm-3 control-label"
+               for="score_expression">
+          Score <br />expression <span class="icon-iw-active-circle-question"
+                tooltip="Optional expression for computing the final score returned by the API"
+                tooltip-placement="top">
+          </span>
+        </label>
+
+        <div class="col-sm-9">
+          <input type="text"
+                 class="form-control"
+                 name="score_expression"
+                 id="score_expression"
+                 ng-model="predictor.score_expression"
+                 ng-required="false"
+                 mentio
+                 mentio-id="'score_expression'"
+                 mentio-typed-term="typedTerm">
+
+          <mentio-menu mentio-for="'score_expression'"
+                       mentio-trigger-char="'@'"
+                       mentio-items="_availableFields"
+                       mentio-template-url="/expressions.tpl"
+                       mentio-search="searchExpressions(term)"
+                       mentio-select="getTextRaw(item)"></mentio-menu>
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group"
+         style="margin-top:20px"
+         ng-repeat="featureType in featureTypes">
+
+      <div class="col-sm-12">
+        <div class="lead">
+          {{featureType.text}}
+          <span ng-show="featureType.key == 'context_features_schema'" class="asterisk">*</span>
+          <span class="icon-iw-active-circle-question" style="font-size:12px" tooltip="{{featureType.tooltip}}" tooltip-placement="top"></span>
+        </div>
+        <hr/>
+      </div>
+        <div class="form-group"
+             ng-show="predictor[featureType.key].length"
+             style="margin-bottom:5px;">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-2">Label
+            <span class="q-sign"
+                 tooltip-placement="right"
+                 tooltip-trigger="mouseenter"
+                 tooltip="Type a new label or select from list">
+                <i class="icon-iw-active-circle-question"></i>
+            </span>
+          </div>
+          <div class="col-sm-2">Type</div>
+          <div class="col-sm-5">
+            Expression
+            <span class="icon-iw-active-circle-question"
+                  tooltip="Define expression using arithmetic operations (+, -, *, /), Python 2.7 built-in functions and fields accessing by @ hotkey"
+                  tooltip-placement="top">
+            </span>
+          </div>
+        </div>
+        <div class="form-group"
+             ng-repeat="feature in predictor[featureType.key] track by $index">
+          <div class="col-sm-1">
+            <span class="fonticon icon-circle-close pull-right" style="font-size: 18px;"
+              ng-click="onRemoveFeature($event, featureType.key, $index)"
+              ng-disabled="predictor.is_locked"
+              ng-show="!predictor.is_locked"></span>
+          </div>
+          <div class="col-sm-2">
+            <input
+                ng-if="feature.label"
+                class="form-control"
+                ng-model="feature.label"
+                ng-disabled="predictor.is_locked || !feature.is_expression" />
+            <ui-select
+                class="{{featureType.key}}-{{$index}} form-control"
+                ng-if="!feature.label"
+                ng-model="feature.label"
+                ng-disabled="predictor.is_locked"
+                reset-search-input="false" tagging tagging-label="('new')" theme="select2"
+                title="Type a new label or select from list" class="form-control"
+                on-select="onFeatureLabelInput(featureType.key, $index)">
+                <ui-select-match placeholder="Type and Press Enter">{{$select.selected}}</ui-select-match>
+                <ui-select-choices repeat="label in featureLabelFields | filter:$select.search">
+                  <span ng-bind-html="label | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+          </div>
+          <div class="col-sm-2">
+            <select class="form-control"
+                    ng-model="feature.type"
+                    ng-disabled="predictor.is_locked || (!feature.is_expression && feature.label)"
+                    ng-options="d.id as d.text for d in fieldTypes">
+              <option value="" disabled>-- feature type --</option>
+            </select>
+          </div>
+          <div class="col-sm-5"
+              ng-if="!!feature.is_expression"
+              ng-class="{'has-error': !feature.field_expr && hasError}">
+            <!--Expression builder-->
+            <textarea class="form-control"
+                      rows="1"
+                      ng-disabled="predictor.is_locked"
+                      mentio
+                      mentio-id="'expression_builder' + $index"
+                      mentio-typed-term="typedTerm"
+                      ng-model="feature.field_expr"
+            ></textarea>
+
+            <mentio-menu mentio-for="'expression_builder' + $index"
+                         mentio-trigger-char="'@'"
+                         mentio-items="_availableFields"
+                         mentio-template-url="/expressions.tpl"
+                         mentio-search="searchExpressions(term)"
+                         mentio-select="getTextRaw(item)"></mentio-menu>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-4 col-sm-offset-1">
+            <button class="btn btn-default" ng-click="onAddFeature($event, featureType.key)" ng-disabled="predictor.is_locked">
+              Add New Feature
+            </button>
+          </div>
+        </div>
+    </div>
+  </fieldset>
+</form>
+
+<form class="form-horizontal">
+    <div class="form-group form-actions">
+        <div class="col-sm-offset-1 col-sm-4">
+            <button class="btn btn-primary"
+                    ng-disabled="PredictorForm.$invalid"
+                    ng-click="onSave()">{{ predictorId===null ? "Create" : "Update" }}
+            </button>
+        </div>
+    </div>
+</form>
+
+<script type="text/ng-template" id="/expressions.tpl">
+  <ul class="list-group fields-search" ng-if="items" style="height: 300px;overflow-y: scroll;">
+    <li mentio-menu-item="exp" ng-repeat="exp in items" class="list-group-item">
+      <span ng-bind-html="exp | mentioHighlight:typedTerm:'menu-highlighted' | unsafe"></span>
+    </li>
+  </ul>
+</script>
+
+<style>
+  .nv-focus {
+    height: 0;
+    display: none;
+  }
+  #daterange-filter {
+    margin-top: -20px;
+  }
+</style>
+{% endraw %}

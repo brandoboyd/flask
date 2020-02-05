@@ -1,0 +1,74 @@
+{% raw %}
+<span class="icon-close close modal-dialog-close" data-dismiss="modal" ng-click="$dismiss('cancel')"></span>
+
+<div class="modal-header">
+  <h1>Matching results</h1>
+</div>
+
+<div class="modal-body" style="min-height: 300px">
+  <div class="spinner-container" style="position:fixed;top:250px;left:50%" ng-show="loading">
+    <div class="spin-circle"></div>
+    <div class="spin-inner-circle"></div>
+  </div>
+  <div class="well table-container" ng-if="dataFetched">
+    <table class="table table-compact">
+      <thead>
+        <tr>
+          <th ng-repeat="key in context_schema">{{key}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td ng-repeat="key in context_schema">
+            <select
+              ng-if="isKeyInContext(key)"
+              ng-model="context[key]"
+              ng-options="v for v in context_options[key]"
+              ng-change="onChangeContext()"
+            />
+
+            <span ng-if="!isKeyInContext(key)">
+              {{getContextValue(key)}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-container" ng-if="dataFetched">
+    <table ng-if="!!agents" class="table table-bordered table-striped table-condensed s-table-common" ng-style="loading? {opacity: 0.4}: ''">
+      <thead>
+      <tr>
+        <th ng-repeat="key in action_schema">{{key}}</th>
+        <th>Predicted {{ metric_name }}</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="agent in agents track by $index"
+            ng-class="{'success' : (agent.id == selectedAgentId)}">
+            <td ng-repeat="key in action_schema">{{getAgentValue(agent, key)}}</td>
+            <td>{{agent.match_score}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$close()">Close</button>
+</div>
+{% endraw %}
+
+<style>
+.modal-dialog {
+  width: 1000px;
+}
+.well {
+  padding: 0 10px;
+}
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+</style>

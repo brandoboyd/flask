@@ -1,0 +1,10 @@
+{% set navigation_bar = [
+(url_for("playground_tagger"), 'playground_tagger', 'Tagger'),
+(url_for("playground_chunker"), 'playground_chunker', 'Chunker')
+] %}
+
+
+{% from "_macros/subtabs.html" import render_subtabs %}
+{{ render_subtabs(title, navigation_bar, name) }}
+
+      

@@ -1,0 +1,2 @@
+- components.smart-tags-modal.directive -- should be simplified, too many logic there
+- add prefix for SLR directives

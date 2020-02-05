@@ -1,0 +1,18 @@
+Attached is the file you requested to have exported from Genesys Social Analytics
+{% set lines = [
+    ["Report Name", report_name],
+    ["Date Range", date_range],
+    ["Smart Tags", smart_tags],
+    ["Intentions", intentions],
+    ["Sentiments", sentiments],
+    ["Posts Status", statuses],
+    ["Topics, Keywords", keywords],
+    ["Languages", languages],
+    ["Agents", agents]
+    ]
+%}
+{% for (name, value) in lines %}
+    {%- if value %}{{ name }}: {{ "%s\n" % value }}{% endif -%}
+{% endfor %}
+
+Cheers, The Genesys Social Analytics Team

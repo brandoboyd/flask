@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Supervisor Desktop</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/static/assets/img/gen_logomark_16px_col.ico">
+    <!-- Le styles -->
+
+    <!-- bootstrap v3:css -->
+    <link rel="stylesheet" href="/static/chat/public/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/chat/public/vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/chat/public/vendor/angular-gridster/angular-gridster.min.css">
+    <!-- endinject -->
+
+    <link rel="stylesheet" href="/static/assets/vendor/select2/select2.css">
+    <link rel="stylesheet" href="/static/assets/vendor/select2-bootstrap-css/select2-bootstrap.css">
+
+    <link rel="stylesheet" href="/static/chat/public/css/app.css">
+    <link rel="stylesheet" href="/static/chat/public/css/supervisor-desktop.css">
+
+    <script>
+        HOST_DOMAIN = '{{config.HOST_DOMAIN}}'
+        SOCKET_DOMAIN = '{{config.SOCKET_DOMAIN}}'
+    </script>
+</head>
+{% raw %}
+<body ng-app="chat">
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="/landing" class="navbar-brand">
+                    Genesys Customer Service &mdash; Supervisor Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" ng-controller="SupervisorCtrl">
+        <div>
+            <div gridster="gridsterOptions">
+                <ul style="padding:0">
+                    <li gridster-item="agent" ng-repeat="agent in agents">
+                        <div class="box">
+                            <div class="box-header">
+                                <img src="/static/chat/public/images/no-photo.jpg"
+                                     class="img-circle pull-left"
+                                     popover="{{ agent.agent_full_name }}"
+                                     popover-placement="bottom"
+                                     popover-trigger="mouseenter"
+                                     style="width:25px;
+                                                margin:5px;
+                                                border:1px solid #999;
+                                                height:25px;">
+                                <h5 class="pull-left">{{ agent.agent_full_name }}</h5>
+                                <h6 class="pull-right" ng-show="isSummariesLoaded">summaries: {{agent.summaries.length}}</h6>
+
+
+                            </div>
+                            <div class="box-content">
+                                <div class="row">
+                                    <div class="col-sm-12" ng-hide="isSummariesLoaded">
+                                        <div class="loading-container"
+                                             style="text-align:center">
+                                            <div class="spinner-container">
+                                                <div class="spin-circle"></div>
+                                                <div class="spin-inner-circle"></div>
+                                            </div>
+                                            <br />
+                                            LOADING...
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-sm-12"
+                                         ng-show="agent.summaries.length == 0">
+                                        <div style="text-align: center;
+                                                    padding: 40px 0;">
+                                        NO CHAT SUMMARIES AVAILABLE
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12"
+                                         ng-show="agent.summaries.length > 0">
+
+
+                                        <div class="panel panel-default"
+                                             ng-repeat="summary in agent.summaries"
+                                             ng-hide="agent.showChat"
+                                             ng-class="{'panel-danger' : summary.sentiment_score == -1}">
+                                            <div class="panel-heading">
+                                                <span class="btn btn-xs btn-link" ng-click="showConvo(summary)">
+                                                    {{summary.customers[0].first_name}}
+                                                    {{summary.customers[0].last_name}}
+                                                </span>
+                                                <div class="pull-right"
+                                                     ng-if="agent.roomId && (summary.latest_event_id == agent.latest_event_id)">
+                                                    <button class="btn btn-xs btn-info"
+                                                            ng-hide="agent.showChat"
+                                                            ng-click="joinChat(agent)">Join</button>
+                                                    <button class="btn btn-xs btn-danger"
+                                                            ng-click="dismissChat(agent, true)">Dismiss</button>
+                                                </div>
+                                                <strong class="pull-right"
+                                                        ng-hide="agent.roomId"
+                                                        style="font-size:9px;
+                                                               padding:5px">{{summary.customers[0].seniority}}</strong>
+                                            </div>
+                                            <div class="panel-body">
+                                                <button class="btn btn-xs btn-link pull-left"
+                                                        title="Show topics"
+                                                        ng-disabled="!summary.topics.length"
+                                                        ng-init="isClosed = true"
+                                                        ng-click="isClosed=!isClosed">
+                                                    <span ng-if="isClosed"><i class="fa fa-plus-square"></i></span>
+                                                    <span ng-if="!isClosed"><i class="fa fa-minus-square"></i></span>
+                                                </button>
+                                                <div style="margin-left:27px">
+                                                    <span class="label label-default pull-left"
+                                                          style="margin:5px;
+                                                                 font-size:10px"
+                                                          ng-bind="tag.display_name"
+                                                          ng-repeat="tag in summary.tags"></span>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                <div style="margin-left:27px"
+                                                     ng-show="!isClosed">
+                                                    <span class="label label-info pull-left"
+                                                          style="margin:5px"
+                                                          ng-bind="topic[0]"
+                                                          ng-repeat="topic in summary.topics"></span>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12"
+                                         ng-include
+                                         src="'/static/chat/public/templates/journey/supervisor/chat.html?spsdgrhrmvsf95o3v'"
+                                         ng-if="agent.showChat">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+
+            <script type="text/ng-template" id="myModalContent.html">
+                <div class="modal-header" style="padding-bottom:0;border-bottom:none;">
+                    <h3>Summary</h3>
+                    <table class="table table-striped">
+                        <tr>
+                            <td><strong>Customer Info</strong></td>
+                            <td>{{summary.customers[0].first_name}} {{summary.customers[0].last_name}}, {{summary.customers[0].age}}, {{summary.customers[0].sex}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Call Intent</strong></td>
+                            <td>{{summary.customers[0].last_call_intent[0]}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sentiment</strong></td>
+                            <td><span ng-repeat="s in summary.sentiment">{{s}} </span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tags</strong></td>
+                            <td><div>
+                                <span class="label label-default pull-left"
+                                      style="margin:5px;
+                                             font-size:10px"
+                                      ng-bind="tag.display_name"
+                                      ng-repeat="tag in summary.tags"></span>
+                                <div class="clearfix"></div>
+                            </div></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Topics</strong></td>
+                            <td><div>
+                                <span class="label label-info pull-left"
+                                      style="margin:5px"
+                                      ng-bind="topic[0]"
+                                      ng-repeat="topic in summary.topics"></span>
+                                <div class="clearfix"></div>
+                            </div></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-body">
+                    <h3>Conversation</h3>
+                    <table class="table table-striped">
+                        <tr ng-repeat="message in summary.list">
+                            <td>
+                                <strong>{{message.first_name}} {{message.last_name}}:</strong>
+                                {{message.content}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" ng-click="cancel()">Close</button>
+                </div>
+            </script>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+{% endraw %}
+<script src="/static/assets/vendor/jquery/jquery.js"></script>
+<script src="/static/assets/vendor/jquery/jquery.resize.js"></script>
+<script src="/static/assets/vendor/angular/angular.min.js"></script>
+<script src="/static/assets/vendor/angular-route/angular-route.js"></script>
+<script src="/static/assets/vendor/angular-resource/angular-resource.js"></script>
+<script src="/static/assets/vendor/angular-sanitize/angular-sanitize.js"></script>
+<script src="/static/assets/vendor/angular-animate/angular-animate.js"></script>
+<script src="/static/chat/public/vendor/angular-bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
+<script src="/static/chat/public/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/chat/public/vendor/angular-ui-slider/slider.js"></script>
+<script src="/static/chat/public/vendor/angular-gridster/angular-gridster.js"></script>
+<script src="/static/assets/vendor/angular-ui-router/angular-ui-router.min.js"></script>
+<script src="/static/assets/vendor/lodash/lodash.compat.js"></script>
+
+<!-- ui-select files -->
+<script src="/static/chat/public/vendor/dist/select.js"></script>
+
+<script src="http://{{config.SOCKET_DOMAIN}}/socket.io/socket.io.js"></script>
+<script src="/static/chat/public/js/app.js?ds11111adasd"></script>
+<script src="/static/chat/public/js/services.js"></script>
+<script src="/static/chat/public/js/api-services.js"></script>
+<script src="/static/chat/public/js/directives.js"></script>
+
+<script src="/static/chat/public/js/supervisor-controller.js"></script>
+
+</body>
+
+</html>

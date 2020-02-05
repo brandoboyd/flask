@@ -1,0 +1,67 @@
+{%- from "_macros/predictors.facets.html" import render_predictorsFacets -%}
+
+<div class="col-sm-2 sidebar">
+    {{ render_predictorsFacets() }}
+</div>
+
+<div class="spinner-container" style="position:fixed;top:45%;left:50%" ng-show="flags.loading">
+    <div class="spin-circle"></div>
+    <div class="spin-inner-circle"></div>
+</div>
+
+<div class="col-md-10 col-md-offset-2" ng-show="!predictors.length">
+    <h2 class="text-center">No Predictors</h2>
+</div>
+
+<div class="col-md-10 col-md-offset-2" ng-show="predictors.length">
+    <h1>{{"{{predictor.name}}"}}</h1>
+
+    <hr/>
+
+    <div class="row form-group" style="margin-bottom: 20px;">
+        <div class="col-md-12">
+            <div class="pull-right btn-icon-group">
+                <div class="filter-block">
+                    <search filter="filters.search" placeholder-text="Search"></search>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-md-12">
+            <div infinite-scroll='load()'
+                 infinite-scroll-disabled='flags.loading'
+                 style="margin-bottom: 10px;">
+                {% raw %}
+                <table class="table table-default">
+                    <thead>
+                    <tr>
+                        <th style="width:47px;">#</th>
+                        <th>Matching</th>
+                        <th ng-repeat="(key, value) in details[0]" sorter="table.sort" data-predicate="{{key}}" data-title="{{key}}"></th>
+
+                    </tr>
+                    </thead>
+                    <tbody ng-class="{'details-disabled': flags.loading}">
+                    <tr ng-repeat="item in details | filter:filters.search | orderBy : table.sort.predicate : table.sort.reverse" style="height: 60px;">
+                        <td>{{$index + 1}}</td>
+                        <td>
+                            <a href="#" ng-click="showMatchingResults($event, item)"
+                               class="link">
+                                Show Matching Results
+                            </a>
+                        </td>
+                        <td ng-repeat="(k, v) in item">{{v}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                {% endraw %}
+            </div>
+            <div ng-show="!details.length" class="alert alert-info text-center">
+                <i class='icon-alert-triangle'></i> No Predictor Details
+            </div>
+        </div>
+    </div>
+
+</div>

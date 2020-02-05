@@ -1,0 +1,76 @@
+{% raw %}
+<h3 style="margin-left: 10%;">
+    {{title == 'Create' ? 'New' : 'Update'}} Widget Model
+</h3>
+
+<a href="#/gallery/{{gallery_id}}">
+    <button class="btn btn-default btn-xs" style="position: absolute;top:0;" tooltip-placement="top" tooltip="Back to Widget Gallery">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+
+<hr>
+
+<div class="alert alert-success" ng-show="formState.isSaved">
+    The widget model settings have been saved. <br />
+    You can keep editing this tag or you can create a new one.
+    <a ng-href="#/gallery/{{gallery_id}}/widget_model/" class="btn btn-success btn-sm" >New Widget Model</a>
+</div>
+<div class="alert alert-danger" ng-show="formState.hasError">
+    The widget model settings can not be saved.
+</div>
+
+<div>
+    <form name="form" class="form-horizontal" novalidate>
+        <fieldset>
+            <div class="form-group" ng-class="{'has-error': form.modelName.$error.required && form.modelName.$dirty}">
+                <label class="col-sm-2 control-label" for="model_name">Model Name <span class="asterisk">*</span>
+                </label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control"
+                        id="model_name"
+                        name="modelName"
+                        ng-model="model.title"
+                        ng-required="true"
+                        focus-here
+                        placeholder="Model Name" />
+                    <span class="help-block error"
+                      ng-show="form.modelName.$error.required && form.modelName.$dirty">Model name is required</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="model_description">Model Description</label>
+                <div class="col-sm-3">
+                    <input type="text" id="model_description" ng-model="model.description" placeholder="Model Description" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="model_settings">Model Settings
+                </label>
+                <div class="col-sm-10">
+                    <textarea ng-model="model.settings" style="width:100%;min-height:500px;"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group form-actions">
+                <div class="col-sm-offset-2 col-sm-4">
+                    <button type="button" class="btn btn-primary"
+                            ng-click="save()"
+                            ng-disabled="!form.$valid">
+                        {{title}}
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+{% endraw %}
+
+<style>
+    .well {
+        padding: 15px !important;
+    }
+    .form-group {
+        margin: 5px 0 15px 0 !important;
+    }
+</style>

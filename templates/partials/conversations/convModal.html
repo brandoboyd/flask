@@ -1,0 +1,17 @@
+{% from "_macros/posts.html" import render_posts with context %}
+
+<div class="modal-header">
+    <div class="clearfix">
+        <h3 class="pull-left" ng-bind="modal_title || 'Conversation'"></h3>
+        <a class="close pull-right"
+           ng-click="close(result)">
+            <span class="icon-close"></span>
+        </a>
+    </div>
+</div>
+<div class="modal-body" scroll-to="scrollToIndex" highlight-class="highlight">
+    {{ render_posts(in_modal=True) }}
+</div>
+<div class="modal-footer">
+    <button ng-click="close(result)" class="btn btn-primary">Close</button>
+</div>

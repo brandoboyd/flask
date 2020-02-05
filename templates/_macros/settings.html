@@ -1,0 +1,229 @@
+{%- macro render_settings(u) -%}
+
+<style>
+    .side-tabs-container > .nav-side-tabs > li[role="presentation"] {
+        padding: 10px 13px;
+        border: 1px solid #eee;
+        background-color: #F4F4F4;
+        text-transform: uppercase;
+        color: #8E8E8E;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    [class*="icon-iw-circle"] {
+        padding-left: 2px;
+        padding-right: 10px;
+    }
+</style>
+<script>
+    function hide(item) {
+        var icon = angular.element('#' + item + '> .fonticon');
+        var lists = angular.element('[id^="' + item + '-"]');
+        lists.toggle();
+
+        icon.toggleClass('icon-iw-circle-no-chevron-up', lists.is(':visible'));
+        icon.toggleClass('icon-iw-circle-no-chevron-down', lists.is(':hidden'));
+    }
+</script>
+
+<!--SCHEMA-->
+{% if u.is_staff or u.is_admin or u.is_analyst %}
+
+{% if u.account.selected_app in ('Journey Analytics', 'Predictive Matching') -%}
+<li role="presentation" onclick="hide('schema')" id="schema">
+    <span class="fonticon icon-iw-circle-no-chevron-up"></span>&nbsp;Schema
+</li>
+<li ng-class="getCurrent('schema_agent_profile')" class="dropdown" id="schema-agent-profile">
+    <a href="/configure#/schema_agent_profile" role="menuitem" tabindex="-1">
+        <span class="icon-doc-generic"></span> Agent Profile
+    </a>
+</li>
+{%- endif %}
+
+{% if u.account.selected_app == 'Journey Analytics' -%}
+<li ng-class="getCurrent('schema_customer_profile')" class="dropdown" id="schema-customer-profile">
+    <a href="/configure#/schema_customer_profile" role="menuitem" tabindex="-1">
+        <span class="icon-doc-generic"></span> Customer Profile
+    </a>
+</li>
+<li ng-class="getCurrent('channel_types')" class="dropdown" id="schema-channel-types">
+    <a href="/configure#/channel_types" role="menuitem" tabindex="-1">
+        <span class="icon-doc-generic"></span> Channel Types
+    </a>
+</li>
+<li ng-class="getCurrent('event_types')" class="dropdown" id="schema-event-types">
+    <a href="/configure#/event_types/" role="menuitem" tabindex="-1">
+        <span class="icon-shuffle"></span> Event Types
+    </a>
+</li>
+<li ng-class="getCurrent('journey_types')" class="dropdown" id="schema-journeytypes">
+    <a href="/configure#/journey_types/" role="menuitem" tabindex="-1">
+        <span class="icon-shuffle"></span> Journey Types</a>
+</li>
+{%- endif %}
+{%- endif %}
+
+{% if u.account.selected_app == 'Predictive Matching' and (u.is_staff or u.is_admin or u.is_analyst) -%}
+<li ng-class="getCurrent('datasets')" class="dropdown" id="schema-datasets">
+    <a href="/configure#/datasets" role="menuitem" tabindex="-1">
+        <span class="icon-doc-generic"></span> Datasets</a>
+</li>
+{%- endif %}
+
+<!--SETTINGS-->
+<li role="presentation" onclick="hide('settings')" id="settings">
+    <span class="fonticon icon-iw-circle-no-chevron-up"></span>&nbsp;Settings
+</li>
+
+{% if u.is_staff or u.is_admin or u.is_analyst %}
+<li ng-class="getCurrent('channels') || getCurrent('channels-no-channels')" class="dropdown" id="settings-channels">
+    <a href="/configure#/channels" role="menuitem" tabindex="-1">
+        <span class="icon-view-list"></span>
+        Channels
+    </a>
+</li>
+{% endif %}
+
+{% if u.is_staff or u.is_admin %}
+<li ng-class="getCurrent('accounts') || getCurrent('account')" class="dropdown" id="settings-accounts">
+    <a href="/configure#/accounts" role="menuitem" tabindex="-1">
+        <span class="icon-person"></span>
+        Accounts
+    </a>
+</li>
+{% endif %}
+
+{% if (u.is_staff or u.is_admin or u.is_analyst or u.is_agent) %}
+<li ng-class="getCurrent('groups')" class="dropdown" id="settings-groups">
+    <a href="/configure#/groups/" role="menuitem" tabindex="-1">
+        <span class="icon-group"></span> Groups
+    </a>
+</li>
+{% endif %}
+
+{% if (u.account.selected_app == 'Journey Analytics') %}
+{% if u.is_staff or u.is_admin or u.is_analyst %}
+<li ng-class="getCurrent('gallery') || getCurrent('widget_models')" class="dropdown" id="settings-widgets">
+    <a href="/configure#/gallery" role="menuitem" tabindex="-1">
+        <span class="fonticon icon-dashtab-xwidget"></span>
+        Widgets Gallery
+    </a>
+</li>
+{% endif %}
+{% endif %}
+
+{% if u.account.selected_app == 'GSA' and (u.is_admin or u.is_staff or u.is_agent) %}
+<li ng-class="getCurrent('messages')" class="dropdown" id="settings-messages">
+    <a href="/configure#/messages/all" role="menuitem" tabindex="-1">
+        <span class="icon-chat-oval-multi"></span>
+        Messages
+    </a>
+</li>
+{% endif %}
+
+{% if u.account.selected_app != 'GSE' %}
+<li ng-class="getCurrent('tags')" class="dropdown" id="settings-smarttags">
+    <a href="/configure#/tags/all" role="menuitem" tabindex="-1">
+        <span class="icon-tag-stat-add"></span>
+        Smart Tags
+    </a>
+</li>
+{% endif %}
+
+{% if (u.account.selected_app == 'Journey Analytics') %}
+<li ng-class="getCurrent('journey_tags')" class="dropdown" id="settings-journeytags">
+    <a href="/configure#/journey_tags" role="menuitem" tabindex="-1">
+        <span class="icon-server-add"></span> Journey Tags</a></li>
+
+
+
+<li ng-class="getCurrent('funnels')" class="dropdown" id="settings-funnels">
+    <a href="/configure#/funnels/" role="menuitem" tabindex="-1">
+        <span class="icon-iw-queue"></span> Funnels</a></li>
+
+<!---
+<li ng-class="getCurrent('customer_segments')" class="dropdown" id="settings-customersegments">
+    <a href="/configure#/customer_segments" role="menuitem" tabindex="-1">
+        <span class="icon-sharethis"></span> Customer Segments</a></li>
+--->
+{% endif %}
+
+{% if u.account.selected_app == 'Predictive Matching' %}
+<li ng-class="getCurrent('predictors')" class="dropdown" id="settings-predictors">
+    <a href="/configure#/predictors" role="menuitem" tabindex="-1">
+        <span class="icon-supervisor"></span> Predictors</a>
+</li>
+{% endif %}
+
+{% if u.is_staff and (u.account.selected_app == 'GSA' or u.account.selected_app == 'GSE') %}
+<li ng-class="getCurrent('trials')" class="dropdown" id="settings-trials">
+    <a href="/configure#/trials/" role="menuitem" tabindex="-1">
+        <span class="icon-access"></span>
+        Trials
+    </a>
+</li>
+{% endif %}
+
+{% if (u.is_staff or u.is_admin or u.is_analyst) and u.account.selected_app == 'GSA' %}
+<li ng-class="getCurrent('labels')" id="settings-contactlabels">
+    <a href="/configure#/labels/all">
+        <span class="fonticon icon-iw-active-circle-twitter"></span> Contact Labels</a></li>
+
+{% if u.is_staff %}
+<li ng-class="getCurrent('events')" id="settings-eventlogs">
+    <a href="/configure#/events/all">
+        <span class="icon-twitter"></span> Event Logs</a></li>
+{% endif %}
+{% endif %}
+
+<!--USER PROFILE-->
+<li role="presentation" onclick="hide('user')" id="user">
+    <span class="fonticon icon-iw-circle-no-chevron-up"></span>&nbsp;User Profile
+</li>
+
+{% if (u.is_staff or u.is_admin) %}
+<li ng-class="getCurrent('profile_channels')" class="dropdown" id="user-defaultchannels">
+    <a href="/configure#/outbound_channels/" role="menuitem" tabindex="-1">
+        <span class="icon-view-list"></span>
+        Default&nbsp;Channels
+    </a>
+</li>
+{% endif %}
+
+<li ng-class="getCurrent('password')" class="dropdown" id="user-password">
+    <a href="/configure#/password/{{ u.email }}" role="menuitem" tabindex="-1">
+        <span class="icon-access"></span> Password</a></li>
+
+{% if u.is_staff or u.is_admin %}
+<li ng-class="getCurrent('user')" class="dropdown" id="user-details">
+    <a href="/configure#/user/{{ u.email }}" role="menuitem" tabindex="-1">
+        <span class="icon-person"></span> User Details
+    </a>
+</li>
+{% endif %}
+
+<!--ACCOUNT-->
+{% if u.is_staff or u.is_admin or u.is_analyst or u.is_agent %}
+<li role="presentation" class="account" onclick="hide('account')" id="account">
+    <span class="fonticon icon-iw-circle-no-chevron-up"></span>&nbsp;Account
+</li>
+{% endif %}
+
+{% if u.is_staff or u.is_admin %}
+<li ng-class="getCurrent('account_channels')" class="dropdown" id="account-defaultchannels">
+    <a href="/configure#/outbound_channels/{% raw %}{{ currentAccount.id || {% endraw %} 'u.account.id' }}" role="menuitem" tabindex="-1">
+        <span class="icon-view-list"></span> Default&nbsp;
+        Channels
+    </a>
+</li>
+{% endif %}
+
+{% if u.is_staff or u.is_admin or u.is_analyst or u.is_agent %}
+<li ng-class="getCurrent('account_users')" class="dropdown" id="account-usermanagement">
+    <a href="/configure#/users/{% raw %}{{ currentAccount.id || {% endraw %} 'u.account.id' }}" role="menuitem" tabindex="-1">
+        <span class="icon-person"></span>
+        User&nbsp;Management
+    </a>
+</li>
+{% endif %}
+{% endmacro %}

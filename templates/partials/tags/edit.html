@@ -1,0 +1,20 @@
+{% raw %}
+<h3 style="margin-left: 30px;">
+  {{ tagItem && tagItem.title ? "Update " + "&ldquo;" + tagItem.title + "&rdquo;" : "New " }} Smart Tag
+</h3>
+{% endraw %}
+<a href="#/tags/all"
+   class="btn btn-xs btn-default"
+   style="position:absolute;top:0"
+   tooltip-placement="top"
+   tooltip="All Smart Tags"><span class="fonticon icon-arrow-left"></span></a>
+<hr/>
+<div class="alert alert-info pull-right" style="width:220px;" ng-show="formState.isSaved">
+  Thanks, the smart tag settings have been saved. <br />
+  You can keep editing this tag or you can <a class="link" ng-click="newTag()">create a new one.</a>
+</div>
+
+{% from "_macros/smart_tags.html" import smart_tag_form with context %}
+<div style="width:70%;">
+{{ smart_tag_form() }}
+</div>

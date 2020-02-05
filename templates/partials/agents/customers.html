@@ -1,0 +1,84 @@
+<style>
+    table {
+        margin-top: 20px;
+    }
+    thead th {
+        vertical-align: middle !important;
+    }
+    td ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .modal {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        top: 0;
+        left: 0;
+    }
+
+
+    .rating {
+        font-size: 175%;
+        padding: 0 0.5em;
+    }
+
+    .rating > a {
+        text-decoration: none;
+    }
+
+    .rating .rating-highlight, .rating.rating-highlight:hover {
+        color: #F4914E;
+    }
+
+    .rating .rating-normal, .rating.rating-normal:hover {
+        color: #3C3C3C;
+    }
+
+</style>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Action</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Location</th>
+                <th>Calls</th>
+                <th>Segment</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="c in customers">
+                {% raw %}
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Call <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="l in labels">
+                                <a href="" ng-click="callAgent(c, l.display_name)">{{l.display_name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                <td>{{c.customer_full_name}}</td>
+                <td>{{c.customer_full_name}}</td>
+                <td>{{c.customer_age}}</td>
+                <td>{{c.customer_gender}}</td>
+                <td>{{c.customer_location}}</td>
+                <td>{{c.customer_num_calls}}</td>
+                <td>{{c.customer_seniority}}</td>
+                {% endraw %}
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -1,0 +1,259 @@
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+  display:none !important
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-bottom: 60px;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+#footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+.online-counter {
+    background-color: #468847;
+    padding: 3px 10px;
+}
+
+.online {
+  background-color: #43ac6a;
+  border-color: #3c9a5f;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 0;
+  padding: 2px 16px;
+}
+
+.offline {
+  background-color: #f04124;
+  border-color: #ea2f10;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 0;
+  padding: 2px 16px;
+}
+
+#messages {
+  overflow-y: scroll;
+  height: 200px;
+  word-wrap: break-word;
+  min-height: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  background-color: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-radius: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+}
+
+#messages ul {
+  margin: 0;
+  padding-left: 5px;
+}
+#messages li {
+  padding: 5px;
+  margin: 0;
+  padding: 0;
+}
+
+.dark {
+  background-color: #f1f1f1;
+}
+
+#errors {
+  padding-top: 50px;
+  padding-left: 15px;
+}
+
+#sidebar {
+  margin-top: 20px;
+}
+
+#createroom {
+  margin-bottom: 5px;
+}
+
+.white {
+  margin: 10px;
+  padding: 5px;
+  color: #fff;
+}
+
+/* Stylesheets for main app chatbox
+----------------------------------------------
+*/
+#chatbox {
+    width:400px;
+    min-height:42px;
+    position:fixed;
+    bottom:30px;
+    right:20px;
+    background:transparent;
+    z-index:1049;
+    border-radius:4px;
+    z-index:1500;
+    margin:0;
+}
+
+#chatbox h4.modal-title {
+  display:inline-block;
+  color: grey;
+  font-size:16px;
+  background: url("/assets/img/genesys-sign.png") left center no-repeat;
+  padding-left:32px;
+}
+
+#chatbox .modal-header li {
+    list-style:none;
+    margin-right:15px;
+    display:inline-block;
+}
+
+  #chatbox .modal-header a {
+    text-decoration:none;
+  }
+
+
+.chatbox-action-toggle {
+  color: #777;
+}
+
+  .chatbox-action-toggle span {
+    display: inline-block;
+    -webkit-transform: rotate(0deg);
+        -ms-transform: rotate(0deg); // IE9 only
+            transform: rotate(0deg);
+    -webkit-transition: transform 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out;
+}
+
+.chatbox-action-toggle.expanded span {
+    display: inline-block;
+    width: 7px;
+    height: 10px;
+    -webkit-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg); // IE9 only
+            transform: rotate(-90deg);
+    -webkit-transition: transform 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out;
+}
+
+.chatbox-body {
+    border:1px solid #ddd;
+    padding:5px;
+    background-color: #fff;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top:0;
+}
+
+.navbar.agent-navbar {
+  margin-bottom:0;
+}
+
+.navbar.agent-navbar.expanded .navbar-inner {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+
+/* Stylesheets for show/hide animations of ngAnimate
+----------------------------------------------
+*/
+.fading-in, .fading-out {
+    -webkit-transition: cubic-bezier(0.250, 0.460, 0.450, 0.940) 400ms;
+            transition: cubic-bezier(0.250, 0.460, 0.450, 0.940) 400ms;
+}
+
+.fading-out.ng-hide-add,
+.fading-in.ng-hide-remove.ng-hide-remove-active {
+    opacity: 1;
+    display: block !important;
+}
+
+.fading-in.ng-hide-remove,
+.fading-out.ng-hide-add.ng-hide-add-active {
+    opacity: 0;
+    display: block !important;
+}
+
+/* Stylesheet for article on chatbox */
+.navbar .btn-group.messagelinks {
+  margin-top:8px;
+}
+#chatbox .messagelinks .btn {
+  padding:2px 12px;
+  font-size:12px;
+}
+.dropdown-menu > li > a {
+  cursor:pointer;
+}
+
+.modal {
+  z-index:1050;
+}
+
+textarea.editing-textarea {
+  width:100%;
+  max-width: 97%;
+  min-height:200px;
+}
+
+
+#chatApp .modal-body  a {
+  cursor:pointer;
+  text-decoration:none;
+}
+
+/* Stylesheet for indicator on the main app */
+/*#customerCounter a.indicator {
+    background-color: rgb(190, 30, 40);
+    border-radius: 5px;
+    color: rgb(255, 255, 255);
+    margin: 5px;
+    line-height: 0.5em;
+}*/
+
+/* bootstrap 3 */
+ul.nav.navbar-nav img.thumbnail {
+  max-width:40px;
+  margin-top:5px;
+  margin-bottom:0;
+}
+
+div.userInfo ul {
+  padding-left:20px;
+}
+
+.navbar .brand {
+  color:grey;
+}

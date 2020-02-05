@@ -1,0 +1,102 @@
+{% raw %}
+
+<div class="modal-header">
+    <div class="clearfix">
+        <h4 class="pull-left">Send an email to users about upcoming system upgrade, maintenance or downtime</h4>
+        <a class="close pull-right"
+           ng-click="close(false)">×</a>
+    </div>
+</div>
+
+<div class="modal-body">
+    <form name="AccountsSendEmail" class="form-horizontal">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="from-field">From</label>
+            <div class="col-sm-9">
+                <input type="text" id="from-field" class="form-control"
+                       ng-model="data.from_address"
+                       ng-disabled="true"
+                       >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="accounts-field">Accounts <span style="font: 15px bold; color:red">*</span></label>
+            <div class="col-sm-9">
+                <ui-select multiple id="accounts-field" class="form-control" theme="select2"
+                           ng-model="chosen.accounts"
+                           ng-disabled="disabled"
+                           >
+                    <ui-select-match placeholder="Email will be sent to users in these accouts">{{$item.value}}</ui-select-match>
+                    <ui-select-choices repeat="o in data.accounts | propsFilter: {id: $select.search, value: $select.search}">
+                        <div ng-bind-html="o.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="roles-field">Roles <span style="font: 15px bold; color:red">*</span></label>
+            <div class="col-sm-9">
+                <ui-select multiple id="roles-field" class="form-control" theme="select2"
+                           ng-model="chosen.roles"
+                           ng-disabled="disabled"
+                           >
+                    <ui-select-match placeholder="Email will be sent to users with any of these roles">{{$item.value}}</ui-select-match>
+                    <ui-select-choices repeat="o in data.roles | propsFilter: {id: $select.search, value: $select.search}">
+                        <div ng-bind-html="o.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="template-field">Template</label>
+            <div class="col-sm-9">
+                <select id="template-field" class="form-control"
+                        ui-select2
+                        ng-model="chosen.templateIdx"
+                        ng-disabled="disabled"
+                        placeholder="Select a template to populate subject and body fields"
+                        >
+                    <option value=""></option><!--empty option to make select placeholder visible-->
+                    <option value="{{ $index }}" ng-repeat="o in data.templates">{{ $index+1 }}. {{ o.subject }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="subject-field">Subject <span style="font: 15px bold; color:red">*</span></label>
+            <div class="col-sm-9">
+                <input type="text" id="subject-field" class="form-control"
+                       placeholder="Choose a template above and modify the subject as required"
+                       ng-model="chosen.subject"
+                       >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="body-field">Body <span style="font: 15px bold; color:red">*</span></label>
+            <div class="col-sm-9">
+                <textarea rows="20" type="text" id="body-field" class="form-control"
+                          placeholder="Choose a template above and modify the body as required"
+                          ng-model="chosen.body"
+                          >
+                </textarea>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button ng-click="close(false)" class="btn btn-info">Close</button>
+    <button class="btn btn-info"
+            ng-disabled="chosen.accounts.length === 0 || chosen.roles.length === 0 || chosen.subject.length === 0 || chosen.body.length === 0"
+            ng-click="sendMail()"
+            >Send
+    </button>
+</div>
+
+{% endraw %}

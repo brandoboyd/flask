@@ -1,0 +1,170 @@
+{% raw %}
+<h3 style="margin-left: 30px;">
+    {{ item && item.display_name ? "Update " + "&ldquo;" + item.display_name + "&rdquo;" : "New " }} Model
+</h3>
+{% endraw %}
+
+<a ng-href="#{{ 'redirectAllHref()'|ng }}">
+    <button class="btn btn-default btn-xs" style="position: absolute;top:0" tooltip-placement="top" tooltip="All Predictor Models">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+
+<hr>
+
+<form class="form-horizontal" name="ModelEditForm">
+    <div ng-init="setForm(ModelEditForm)"></div>
+    <fieldset>
+        {% raw %}
+
+        <div class="form-group"
+             ng-class="{'has-error': ModelEditForm.modelName.$error.minlength && ModelEditForm.modelName.$dirty || ModelEditForm.modelName.$error.required && ModelEditForm.modelName.$dirty}">
+            <label class="col-sm-2 control-label" for="id_modelName">Model Name <span class="asterisk">*</span></label>
+
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="modelName" id="id_modelName"
+                       ng-model="item.display_name"
+                       ng-disabled="item.is_locked"
+                       ng-required="true"
+                       ng-minlength="2"
+                       placeholder="Model name must be at least 2 characters long">
+                <span ng-show="ModelEditForm.modelName.$error.minlength && ModelEditForm.modelName.$dirty"
+                        class="help-block error">Model name must be at least 2 characters long
+                </span>
+                <span ng-show="ModelEditForm.modelName.$error.required && ModelEditForm.modelName.$dirty"
+                        class="help-block error">Model name is required
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="description">
+                Description
+            </label>
+
+            <div class="col-sm-4">
+        <textarea class="form-control"
+                  name="description"
+                  id="description"
+                  rows="3"
+                  ng-disabled="item.is_locked"
+                  ng-model="item.description">
+        </textarea>
+            </div>
+        </div>
+
+        <div class="form-group"
+             ng-class="{'has-error': ModelEditForm.modelType.$error.required && ModelEditForm.modelType.$dirty}">
+            <label class="col-sm-2 control-label">
+              Type of model <span class="asterisk">*</span>
+            </label>
+
+            <div class="col-sm-4">
+                <select class="form-control" name="modelType" id="model_type"
+                      ng-model="item.model_type"
+                      ng-disabled="item.is_locked"
+                      ng-options="c for c in template.model_types"
+                      ng-required="true">
+                      <option value="" disabled>-- choose a model type --</option>
+                </select>
+                <span ng-show="ModelEditForm.modelType.$error.required && ModelEditForm.modelType.$dirty"
+                    class="help-block error">Model type must not be empty
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group"
+        ng-class="{'has-error': ModelEditForm.contextFeatures.$error.required && ModelEditForm.contextFeatures.$dirty}">
+            <label class="col-sm-2 control-label" for="context_features">
+                Context Features <span class="asterisk">*</span>
+            </label>
+
+            <div class="col-sm-4">
+                <ui-select
+                    multiple
+                    name="contextFeatures"
+                    theme="select2"
+                    class="form-control"
+                    ng-disabled="item.is_locked"
+                    ng-model="item.context_features">
+                    <ui-select-match placeholder="Select some context features of the parent predictor">{{$item.label}}</ui-select-match>
+                    <ui-select-choices repeat="feature in predictor.context_features_schema">
+                        <div ng-bind-html="feature.label | highlight: $select.search"></div>
+                        <small>
+                            expression: <span ng-bind-html="feature.field_expr | highlight: $select.search"></span>
+                        </small>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="action_features">
+                Action Features
+            </label>
+
+            <div class="col-sm-4">
+                <ui-select
+                    multiple
+                    name="actionFeatures"
+                    theme="select2"
+                    class="form-control"
+                    ng-disabled="item.is_locked"
+                    ng-model="item.action_features">
+                    <ui-select-match placeholder="Select some action features of the parent predictor">{{$item.label}}</ui-select-match>
+                    <ui-select-choices repeat="feature in predictor.action_features_schema">
+                        <div ng-bind-html="feature.label | highlight: $select.search"></div>
+                        <small>
+                            expression:: <span ng-bind-html="feature.field_expr | highlight: $select.search"></span>
+                        </small>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                Test vs Train Split
+            </label>
+
+            <div class="col-sm-4">
+                <h5 style="margin-top: 15px;margin-bottom: 20px;">{{resultMetric}}</h5>
+                <slider ng-model="item.train_data_percentage"
+                        style="padding: 15px 0"
+                        min="0"
+                        max="100"
+                        step="10"
+                        ng-disabled="item.is_locked"
+                        slider-tooltip="always"
+                        range="false"></slider>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                Min Samples Thresould
+            </label>
+
+            <div class="col-sm-4">
+                <input type="number" class="form-control" name="min_samples_thresould" id="id_min_samples_thresould" min="1" style="text-align: right;"
+                       ng-model="item.min_samples_thresould"
+                       ng-disabled="item.is_locked" positive>
+                <span class="error" ng-show="ModelEditForm.min_samples_thresould.$error.positive"
+                        class="help-block error">Min Samples Thresould must be more than 1.
+                </span>
+            </div>
+        </div>
+
+        {% endraw %}
+    </fieldset>
+</form>
+
+<form class="form-horizontal">
+    <div class="form-group form-actions">
+        <div class="col-sm-offset-2 col-sm-4">
+            <button class="btn btn-primary"
+                    ng-disabled="ModelEditForm.$invalid || item.is_locked"
+                    ng-click="save(item)">{{"title"|ng}}
+            </button>
+        </div>
+    </div>
+</form>

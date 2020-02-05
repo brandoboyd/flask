@@ -1,0 +1,100 @@
+<style>
+    table {
+        margin-top: 20px;
+    }
+    thead th {
+        vertical-align: middle !important;
+    }
+    td ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .modal {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        top: 0;
+        left: 0;
+    }
+
+
+    .rating {
+        font-size: 175%;
+        padding: 0 0.5em;
+    }
+
+    .rating > a {
+        text-decoration: none;
+    }
+
+    .rating .rating-highlight, .rating.rating-highlight:hover {
+        color: #F4914E;
+    }
+
+    .rating .rating-normal, .rating.rating-normal:hover {
+        color: #3C3C3C;
+    }
+
+</style>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Display Name</th>
+                <th>Precondition</th>
+                <th>Acceptance Rule</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="s in segments">
+                {% raw %}
+                <td>{{s.display_name}}</td>
+                <td>{{s.precondition}}</td>
+                <td>{{s.acceptance_rule}}</td>
+
+                {% endraw %}
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Display Name</th>
+                <th>Options</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="s in multi_segments">
+                {% raw %}
+                <td>{{s.display_name}}</td>
+                <td>
+                    {% endraw %}
+                    <table>
+                        <tr>
+                            <th>Display Name</th>
+                            <th>Precondition</th>
+                            <th>Acceptance Rule</th>
+                        </tr>
+                        <tbody>
+                            <tr ng-repeat="o in s.segment_options">
+                                {% raw %}
+                                    <td>{{ o.display_name }}</td>
+                                    <td>{{ o.precondition }}</td>
+                                    <td>{{ o.acceptance_rule }}</td>
+
+                                {% endraw %}
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% raw %}
+                </td>
+                {% endraw %}
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

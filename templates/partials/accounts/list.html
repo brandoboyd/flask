@@ -1,0 +1,147 @@
+{% from './_macros/dialogs.html' import render_account_create_update_dialog, render_share_dialog with context %}
+
+{% if user.is_staff %}
+<h1>Accounts</h1>
+
+{% else %}
+<h1>Account <span ng-bind="selectedAccount.name"></span></h1>
+{% endif %}
+
+<hr/>
+
+<div class="row form-group" style="margin-bottom: 20px;">
+    <div class="col-md-12">
+        {% if user.is_staff %}
+        <div class="pull-left">
+            <a href="#/new_account" role="button" class="btn btn-primary">
+                <span class="fonticon icon-add"></span>&nbsp;Add Account
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="pull-right">
+            <div class="filter-block">
+                <date-range-dropdown on-change="loadAccounts(dates)"></date-range-dropdown>
+            </div>
+            <div class="filter-block">
+                <search filter="filters.name" placeholder-text="Search by Name"></search>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if user.is_staff -%}
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group form-inline">
+            <label for="id_current_acct"> Current account: </label>
+            <select id="id_current_acct" class="form-control"
+                        ng-options="acct.name for acct in accounts|orderBy:'name'"
+                        ng-model="selectedAccount"
+                        ng-change="accountSelected()">
+            </select>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <div>
+            <span class="fonticon icon-email" style="font-size: 18px;"></span>&nbsp;
+            <a class="btn-link" ng-click="showEmailForm()">Send an email to users about upcoming system upgrade, maintenance or downtime</a>
+        </div>
+    </div>
+</div>
+{%- endif %}
+
+<div ng-controller="CreateUpdateDialogCtrl">
+    {{ render_account_create_update_dialog() }}
+</div>
+
+{{ render_share_dialog(scope='accounts') }}
+<div class="row" ng-show="accounts && accounts.length">
+    <div class="col-md-12">
+        <table class="table table-default">
+            <thead>
+            <tr>
+                {% if user.is_staff %}
+                <th style="width:120px;">Actions</th>
+                {% endif %}
+                <th sorter data-predicate="name" data-title="Name"></th>
+                <th sorter data-predicate="created_at" data-title="Created"></th>
+                {% if user.is_staff %}
+                <th sorter data-predicate="package" data-title="Package"></th>
+                {% endif %}
+                <th>Users</th>
+                <th sorter data-predicate="stats.number_of_posts" data-title="Posts"></th>
+                <th sorter data-predicate="is_locked" data-title="Locked"></th>
+                <th sorter data-predicate="updated_at" data-title="Last Updated"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="account in accounts | filter:filters | orderBy: table.sort.predicate: table.sort.reverse">
+                {% if user.is_staff %}
+                {% raw %}
+                <td>
+                    <button class="btn btn-default btn-sm pull-left"
+                            ng-confirm
+                            tooltip-placement="top" tooltip="Delete"
+                            action-text="When you delete an account all of the data associated with that account will be lost. Are you sure you want to delete?"
+                            action-function="deleteAccount(account)"
+                            action-button-text="Yes"
+                            cancel-button-text="No">
+                        <span class="fonticon icon-trash"></span>
+                    </button>
+                    <div class="pull-left" style="margin-top: -5px;margin-left:10px;" tooltip-placement="top" tooltip="Account is {{account.is_selected ? 'active' : 'disabled'}}">
+                        <ark-switch switch-model="account.is_selected"
+                                switch-id="account.id"
+                                switch-on="Active"
+                                disabled-case="selectedAccount.is_selected"
+                                switch-off="Suspended"
+                                ng-click="switchAccount(account)"></ark-switch>
+                    </div>
+                </td>
+                {% endraw %}
+                {% endif %}
+                
+                {% raw %}
+                <td>
+                    <a href="#/accounts/{{account.id}}" class="link">{{ account.name }}</a>
+                </td>
+                <td>{{ account.created_at|date }}</td>
+                {% endraw %}
+
+                {% if user.is_staff %}
+                {% raw %}
+                <td>{{ account.package }}</td>
+                {% endraw %}
+                {% endif %}
+
+                {% raw %}
+                <td>
+                    <span class="badge">
+	                    <a style="color:#fff"
+                        href="/configure#/users/{{ account.id }}"
+                        tooltip-placement="top" tooltip class="link"
+                        title="This account is current for {{ account.users_count }} user(s)<br> and {{ account.all_users_count }} non-privileged users<br> have been granted access to it.">
+                        {{ account.users_count }} / {{ account.all_users_count }}</a>
+                    </span>
+                </td>
+                <td><span tooltip-placement="top" tooltip
+                          title="Number of posts"
+                          ng-show="account.stats.number_of_posts>0">{{ account.stats.number_of_posts }}</span>
+                </td>
+                <td>
+                    <span ng-show="account.is_locked">Yes</span>
+                    <span ng-hide="account.is_locked">No</span>
+                </td>
+                <td>
+                    {{ account.updated_at|date }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div ng-show="!accounts.length" class="alert alert-info text-center">
+            <i class='icon-alert-triangle'></i> No Accounts
+        </div>
+    </div>
+</div>
+{% endraw %}

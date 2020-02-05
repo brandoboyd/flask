@@ -1,0 +1,10 @@
+<div class="pull-right">
+    <div style="margin-left:10px;" class="pull-right btn-group">
+        <button ng-repeat="button in dateRangeButtons"
+                ng-bind="button.type"
+                ng-click="setDateRange(button.type)"
+                ng-class="{true:'active', false:''}[button.enabled]"
+                class="btn"
+                >Loading...</button>
+    </div>
+</div>

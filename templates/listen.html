@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "Interactions - %s" % user.account.selected_app }}
+{% endblock %}
+
+{% from "_macros/filter.html"    import filter_date,
+                                        filter_date_dropdown,
+                                        filter_threshold,
+                                        details_filter_bar,
+                                        smart_tags_filter,
+                                        tag_moderation_panel,
+                                        render_filter_posts with context -%}
+
+{% from "_macros/posts.html"     import render_posts    with context    -%}
+{% from "_macros/plotter.html"   import render_plot         -%}
+
+{% from "_macros/facets.html"    import facet_intentions,
+                                        facet_agents,
+                                        facet_statuses,
+                                        facet_languages,
+                                        facet_topics,
+                                        render_facet_tags -%}
+
+
+{% from "_macros/modals.html"    import render_modal        -%}
+
+{% set ngApp        = 'listen' %}
+{% set section      = section  %}
+{% set channel_type =  c_type  %}
+
+{% block body %}
+
+<div class="container-fluid" ng-controller="AnalyticsCtrl">
+    <div class="row">
+
+        <ul class="nav nav-tabs fixed-nav" style="left: 0;">
+            <li ng-class="{active: (isActive('time'))}">
+                <a href="" ng-click="switchTab('time')">
+                    <span class="icon-bar-graph-variable-2"></span> Trends
+                </a>
+            </li>
+            <li ng-class="{active: (isActive('share'))}">
+                <a href="" ng-click="switchTab('share')">
+                    <span class="icon-agent-status-ready-partial"></span> Distribution
+                </a>
+            </li>
+            <li ng-class="{active: (section.is_topics)}">
+                <a href="" ng-click="switchTab('topics')">
+                    <span class="icon-cloud-b"></span> Topic Cloud
+                </a>
+            </li>
+            <li ng-class="{active: (section.is_details)}">
+                <a href="" ng-click="switchTab('details')">
+                    <span class="icon-chat-oval-multi"></span> Details
+                </a>
+            </li>
+        </ul>
+
+        <div class="fixed-nav" style="right: 25px;">
+            <div class="btn-group"
+                 ng-cloak
+                 ng-show="widget">
+                <a href=""
+                   widget-dialog
+                   data-widget="widget"
+                   data-settings="getStoredTrendParams()"
+                   ui-jq="tooltip"
+                   data-original-title="Update: {{'{{widget.title}}'}}"
+                   class="btn btn-xs btn-warning"><span class="icon-dash" style="font-size:15px"></span>
+                </a>
+                {% raw %}
+                <a ng-click="removeWidget()"
+                   class="btn btn-xs btn-default"
+                   ui-jq="tooltip"
+                   data-original-title="Cancel widget edit mode"
+                        ><span class="icon-small-close" style="font-size:15px"></span></a>
+                {% endraw %}
+            </div>
+            <a href=""
+               ng-cloak
+               ng-hide="widget || section.is_details"
+               data-widget="widget"
+               data-settings="getStoredTrendParams()"
+               widget-dialog
+               ui-jq="tooltip"
+               data-original-title="Add to Dashboard"
+               class="btn btn-xs btn-default">
+                <span class="icon-dash" style="font-size:15px"></span></a>
+
+            <div>
+                <date-range-dropdown current-date="currentDate"></date-range-dropdown>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:40px;">
+        <span class="fonticon icon-circle-arrow-up to-top-scroller" to-top-scroller style="display: none"></span>
+
+        <div class="col-md-12">
+            <div class="tab-content" style="overflow: visible;">
+                <div class="tab-pane"
+                     ng-class="{active:section}">
+                    <div ng-switch on="section.is_details">
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-2 sidebar side-tabs-container no-sides-padding">
+                                    <ul class="nav nav-side-tabs">
+                                        {%- set u = user if user else None -%}
+                                        {%- set navigation_bar = [
+                                        ('/inbound', 'inbound', 'Inbound', False, False, False ),
+                                        ('/outbound', 'outbound', 'Outbound', False, False, False ),
+                                        ('/conversations', 'conversations', 'Conversations', True, False, False )
+                                        ] -%}
+
+                                        {%- for href, id, caption, for_su, for_staff, for_admin in navigation_bar %}
+                                        {% if (for_su and u.is_superuser)
+                                        or (for_staff and u.is_staff)
+                                        or (for_admin and u.is_admin)
+                                        or (not (for_su or for_staff or for_admin)) -%}
+                                        <li {% if id== section %} class="active" {% endif%}>
+                                            <a href="{{ href | e }}">{{ caption | e }}</a>
+                                        </li>
+                                        {%- endif -%}
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+
+                                <div class="col-md-3 col-md-offset-2 sidebar" style="margin-top: 10px;">
+                                    <div>
+                                        {{ facet_languages() }}
+                                    </div>
+                                    <div ng-show="global_section=='inbound' || global_section=='outbound'">
+                                        {{ smart_tags_filter() }}
+                                    </div>
+                                    <div>
+                                        {{ facet_intentions() }}
+                                    </div>
+                                    <div ng-show="global_section=='outbound'">
+                                        {{ facet_agents() }}
+                                    </div>
+                                    <div ng-show="global_section=='inbound'">
+                                        {{ facet_statuses() }}
+                                    </div>
+                                    <div ng-hide="section.is_topics">
+                                        {{ facet_topics() }}
+                                    </div>
+                                </div>
+
+
+
+
+
+                                <div class="col-md-7 col-md-offset-5">
+                                    <h1 style="text-transform: capitalize; margin-bottom: 30px">{{section}} {{"tabName"|ng}}</h1>
+
+
+                                    {{ render_facet_tags() }}
+
+
+                                    <div class="row form-group" style="margin-top:20px">
+                                            <div class="col-md-6">
+                                                {{tag_moderation_panel()}}
+                                            </div>
+                                            <div class="btn-icon-group col-md-6">
+                                                <div class="filter-block pull-right">
+                                                    <search filter="post_search"
+                                                            ng-show="section.is_details"
+                                                            control="reload"
+
+                                                            placeholder-text="Search"></search>
+                                                    <search filter="search"
+                                                            ng-show="section.is_topics"
+                                                            placeholder-text="Search"></search>
+                                                </div>
+                                                <div class="filter-block pull-right">
+                                                    <select ng-controller="ChannelsBookmarksCtrl"
+                                                            ng-init="init('{{channel_type}}', '{{section}}')"
+                                                            ng-model="channel"
+                                                            class="form-control"
+                                                            style="width:100%"
+                                                            ng-options="c.title for c in channels"></select>
+                                                </div>
+                                            </div>
+                                    </div>
+
+                                    <div ng-switch-when="true">
+                                        {{ render_posts(type=section, multi_select=True, tag_moderation=True) }}
+                                    </div>
+                                    <div ng-switch-default>
+                                        <div ng-include="getPlotterURL()"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            {{ render_modal(id="userProfileModal", title="User Profile", type="user_profile") }}
+            {{ render_modal(id="replyModal", title="Reply to", type="reply") }}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+<style>
+    slr-smart-tags-modal > button {
+        padding: 0;
+    }
+</style>

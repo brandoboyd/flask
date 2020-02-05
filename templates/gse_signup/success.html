@@ -1,0 +1,22 @@
+{% extends "gse_signup/base.html" %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <section>
+            <h2>Hi {{user.first_name}} {{user.last_name}}</h2>
+            <p>
+                Success. You have been setup with the role of Customer Administrator of Genesys Social Engagement.
+                Please save the following URL <a href="/login" target="_self">{{host_url}}</a> to your bookmarks for future reference.
+                Click this <a href="{{host_url}}" target="_self">link</a> to proceed to Social Admin application.
+            </p>
+            <p>
+                <br />
+                Thanks! <br />
+               <strong>The Genesys Team.</strong>
+            </p>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,148 @@
+<h1>Smart Tags</h1>
+
+<hr/>
+
+<div class="row form-group">
+    <div class="col-md-12">
+        <div class="pull-left">
+            {% if user.is_admin or user.is_staff or user.is_analyst %}
+            <a href ng-click="createSmartTag()" class="btn btn-primary" tooltip-placement="top" tooltip="New Smart Tag"><span class="fonticon icon-add"></span> Add Smart Tag</a>
+            {% endif %}
+            <div class="pull-right btn-icon-group" style="margin-left: 10px;">
+                <button class="btn btn-default btn-icon" tooltip-placement="top" tooltip="Activate" ng-disabled="!selected.length" ng-click="activate()">
+                    <span class="fonticon icon-24-control-play success"></span>
+                </button>
+                <button class="btn btn-default btn-icon" tooltip-placement="top" tooltip="Suspend" ng-disabled="!selected.length" ng-click="deactivate()">
+                    <span class="fonticon icon-24-control-pause error"></span>
+                </button>
+                <button class="btn btn-default btn-icon icon-more-btn" toggle-responsive-menu="#tags-btns">
+                    <span class="fonticon icon-more"></span>
+                    <ul class="dropdown-menu nav-tabs-dropdown-menu dropdown-menu-pull-left" id="tags-btns" role="menu" style="left: 16%;top:40px;">
+                        <li class="dropdown" ng-disabled="!selected.length">
+                            <a role="menuitem" tabindex="-1"
+                               ng-confirm
+                               tooltip-placement="top" tooltip="Delete"
+                               action-text="When you delete a smart tag, all data collected for that smart tag will be lost. <br><br>Are you sure you want to delete?"
+                               action-function="delete()"
+                               action-button-text="Yes"
+                               cancel-button-text="No"><span class="fonticon icon-trash"></span>&nbsp;Delete</a>
+                        </li>
+                        <li class="dropdown" ng-disabled="!selected.length">
+                            <a role="menuitem" tabindex="-1" ng-click="activate()"><span class="fonticon icon-24-control-play success"></span>&nbsp;Activate</a>
+                        </li>
+                        <li class="dropdown" ng-disabled="!selected.length">
+                            <a role="menuitem" tabindex="-1" ng-click="deactivate()"><span class="fonticon icon-24-control-pause error"></span>&nbsp;Suspend</a>
+                        </li>
+                    </ul>
+                </button>
+            </div>
+        </div>
+        <div class="pull-right">
+            <div class="filter-block">
+                <select class="form-control"
+                        ng-model="filters.channel"
+                        ng-options="o.id as o.title for o in channels"
+                        ng-change="refresh()">
+                </select>
+            </div>
+            <div class="filter-block">
+                <select ng-init="foo = foo || items[0]"
+                        class="form-control"
+                        ng-model="filters.status">
+                    <option value="">-- All Statuses --</option>
+                    <option>Active</option>
+                    <option>Suspended</option>
+                </select>
+            </div>
+            <div class="filter-block">
+                <date-range-dropdown on-change="loadSmartTags(dates)"></date-range-dropdown>
+            </div>
+            <div class="filter-block">
+                <search filter="filters.title" placeholder-text="Search by Name or Description"></search>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="alert alert-info text-center" ng-show="!tags.length"><i class='icon-alert-triangle'></i> No Smart Tags</div>
+
+<table class="table table-default" ng-show="tags.length" ng-init="orderByPredicate='title';orderByReverse=false">
+    <thead>
+        <tr>
+            {% if user.is_admin or user.is_staff or user.is_analyst %}
+            <th style="width:47px;"></th>
+            {% endif %}
+            <th sorter="table.sort" data-predicate="title" data-title="Name"></th>
+            <th sorter data-predicate="direction" data-title="Direction"></th>
+            <th style="width:80px;">Status</th>
+            <th>Description</th>
+            <th sorter="table.sort" data-predicate="created_at" data-title="Created"></th>
+            <th><div tooltip="Total number of posts analyzed in relation to this tag" tooltip-placement="left">Posts</div></th>
+            <th><div tooltip="Posts that were NOT tagged with the related tag by the system, but a user subsequently added a tag." tooltip-placement="left">FN</div></th>
+            <th><div tooltip="Total number of posts that are incorrectly tagged with the related tag. A user has taken steps to remove the tag from the post." tooltip-placement="left">TP</div></th>
+            <th><div tooltip="A post where a tag was assigned and is confirmed by a user." tooltip-placement="left">FP</div></th>
+            <th><div tooltip="TP / (TP+FP)" tooltip-placement="left">Precision</div></th>
+            <th><div tooltip="TP / (TP + FN)" tooltip-placement="left">Recall</div></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="tag in tags | filter:filterPredicate | orderBy: table.sort.predicate: table.sort.reverse">
+            {% raw %}
+            <td>
+                <label class="checkbox">
+                    <input type="checkbox"
+                           class="ark-checkbox"
+                           value="{{ tag.id }}"
+                           ng-model="tag.selected" ng-change="selectRow(tag)" /><span></span>
+                </label>
+            </td>
+            <td><a ng-click="edit(tag)" class="link">{{ tag.title }}</a></td>
+            <td style="text-transform: capitalize">{{ tag.direction }}</td>
+            <td>{{tag.status}}</td>
+            <td>{{ tag.description }}</td>
+            <td>{{ tag.created_at | date }}</td>
+           <td><span
+                     tooltip-placement="top" tooltip
+                     title="Number of posts">{{ tag.stats.number_of_posts}}</span></td>
+           <td><span
+                     tooltip-placement="top" tooltip
+                     title="">{{ tag.stats.number_of_false_negative}}</span></td>
+           <td><span
+                     tooltip-placement="top" tooltip
+                     title="">{{ tag.stats.number_of_true_positive}}</span></td>
+           <td><span
+                     tooltip-placement="top" tooltip
+                     title="">{{ tag.stats.number_of_false_positive}}</span></td>
+           <td><span
+                     tooltip-placement="top" tooltip
+                     title="">
+                      {{ tag.stats.presicion.toFixed(2)}}
+                </span></td>
+           <td><span
+                     tooltip-placement="top" tooltip
+                     title="">
+                      {{ tag.stats.recall.toFixed(2)}}
+                </span></td>
+           {% endraw %}
+        </tr>
+    </tbody>
+</table>
+<div class="center" ng-show="messages.length>0">
+    <div class="pagination">
+        <ul>
+            <li ng-class="{disabled: filters.currentPage == 0}">
+                <a href ng-click="prevPage()">« Prev</a>
+            </li>
+            <li ng-repeat="n in range(pages)"
+                ng-class="{active: n == filters.currentPage}"
+                ng-click="setPage()">
+                <a href ng-bind="n + 1">1</a>
+            </li>
+            <li ng-class="{disabled: filters.currentPage == pages-1}">
+                <a href ng-click="nextPage()">Next »</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+{% from '_macros/dialogs.html' import render_share_dialog %}
+{{ render_share_dialog(scope="channel") }}

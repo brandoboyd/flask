@@ -1,0 +1,31 @@
+{% from "_macros/smart_tags.html" import smart_tag_form with context %}
+
+<div class="modal-header">
+    <div class="clearfix">
+        <h3 class="pull-left">Smart Tag settings</h3>
+        <a class="close pull-right"
+           ng-click="close(result)">
+            <span class="icon-close"></span>
+        </a>
+        <div class="pull-right alert alert-success" ng-show="formState.isSaved">
+           The settings were saved.
+        </div>
+        <div class="pull-right alert alert-danger"  ng-show="formState.isError">
+            Tags must contain a title and description.
+        </div>
+    </div>
+</div>
+
+<div class="modal-body">
+{{ smart_tag_form(inModal=True) }}
+</div>
+
+<div class="modal-footer">
+<button ng-click="close(result)" class="btn btn-default">Cancel</button>
+{% if user.is_analyst %}
+    <button type="button"
+            class="btn btn-primary"
+            ng-disabled="SmartTagForm.$invalid"
+            ng-click="save()">Update</button>
+{% endif %}
+</div>

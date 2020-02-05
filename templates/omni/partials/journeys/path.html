@@ -1,0 +1,124 @@
+{% extends "omni/partials/journeys/_template.html" %}
+
+{% block journeys_tpl_title %}
+Path Analysis
+{% endblock %}
+
+{% block journeys_tpl_right_filter %}
+
+{% raw %}
+<div class="col-md-6">
+  <div class="pull-left" ng-if="!flags.isOverview">
+    <label>Top-{{topKpaths}} paths</label>
+    <select class="form-control"
+            ng-model="topKpaths"
+            ng-change="selectK(topKpaths)"
+            ng-options="k.limit as k.limit for k in limit_list"></select>
+  </div>
+</div>
+<div class="col-md-6">
+  <div class="pull-right">
+    <button class="btn btn-default" ng-click="configure()">Configure</button>
+  </div>
+</div>
+{% endraw %}
+{% endblock %}
+
+{% block journeys_tpl_body %}
+
+<div class="drill-down-hint" ng-if="!loading">
+  <div ng-show="analysisMode">
+    Analysis mode (Shift to toggle)
+  </div>
+  <div ng-show="drillDownMode">
+    Drill-down mode
+  </div>
+</div>
+
+{% raw %}
+<div class="row">
+  <div class="col-md-12">
+    <!-- Tabs -->
+    <nav class="navbar navbar-switch-default" role="navigation">
+      <ul class="nav navbar-nav" data-tabs="tabs" id="tabs">
+        <li ng-repeat="tab in subtabs" ng-cloak ng-show="subtabs.length" ng-class="{'active': tab.active}" ng-click="selectTab(tab)"
+            onclick="angular.element(this).tab();">
+          <a data-target="#{{tab.label}}" data-toggle="tab">
+            <span ng-hide="tab.display_name">{{tab.measure | toTitleCase}} {{tab.label}}</span>
+            <span ng-show="tab.display_name">{{tab.display_name}}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- Content -->
+    <div class="tab-content">
+      <div class="tab-pane" style="display: block">
+        <table class="table table-default path-analysis" style="margin-top: 20px;">
+          <thead>
+            <tr>
+              <th style="width: 40%">Paths</th>
+              <th style="width: 9%">% of Paths</th>
+              <th ng-repeat="m in paths[0].metrics"
+                  style="width:9%"
+                  ng-if="m.label != '% of paths'">
+                {{m.label.toLowerCase()}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="p in paths track by $index"
+              ng-init="pathIndex = $index"
+              >
+            <td style="position: relative; cursor:pointer;"
+                class="single-path"
+                ng-click="selectPaths(p, pathIndex)"
+                ng-class="{'active': tab.active, 'clickToDrill': _hovering && drillDownMode, 'clickToAnalysis': _hovering && analysisMode}"
+                ng-mouseenter="_hovering=true"
+                ng-mouseleave="_hovering=false"
+              >
+              <div class="decoratorStage" ng-show="p.selected" style="top:0;left:0;bottom:0;height:100%;width:5px"></div>
+              <h3 ng-show="flags.isOverview">
+                <span ng-hide="p.display_name">{{p.measure | toTitleCase}} {{p.label}}</span>
+                <span ng-show="p.display_name">{{p.display_name}}</span>
+              </h3>
+              <div class="row">
+                <div class="col-md-12">
+                  <div ng-repeat="stage in p.stages" ng-init="stageIndex = $index" class="col-md-{{getGridNumber(p.stages.length)}} no-side-padding">
+                    <div class="stage-card {{stageIndex % 2 == 0 ? 'semi-blue-pill' : 'semi-grey-pill'}}">
+                      <div class="stage-node-wrapper">
+                        <div ng-repeat="node in stage.nodes track by $index"
+                             ng-init="nodeIndex = $index; _maxNodesToDisplay = 3;"
+                             ng-hide="nodeIndex >= _maxNodesToDisplay"
+                             class="stage-node">
+                            <span ng-show="stage.nodes.length > _maxNodesToDisplay && nodeIndex > _maxNodesToDisplay-2" tooltip="{{(stage.nodes.slice(_maxNodesToDisplay-1) | _:'pluck':'label').join(', ')}}" tooltip-placement="top">{{stage.nodes.length - nodeIndex}}</span>
+                            <span ng-show="stage.nodes.length <= _maxNodesToDisplay || nodeIndex <= _maxNodesToDisplay-2" class="fonticon" tooltip="{{node.label}}" tooltip-placement="top" ng-class="getNodeIcon(node.platform)"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <h4 class="text-center">{{stage.label}}</h4>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td style="vertical-align:middle;text-align: center;">
+              <h2 style="color:black!important;">
+                <b>{{p.metrics.percentage.value}}</b>
+              </h2>
+            </td>
+            <td style="vertical-align:middle;text-align:center;color:black"
+                ng-repeat="m in p.metrics"
+                ng-if="m.label != '% of paths'">
+              <h2>{{m.value}}</h2>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div ng-show="!loading && !paths.length" class="alert alert-info text-center">
+          <span class="icon-alert-triangle"></span>&nbsp;No Data Available
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endraw %}
+{% endblock %}

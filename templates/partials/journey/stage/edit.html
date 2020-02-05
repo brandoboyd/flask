@@ -1,0 +1,115 @@
+{% macro journey_stage_form(form='form') %}
+<form name="{{ form }}" class="form-horizontal" novalidate>
+    <fieldset>
+
+    <div class="form-group" ng-class="{'has-error': {{ form }}.id_name.$dirty && {{ form }}.id_name.$invalid || {{ form }}.id_name.$overflow}">
+        <label class="col-sm-2 control-label" for="id_name">Name <span class="asterisk">*</span></label>
+        <div class="col-sm-4">
+            <input type="text"
+                   placeholder="Stage names need to be unique per journey type"
+                   ng-model="item.display_name"
+                   my-maxlength="40"
+                   id="id_name"
+                   name="id_name"
+                   class="form-control"
+                   autofocus=""
+                   tabindex="1"
+                   required />
+
+            <span ng-show="{{ form }}.id_name.$dirty && {{ form }}.id_name.$invalid"
+                  class="help-block error">Stage name is required</span>
+            <span ng-show="{{ form }}.id_name.$overflow"
+                  class="help-block error">Stage name is too long</span>
+
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': {{ form }}.id_status.$dirty && {{ form }}.id_status.$invalid}">
+        <label class="col-sm-2 control-label" for="id_status">Status <span class="asterisk">*</span></label>
+        <div class="col-sm-4">
+            <select ng-model="item.status"
+                    ng-options="opt.id as opt.text for opt in options.stageStatuses"
+                    name="id_status"
+                    class="form-control"
+                    tabindex="1"
+                    required />
+
+            <span ng-show="{{ form }}.id_status.$dirty && {{ form }}.id_status.$invalid"
+                  class="help-block error">Stage status is required</span>
+        </div>
+    </div>
+
+    <div ng-repeat="type in eventTypeItems">
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="event_types">Event Type</label>
+            <div class="col-sm-3">
+                <select id="event_types" class="form-control"
+                        ng-options="et.id as et.display_name for et in options.eventTypes"
+                        placeholder="Select event types"
+                        ng-model="type.id">
+                </select>
+            </div>
+            <div class="col-sm-1">
+                <a class="btn btn-sm btn-default pull-right" tooltip-placement="top" tooltip="Remove Event Tyep" ng-click="removeEventTypeItem($index)">
+                    <span class="fonticon icon-close-bold"></span></a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="must_contain">Must Contain</label>
+            <div class="col-sm-3">
+                <input id="must_contain"
+                       class="form-control"
+                       ui-select2="{multiple: true, simple_tags: true, tags: []}"
+                       ng-model="type.must_have_rules"
+                       placeholder="Type a keyword/search term and hit tab"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="must_not_contain">Must Not Contain</label>
+            <div class="col-sm-3">
+                <input id="must_not_contain"
+                       class="form-control"
+                       ui-select2="{multiple: true, simple_tags: true, tags: []}"
+                       ng-model="type.must_not_have_rules"
+                       placeholder="Type a keyword/search term and hit tab"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-4">
+            <button type="button" class="btn btn-default pull-right"
+                    ng-click="addEventTypeItem()"
+                    ><span class="fonticon icon-add"></span>&nbsp;Add Event Type
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group form-actions">
+        <div class="col-sm-offset-2 col-sm-4">
+        <button type="button"
+                class="btn btn-primary"
+                ng-click="save()"
+                ng-disabled="!form.$valid">{{'title'|ng}}</button>
+        </div>
+    </div>
+    </fieldset>
+</form>
+{% endmacro %}
+
+{% raw %}
+<h3 style="margin-left: 10%;">
+    {{ title == 'Create' ? 'New' : 'Update'}} Journey Stage
+</h3>
+{% endraw %}
+
+<a ng-href="#/journey_types/edit/{{ '{{item.jtId}}' }}/">
+    <button class="btn btn-default btn-xs" style="position: absolute;top:0" tooltip-placement="top" tooltip="Back To Journey Type">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+
+<hr>
+{{ journey_stage_form() }}

@@ -1,0 +1,33 @@
+<a style="position: relative;margin-top: 16px;" class="btn btn-xs btn-default" href="#/events/all" tooltip-placement="top" tooltip="All Events"><span class="fonticon icon-arrow-left"></span></a>
+
+<hr />
+<form name="form" class="form-horizontal">
+    <fieldset>
+        {% raw %}
+        <div class="control-group">
+            <label class="control-label" for="sTitle">Title <span class="asterisk">*</span></label>
+            <div class="controls">
+            {{item.title}}
+
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Name</label>
+            <div class="controls">
+                <div style="display:block">
+           {{item.title}}
+          </div>
+        </div>
+        </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">User</label>
+            <span>{{item.user}}</span>
+        </div>
+
+        {% endraw %}
+
+    </fieldset>
+</form>
+
+

@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <div class="clearfix">
+    <h3 class="pull-left" ng-bind="modal_title || 'Confirm'"></h3>
+    <a class="close pull-right"
+       ng-click="close(result)">×</a></div>
+</div>
+<div class="modal-body">
+
+        <p>Clicking <strong>Confirm</strong> will remove all the {{language}} keywords.</p>
+        <p>Click <strong>Confirm</strong> to proceed, click <strong>Dismiss</strong> to cancel.</p>
+
+</div>
+<div class="modal-footer">
+<button ng-click="dismiss()" class="btn btn-info">Dismiss</button>
+<button ng-click="close()" class="btn btn-primary">Confirm</button>
+</div>

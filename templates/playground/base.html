@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{%- from "_macros/formhelper.html" import render_field -%}
+{%- from "_macros/buttons.html" import render_button -%}
+
+{% block title %}
+    {{ "SU playground: %s" % name }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+{% include "partials/test_subtabs.html" %}
+
+
+
+<div style="margin: 10px 9px">
+    {% include "playground/partials/menu.html" %}
+</div>
+
+<form action="{{ url_for(name) }}" method='POST' class="form-horizontal">
+<fieldset>
+    <legend>Post</legend>
+    <div class="form-group">
+        <div class="col-sm-3">
+            {{ render_field( form.language,
+                            no_label = True,
+                            form_readonly = False,
+                            class = 'form-control')
+            }}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            {{ render_field( form.content,
+                            form_readonly = False,
+                            no_label = True,
+                            cols = '10',
+                            rows = '5',
+                            class = 'form-control')
+            }}
+        </div>
+    </div>
+</fieldset>
+</form>
+
+{% block tool_output %}
+    {% if lang %}
+        <div class="clear">{{lang}}</div><br>
+    {% endif %}
+    {% if result %}
+    <fieldset>
+    <legend>Output</legend>
+        <div class="clear">
+            <textarea rows="5" style="width: 99%">{{ result }}</textarea>
+        </div>
+    </fieldset>
+    {% endif %}
+{% endblock %}
+
+{% endblock %}
+</div>
+{% block extra_scripts %}
+<script type="text/javascript">
+    jQuery('#content').focus().keydown(function(ev){
+        if (ev.keyCode==13) {
+           this.form.submit();
+           this.disabled = true;
+           return false;
+        }
+    });
+</script>
+{% endblock %}

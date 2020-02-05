@@ -1,0 +1,12 @@
+<div class="filter-container">
+    <div class="input-container pull-left">
+        <input type="text" ng-model="filter" class="form-control filter-search-box" placeholder="{{placeholderText}}" style="width:100%;">
+        <span class="icon-search search-box-icon"></span>
+        <span class="icon-close search-box-cancel" ng-click="filter = ''"></span>
+    </div>
+    <button class="btn btn-default btn-sm pull-left"
+            ng-show="isReloadShown"
+            style="height: 32px;" ng-click="reload()">
+        <span class="fonticon icon-refresh"></span>
+    </button>
+</div>

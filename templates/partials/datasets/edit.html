@@ -1,0 +1,160 @@
+{% raw %}
+<div class="configure-schema-header">
+    <h3 style="margin-left: 30px;">
+    {{ dataset ? "Update " + "&ldquo;" + dataset.name + "&rdquo; Dataset" : "&nbsp;" }}
+    </h3>
+    <a href="#/datasets">
+            <button class="btn btn-default btn-xs"
+                    style="position: absolute;top:0; left:0"
+                    tooltip-placement="top"
+                    tooltip="All Datasets">
+                <span class="fonticon icon-arrow-left"></span>
+            </button>
+    </a>
+
+    <div class="topright-status" ng-show="dataset">
+      <span class="icon-alert-octo error" ng-show="dataset.sync_status!='IN_SYNC'"></span>
+      <span class="icon-alert-octo success" ng-show="dataset.sync_status=='IN_SYNC'"></span>
+      &nbsp;{{dataset.status_display}}
+    </div>
+</div>
+
+<hr>
+
+<div class="configure-schema">
+
+<div class="alert alert-warning text-center" ng-show="isFetched && !hasTimetampField">
+  <i class='icon-alert-triangle'></i> To proceed, you need to specify a timestamp field which represents each entry's created time.
+</div>
+
+<div class="alert alert-info text-center" ng-if="dataset.sync_status=='SYNCED'">
+    <span ng-if="!rowsLost">{{dataset.items_synced}} rows have been synchronized.</span>
+    <span ng-if="rowsLost > 0">{{dataset.items_synced}} rows have been synchronized, {{rowsLost}} rows have been dismissed due to type mismatch.</span>
+    <span class="q-sign"
+       ng-if="rowsLost > 0"
+       tooltip-placement="right"
+       tooltip-trigger="mouseenter"
+       tooltip="Show synchronization errors"
+       ng-click="onShowErrors()">
+      <i class="icon-iw-active-circle-question"></i>
+    </span>
+    <br/>
+    <br/>
+    <button
+        ng-click="acceptSchema()"
+        ng-disabled="dataset.items_synced < 1"
+        class="btn btn-default">Accept Schema
+    </button>
+    <button
+        ng-click="cancelSchema()"
+        class="btn btn-default">Cancel Schema
+    </button>
+</div>
+{% endraw %}
+
+<div class="row form-group action-bar" ng-show="isFetched">
+  <div class="col-md-12">
+    <div class="pull-left">
+        {% if user.is_staff or user.is_admin %}
+      <!-- <button
+            ng-show="selected.length"
+            ng-click="showDetails()"
+            class="btn btn-default">Show Selected
+      </button> -->
+        <div ng-if="dataset.sync_status=='IN_SYNC'">
+            <button
+                ng-show="dataset.is_locked"
+                ng-click="appendData()"
+                class="btn btn-default">Append Data
+            </button>
+        </div>
+        <div ng-if="dataset.sync_status=='OUT_OF_SYNC'">
+            <button
+                ng-click="setAsCreatedTime()"
+                ng-disabled="selected.length!==1 || selected[0].created_time===true"
+                class="btn btn-default">Set As Created Time
+            </button>
+            <button
+                ng-click="saveSchema()"
+                ng-disabled="!isSchemaChanged"
+                class="btn btn-default">Save Changes
+            </button>
+            <button
+                ng-click="applySchema()"
+                ng-disabled="!hasTimetampField || dataset.sync_status == 'SYNCING'"
+                class="btn btn-default">Sync Schema
+            </button>
+        </div>
+        {% endif %}
+    </div>
+    <div class="pull-right">
+      <div class="filter-block">
+        <search filter="flags.search" placeholder-text="Search"></search>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% raw %}
+<table class="table table-default">
+    <thead>
+    <tr>
+        <th style="width:40px;">
+          <label class="checkbox">
+            <input type="checkbox" class="ark-checkbox" ng-model="flags.selectedAll" ng-click="select()"><span></span>
+          </label>
+        </th>
+        <th sorter="table.sort" data-predicate="name" data-title="Field Name"></th>
+        <th sorter="table.sort" data-predicate="type" data-title="Type"></th>
+        <th sorter="table.sort" data-predicate="cardinality" data-title="Cardinality"></th>
+        <th sorter="table.sort" data-predicate="description" data-title="Description"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="field in dataset.schema | filter:flags.search | orderBy: table.sort.predicate: table.sort.reverse">
+        <td>
+          <label class="checkbox">
+            <input type="checkbox" class="ark-checkbox" ng-model="field.selected" ng-click="select(field)"><span></span>
+          </label>
+        </td>
+        <td>
+            <a class="link"
+               ng-click="showData(field.name)"
+               >{{field.name}}
+            </a>
+            <span class="created_at_mark"
+                  ng-if="field.created_time">
+                  {{field.created_time ? 'created_at field ' : ''}}
+            </span>
+        </td>
+        <td>
+            <span ng-if="dataset.is_locked">{{field.type}}</span>
+            <select class="form-control"
+                    ng-if="!dataset.is_locked"
+                    ng-model="field.type"
+                    ng-options="type.id as type.text for type in types"
+                    ng-change="onEditStart()">
+            </select>
+        </td>
+        <td>
+            <a class="link"
+               ng-if="dataset.cardinalities[field.name].values"
+               ng-click="showDetails(field.name, dataset.cardinalities[field.name].values)"
+               >{{dataset.cardinalities[field.name].display_count}}</a>
+            <span
+              ng-if="!dataset.cardinalities[field.name].values"
+              >{{dataset.cardinalities[field.name].display_count}}</span>
+        </td>
+        <td>
+            <span ng-if="dataset.is_locked">{{field.description}}</span>
+            <input type="text" class="form-control inline-editable-input"
+                ng-if="!dataset.is_locked"
+                ng-model="field.description"
+                ng-change="onEditStart()"
+            />
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+{% endraw %}

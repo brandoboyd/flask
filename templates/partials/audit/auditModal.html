@@ -1,0 +1,29 @@
+{% raw %}
+<div class="modal-header">
+    <div class="clearfix">
+        <h4 class="pull-left">Account Audit Trail</h4>
+        <a class="close pull-right"
+           ng-click="close(false)">×</a>
+    </div>
+</div>
+
+<div class="modal-body">
+    <div style="height: 300px; overflow:auto;">
+    <table class="table table-default">
+        <tbody>
+        <tr ng-repeat="d in data">
+            <td> {{ (d.created_at*1000) | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+            <td> {{ d.change }}</td>
+            <td> {{ d.user_email }}</td>
+        </tr>
+        </tbody>
+
+    </table>
+    <a class="btn btn-primary" ng-show="cursor" ng-click="loadMoreAccountEvents()">Load more</a>
+    </div>
+</div>
+<div class="modal-footer">
+
+    <button ng-click="close(false)" class="btn btn-primary">Close</button>
+</div>
+{% endraw %}

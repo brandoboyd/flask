@@ -1,0 +1,9 @@
+<h3>{{ "{{ title }}" }}
+    <a class="btn btn-success pull-right" href="#/multi_channel_tags/all">All Multi Channel Tags</a>
+</h3>
+<hr />
+
+{% from "_macros/multi_channel_tags.html" import multi_channel_tag_form with context %}
+<div style="width:650px">
+{{ multi_channel_tag_form() }}
+</div>

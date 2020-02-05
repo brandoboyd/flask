@@ -1,0 +1,160 @@
+{% from './_macros/dialogs.html' import render_account_create_update_dialog, render_share_dialog with context %}
+
+<h3 style="margin-left: 10%;">New Account</h3>
+<a href="#/accounts" style="position: absolute;top:0;left:15px;">
+    <button class="btn btn-default btn-xs" tooltip-placement="top" tooltip="All Accounts">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+
+<hr />
+<div ng-controller="CreateUpdateDialogCtrl">
+
+<form class="form-horizontal" name="accountForm">
+    <fieldset>
+
+        <div class="col-sm-6 pull-left">
+            <div class="form-group" ng-class="{'has-error': (accountForm.accountName.$error.minlength || accountForm.accountName.$error.required) && accountForm.accountName.$dirty}">
+                <label for="accountName" class="col-sm-4 control-label">Account Name <span class="asterisk">*</span></label>
+                <div class="col-sm-8">
+                    <input ng-model="account.name"
+                         name="accountName"
+                         type="text"
+                         ng-minlength="2"
+                         my-maxlength="20"
+                         id="acct_name"
+                         ng-required="true"
+                         class="form-control"
+                         placeholder="Account name must be 2-20 characters long"
+                         autofocus>
+                    <span class="help-block error"
+                        ng-show="(accountForm.accountName.$error.minlength || accountForm.accountName.$overflow) && accountForm.accountName.$dirty">
+                        Account name must be 2-20 characters long</span>
+                    <span class="help-block error"
+                        ng-show="accountForm.accountName.$error.required && accountForm.accountName.$dirty">
+                        Account name is required
+                    </span>
+                </div>
+            </div>
+
+        {% if user.is_staff %}
+
+            {#
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="accountType">Account Type</label>
+                <div class="col-sm-8">
+                    <select ng-model="account.account_type"
+                            name="accountType"
+                            id="accountType"
+                            class="form-control"
+                            ng-options="o.value as o.label for o in accountTypeOptions">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            #}
+
+            <div class="form-group"
+                >
+                <label class="col-sm-4 control-label" for="pricingPackage">Pricing Package</label>
+                <div class="col-sm-8">
+                    <select ng-model="account.package"
+                            name="pricingPackage"
+                            class="form-control"
+                            id="pricingPackage">
+                        <option value="Internal">Internal</option>
+                        <option value="Bronze">Bronze</option>
+                        <option value="Silver">Silver</option>
+                        <option value="Gold">Gold</option>
+                        <option value="Platinum">Platinum</option>
+                        <option value="Trial">Trial</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group animate-show"
+                 style="padding-left:0!important;"
+                 ng-cloak
+                 ng-if="notInternalAccount {% if not user.is_staff %} && account.end_date{% endif %}">
+                 <label class="col-sm-4 control-label" for="endDate">Expires</label>
+                 <div class="col-sm-8">
+                     <input type="text"
+                            ui-jq="datepicker"
+                            name="endDate"
+                            class="form-control"
+                            ui-options="options.end_date"
+                            {# check-account-end-date="account" #}
+                            ng-model="account.end_date"
+                            placeholder="Choose a Date"/>
+                     {#
+                     <span class="help-block error"
+                           ng-show="accountForm.endDate.$error.checkAccountEndDate">
+                         You need to set expire date for the account
+                     </span>
+                     #}
+                     <span class="help-block error"
+                           ng-show="isExpired(account)">
+                         Account is not active any more
+                     </span>
+                 </div>
+            </div>
+
+        {% endif %}
+        </div>
+
+        <div class="col-sm-4 col-sm-offset-1">
+            <div class="form-group"
+                 ng-show="notInternalAccount && account.package != 'Trial'">
+                <label ng-show="notInternalAccount" class="col-sm-8 control-label">
+                    <p class="text-left">Package Options</p>
+                </label>
+                <div class="col-sm-8">
+                    <span id="bronze_span"
+                          ng-cloak
+                          ng-show="show_pricing_package_details.Bronze"
+                          class="help-block animate-show"
+                          style="margin-left:3px; margin-top:9px">Cost: $500 p/m<br>
+                                                  Volume: 5000 Inbound Posts<br>
+                                                  Storage: Data is stored for 3 months</span>
+                    <span id="silver_span"
+                          ng-cloak
+                          ng-show="show_pricing_package_details.Silver"
+                          class="help-block animate-show"
+                          style="margin-left:3px; margin-top:9px">Cost: $2000 p/m<br>
+                                                      Volume: 25000 Inbound Posts<br>
+                                                      Storage: Data is stored for 3 months</span>
+                    <span id="gold_span"
+                          ng-cloak
+                          ng-show="show_pricing_package_details.Gold"
+                          class="help-block animate-show"
+                          style="margin-left:3px; margin-top:9px">Cost: $5000 p/m<br>
+                                                      Volume: 75000 Inbound Posts<br>
+                                                      Storage: Data is stored for 6 months</span>
+                    <span id="platinum_span"
+                          ng-cloak
+                          ng-show="show_pricing_package_details.Platinum"
+                          class="help-block animate-show"
+                          style="margin-left:3px; margin-top:9px">Cost: $10000 p/m<br>
+                                                      Volume: 200000 Inbound Posts<br>
+                                                      Storage: Data is stored for 13 months</span>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+</form>
+
+
+
+<div class="form-horizontal">
+    <div class="form-group form-actions">
+        <div class="col-sm-offset-2 col-sm-4">
+            <button class="btn btn-primary"
+               ng-disabled="!(account.name.length >= 2)"
+               ng-click="accountForm.$invalid || save()">Create
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+

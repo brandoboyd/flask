@@ -1,0 +1,71 @@
+<form class="form-horizontal" role="form" name="shareForm">
+    <div class="modal-header">
+        <h1 style="text-align: left;">Share a Dashboard with</h1>
+        <span class="fonticon icon-close"
+              ng-click="$dismiss()"
+              style="position: absolute;top: 30px;right: 25px;cursor:pointer;font-size: 14px;"></span>
+    </div>
+
+    <div class="modal-body" style="margin-top: 15px;">
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="filter-container">
+                    <div class="input-container">
+                        <input type="text" ng-model="filters.searchQuery" class="form-control filter-search-box"
+                               placeholder="Search by name or email">
+                        <span class="icon-search search-box-icon"></span>
+                    </div>
+                </div>
+
+                {% raw %}
+
+                <table class="table table-default" style="margin-top:10px">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="user in users">
+                        <td>
+                            <label class="checkbox">
+                                <input type="checkbox" class="ark-checkbox" ng-model="user.chosen" ng-change="toggled(user)">
+                                <span></span>
+                            </label>
+                        </td>
+                        <td>{{user.name}}</td>
+                        <td style="word-break: break-all;">{{user.email}}</td>
+                        <td>{{ user.full_roles.join(' ') }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                {% endraw %}
+            </div>
+
+                <div class="center" ng-show="users.length>0">
+                    <pagination class="pagination-sm"
+                                ng-model="pagination.currentPage"
+                                ng-change="pagination.setPage()"
+                                total-items="pagination.totalItems"
+                                items-per-page="pagination.limit"
+                                max-size="pagination.maxSize"
+                                boundary-links="true"
+                                num-pages="pagination.pages">
+                    </pagination>
+                </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default pull-left"
+                ng-click="$dismiss()">Cancel</button>
+        <button class="btn btn-primary pull-right"
+                ng-click="share()"
+                ng-disabled="shareForm.$pristine">Share</button>
+    </div>
+
+</form>

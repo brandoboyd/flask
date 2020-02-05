@@ -1,0 +1,125 @@
+.spinner-container {
+  height: 48px;
+  width: 48px;
+  position: relative;
+
+  .spin-circle {
+    z-index: 100;
+    position: absolute;
+    left: -2px;
+    top: -2px;
+    border-bottom: 5px solid rgba(0, 0, 0, 0);
+    border-left: 5px solid rgba(0, 0, 0, 0);
+    border-right: 5px solid #5E99FF;
+    border-top: 5px solid rgba(0, 0, 0, 0);
+    border-radius: 100%;
+    height: 52px;
+    width: 52px;
+    -webkit-animation: spin 3s infinite linear;
+    -moz-animation: spin 3s infinite linear;
+    -ms-animation: spin 3s infinite linear;
+    -o-animation: spin 3s infinite linear;
+    animation: spin 3s infinite linear;
+  }
+
+  .spin-inner-circle {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    background-color: white;
+    border: solid 1px rgba(34, 37, 41, 0.14);
+    border-radius: 50%;
+  }
+}
+
+.input-spinner {
+  height: 16px;
+  width: 16px;
+
+  .spin-circle {
+    left: -1px;
+    top: -1px;
+    border-bottom: 3px solid rgba(0, 0, 0, 0);
+    border-left: 3px solid rgba(0, 0, 0, 0);
+    border-right: 3px solid #5E99FF;
+    border-top: 3px solid rgba(0, 0, 0, 0);
+    height: 18px;
+    width: 18px;
+  }
+
+  .spin-inner-circle {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.fast-spinner {
+  .spin-circle {
+    -webkit-animation: spin 1s infinite linear;
+    -moz-animation: spin 1s infinite linear;
+    -ms-animation: spin 1s infinite linear;
+    -o-animation: spin 1s infinite linear;
+    animation: spin 1s infinite linear;
+  }
+}
+
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+@-moz-keyframes spin {
+  from {
+    -moz-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+@-ms-keyframes spin {
+  from {
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+@-o-keyframes spin {
+  from {
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -o-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}

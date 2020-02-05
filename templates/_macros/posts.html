@@ -1,0 +1,225 @@
+{%- macro render_posts(in_modal=False, type='inbound', multi_select=False, tag_moderation=False) -%}
+
+<style>
+    .dimmed {
+        opacity: 0.3;
+    }
+</style>
+<div class="spinner-container" style="position:fixed;left:70%;top:50%;" ng-show="showLoader">
+        <div class="spin-circle"></div>
+        <div class="spin-inner-circle"></div>
+</div>
+<div style="position: relative"
+     ng-class="{'dimmed': showLoader}">
+    <div ng-hide="(posts|filter:post_search).length > 0 || showLoader">
+        <div ng-bind-html="noDataMessageHtml()"></div>
+    </div>
+    <div infinite-scroll='loadMore()'
+         infinite-scroll-disabled='showLoader'
+         style="margin-bottom: 10px;">
+        <div ng-repeat="item in posts | filter:post_search"
+             class="response-wrap" id="{{'{{item.id}}'}}">
+            <table class="response"
+                   {% if in_modal != True %}
+                   ng-class="{'post-rejected' : (item.filter_status == 'rejected' || item.tag_filter_status == 'tag_rejected'), 'post-disabled' : arePostsDisabled }"
+                   {% endif %}
+                   style="width:100%">
+                <tbody>
+                <tr>
+                    <td style="padding:3px 3px 0 3px">
+                        {% if in_modal == False %}
+                        <div class="pull-left intention-labels"
+                             intention-labels="item.intentions"></div>
+                        {% endif %}
+                        {% if type != 'outbound' and in_modal == False %}
+                        <div class="pull-right">
+                            <div class="pull-right" style="margin: 0 5px" ng-show="item.filter_status=='actual'">
+                                <label class="inline post-action-label">replied</label>
+                            </div>
+                            {% if not user.current_account.account_type == 'Skunkworks' %}
+                            <div class="pull-right form-inline" style="margin: 0 5px" ng-show="item.filter_status!='actual'">
+                                {% if not user or user.is_analyst %}
+                                <label class="radio inline post-action-label">
+                                    <input type="radio"
+                                           class="ark-radiobtn"
+                                           ng-model="item.filter_status"
+                                           value="actionable"
+                                           ng-change="starPost(item)"
+                                           ng-disabled="is_facet_disabled"><span></span>actionable
+                                </label>
+                                <label class="radio inline post-action-label">
+                                    <input type="radio" style="margin: 2px 5px" class="ark-radiobtn"
+                                           ng-model="item.filter_status"
+                                           value="rejected"
+                                           ng-change="rejectPost(item)"
+                                           ng-disabled="is_facet_disabled"><span></span>rejected
+                                </label>
+                                {% else %}
+                                    <span class="post-action-label"
+                                          ng-bind="item.filter_status"></span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="white-space:inherit">
+                        <div class="inbox-post-wrap">
+                            {% if multi_select == True and (not user or user.is_analyst) %}
+                            <label class="checkbox">
+                                <input type="checkbox"
+                                       class="ark-checkbox"
+                                       ng-model="selected_items_ids[item.id_str]"
+                                       ng-disabled="is_facet_disabled" /><span></span>
+                            </label>
+                            {% endif %}
+                            {{ render_post('item', 'item.channel_id', None, in_modal, type, tag_moderation, user=user) }}
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro render_post(item, channel_id, response, in_modal, type, tag_moderation=False, user=None) %}
+
+<div class="tweet"
+     ng-class="{true:'has_klout'}[{{item}}.user.klout_score != null ]">
+    <div class="content">
+        <div class="stream-item-header">
+            <small class="time">
+                <span class="_timestamp js-short-timestamp"
+                      ng-bind="{{ item }}.created_at | moment:'LLL' "></span>
+            </small>
+            <div class="account-group">
+                <div class="avatar">
+                    <img ng-src="{{'{{%s.user.profile_image_url || default_profile_url }}' | format(item) }}"
+                         alt="{{'{{%s.user.name}}' | format(item)  }}">
+                </div>
+                <span class="klout" title="Klout influence score"
+                      ng-show="{{item}}.user.klout_score"
+                      ng-bind="{{item}}.user.klout_score"></span>
+                <strong class="fullname">
+                    {% if in_modal == False %}
+                    <span ui-user-history item="{{item}}"></span>
+                    {% endif %}
+                    <span ng-bind="{{item}}.user.screen_name"></span>
+                </strong>
+            </div>
+        </div>
+        <div class="post-content">
+            {% if in_modal == False %}
+                <p vote-topics='{{item}}'></p>
+            {% else %}
+                <p vote-topics='{{item}}' style="max-width:300px;"></p>
+            {% endif %}
+            {{ render_post_tags(item, channel_id, in_modal, type, response, tag_moderation=tag_moderation) }}
+        </div>
+        <span ng-show="item.has_attachments" class='icon-attach'></span>
+        <span ng-show="item.has_location" class='icon-pin'></span>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro render_post_tags(item, channel_id, in_modal, type, response, tag_moderation=False) %}
+
+{% if in_modal == False or type != 'outbound' %}
+<div class="select2-container-multi applied-tags ng-cloak clearfix"
+     ng-show="{{item}}.smart_tags.length > 0"
+     ng-cloak>
+    <ul class="select2-choices">
+        {% if user.is_staff or user.is_admin or user.is_agent or user.is_analyst %}
+            <li ng-repeat="tag in {{item}}.smart_tags"
+                class="select2-search-choice"
+                tag-assignment="tag"
+                active-tag="getChannelId()"
+                post-id="{{item}}.id_str"
+                channel-id="{{'{{%s}}'|format(channel_id) }}">
+                <div ng-bind="tag.title"></div>
+                    <a href=""
+                       class="select2-search-choice-close"
+                       remove-smart-tag="{{item}}"
+                       tag = "tag"
+                       selected-tag-filter="smart_tag.selected"
+                       response-id="{{'{{%s}}'|format(response)}}"
+                       channel-id="{{'{{%s}}'|format(channel_id) }}"
+                       tabindex="-1"></a>
+            </li>
+        {% else %}
+            <li ng-repeat="tag in {{item}}.smart_tags"
+                class="select2-search-choice">
+                <div ng-bind="tag.title"></div>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="stags-wrap pull-right">
+    <div class="post-actions">
+
+     {% if in_modal == True or type == 'outbound'  %}
+
+         {% if user.current_account.account_type != 'Skunkworks' %}
+            <a ng-href="{{ '{{%s.url || \'/redirects/post_view?post_id=\' + %s.id_str }}'|format(item, item) }}"
+               target="_blank">
+              <i class="icon-external-link"></i>
+              <span ng-bind="{{ '%s.url_href_text' | format(item) }}"></span></a>
+         {% endif %}
+
+     {% else %}
+      {% if type == 'inbound' %}
+        <a class="hide-action"
+           ng-click = 'openReplyDialog(item)' ng-show="item.channel_platform == 'Twitter'"><span class="icon-chat-oval icon-white"></span> Reply</a>
+      {% endif %}
+     	{% if tag_moderation %}
+	       <a ng-show="shouldShowLRU(item)"
+              href=""
+              class="hide-action"
+              ng-click="addLRUTag(item)">
+	       	  <i class="icon-tag-stat-add"></i> Add '<span ng-bind="lru_smart_tag.title"></span>'</a>
+
+	       <a ng-show="shouldShowModerated(item)"
+              href=""
+              class="hide-action"
+	       	  ng-click="addModeratedTag(item)">
+	       	  <i class="icon-tag-stat-add"></i> Add '<span ng-bind="smart_tag.selected_moderation.title"></span>'</a>
+
+            {% if not user or user.is_analyst or user.is_agent %}
+                <a ui-smart-tags2
+                   class="hide-action"
+                   item="{{ item }}"
+                   channel-id="{{ '{{%s}}'|format(channel_id) }}"></a>
+            {% endif %}
+
+	     {% else %}
+            {% if not user or user.is_analyst or user.is_agent %}
+                <a ui-smart-tags2 class="hide-action"
+                  item="{{ item }}"
+                  channel-id="{{ '{{%s}}'|format(channel_id) }}"></a>
+            {% endif %}
+	    {% endif %}
+
+        {% if user.current_account.account_type != 'Skunkworks' %}
+           <a ng-href="{{ '{{%s.url || \'/redirects/post_view?post_id=\' + %s.id_str }}'|format(item, item) }}"
+              ng-hide="{{ '%s.has_conversation == true' | format(item) }}"
+              target="_blank">
+              <i class="icon-external-link"></i>
+              <span ng-bind="{{ '%s.url_href_text' | format(item) }}"></span></a>
+        {% endif %}
+       <a ui-conversations="{{ item }}"
+          response-id="{{'{{%s}}'|format(response)}}"
+          selected-tag-filter="smart_tag.selected"></a>
+     {% endif %}
+    </div>
+
+    <div class="stags"></div>
+</div>
+{% endmacro %}
+
+

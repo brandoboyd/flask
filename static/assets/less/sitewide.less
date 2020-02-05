@@ -1,0 +1,234 @@
+// Core variables and mixins
+@import "static/ark/ark-style/less/variables.less";
+@import "static/ark/ark-style/less/mixins.less";
+@import "static/ark/ark-style/less/tooltip.less";
+
+.no-gutter > [class*='col-'] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Logo on login page */
+.solariat-login-section {
+  margin-top: 120px;
+  padding: 15px 15px;
+
+  .logo {
+    height: 30px;
+    float: left;
+  }
+
+  .divider-vertical {
+    float: left;
+    height: 40px;
+    margin: -5px 9px 0 9px;
+    border-right: 2px solid #fff;
+    border-left: 2px solid #f2f2f2;
+  }
+
+  .logo-text {
+    float: left;
+    font-size: 24px;
+    font-weight: 300;
+    font-family: Roboto;
+    line-height: 30px;
+    color: #aeaeae;
+    margin: 0;
+  }
+
+  form {
+    padding: 32px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    legend {
+      margin-bottom: 10px;
+      border: none;
+    }
+  }
+}
+
+.tooltip {
+  .tooltip-light;
+}
+
+/*
+  styles for /solariat_bottle/templates/configure.html
+  side-bar-left
+*/
+.nav-sidebar span {
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+.sidebar a.list-group-item.active {
+  border-color: #ccc !important;
+}
+
+.sidebar .list-group-item {
+  border-right: 0;
+}
+
+label.disabled .label {
+  background-color: #ccc;
+  color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+/* IMPORTANT for select2 containers on modal */
+.modal-content .select2-container-multi .select2-choices {
+  position: initial;
+}
+
+/* Apply sample placeholder color for select2 inputs as default ark-style inputs.
+  ** static/assets/vendor/select2 has already an !important flag.
+*/
+.select2-search-field .select2-default {
+  color: @input-color-placeholder !important;
+}
+
+/* checkbox height in tables*/
+.table {
+  .radio, .checkbox {
+    margin: 0;
+  }
+}
+
+
+/*
+ * Sidebar
+ */
+
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 90px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #fff;
+    border-right: 1px solid #eee;
+  }
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+.nav-sidebar > li > a {
+  padding: 5px 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+.nav-sidebar .divider {
+  height: 2px;
+  margin: 8px 21px;
+  overflow: hidden;
+  background-color: #e5e5e5;
+  border-bottom: 1px solid #fff;
+}
+
+.nav-sidebar .dropdown-header {
+  color: #999;
+  font-weight: 700;
+  padding: 0 20px;
+  line-height: 28px;
+  text-transform: uppercase;
+}
+
+.nav-tabs > li > a {
+  span {
+    color: #80A4FD;
+    &:before {
+      font-size: 16px;
+      margin: -4px 5px 0 0;
+    }
+  }
+  &:hover, &:focus {
+    span {
+      color: #fff;
+    }
+  }
+}
+
+.nav-tabs > li.active > a {
+  &, &:hover, &:focus {
+    color: #000;
+    span {
+      color: #9AA6B7;
+    }
+  }
+}
+
+.nav-tabs > li.disabled > a {
+  &, & > span {
+    color: #999;
+  }
+}
+
+.nav-tabs > li {
+  &.disabled > a:hover {
+    background-color: #2E69DB;
+  }
+}
+
+ul.dropdown-menu li > a > span, ul.dropdown-menu li > a > i {
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+#loading, #error {
+  position: fixed;
+  top: 2px;
+  z-index: 1130;
+  display:none;
+}
+#loading {
+  padding-top:5px;
+  padding-bottom: 5px;
+  right: 42%;
+  left: 42%;
+}
+
+#error {
+  right: 32%;
+  left: 32%;
+}
+
+#loading #wrapper {
+  padding: 60px
+}
+
+/* forms on settings pages */
+form {
+  /* some tags don't have has-error class */
+  .help-block {
+    font-weight: normal;
+  }
+  .error.help-block {
+    color: #ea4f6b;
+    margin-top: 9px;
+  }
+
+  /* required fields */
+  span.asterisk {
+    color: #ea4f6b;
+    font: 15px bold;
+  }
+}

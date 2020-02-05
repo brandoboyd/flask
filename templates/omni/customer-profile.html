@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% set ngApp        = 'omni' %}
+{% set section      = section  %}
+
+{% block body %}
+<div ng-controller="CustomerTimelineCtrl">
+
+    <script type="text/ng-template" id="interaction-content.html">
+        <div class="modal-header">
+            <h4 class="modal-title">Interactions</h4>
+        </div>
+        <div class="modal-body">
+            <div style="
+                        border: 1px #ccc solid;
+                        margin: -1px 0 0 -1px;
+                        padding: 15px 10px 20px 20px;
+                        "
+                ng-repeat="event in events"
+                >
+                <div
+                  style="float: left; margin-right: 10px"
+                  <img class="avatar"
+                    ng-src="event.user.profile_image_url"
+                    >
+                  </img>
+                </div>
+
+                <div
+                  >
+                  <strong class="screen-name"
+                    >
+                    {{ 'event.user.first_name'|ng }} {{ 'event.user.last_name'|ng }}
+                  </strong>
+
+                  <small class="created"
+                    style="float: right; color: #aaa"
+                    >
+                    {{ "event._created * 1000 | date:'MMM d, y HH:mm' "|ng }}
+                  </small>
+
+                  <div class="content"
+                    ng-bind="event.content"
+                    >
+                  </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" ng-click="close()">Close</button>
+        </div>
+    </script>
+
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <div class="col-sm-3 sidebar" style="top:40px;">
+                <div style="margin: 20px 10px;font-size:14px;">
+                    <div class="row">
+                        <div class="col-sm-3">Full Name</div>
+                        <div class="col-sm-9">: <span>{{ customer.first_name }} {{ customer.last_name }}</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">Age</div>
+                        <div class="col-sm-9">: <span>{{ customer.age }}</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">Location</div>
+                        <div class="col-sm-9">: <span>{{ customer.location }}</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">Industries</div>
+                        <div class="col-sm-9">: <span>{{ customer.industry }}</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">Status</div>
+                        <div class="col-sm-9">: <span>{{ customer.status }}</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3 main">
+                <div style="position:relative">
+                    {% raw %}
+                    <div>
+                        <ul class="nav nav-tabs"
+                            style="margin-bottom: 0">
+                            <li class="active">
+                                <a href="#">
+                                    <span class="icon-adjust"></span> Timeline
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% endraw %}
+                </div>
+
+                <div class="tab-content" style="overflow: visible;">
+                    <div class="tab-pane active">
+                        <timeline style="width: 350px;margin:auto">
+                        {% for month_label, days_data in timeline_data %}
+                          <h3 style="position:relative; text-align: center; margin: {{'100px' if loop.index > 1 else '0px'}} -25px 25px 0;">
+                              {{ month_label }}
+                          </h3>
+
+                          {% for day_label, agg_data in days_data %}
+                          <timeline-node side="{{ loop.cycle('left', 'right') }}">
+                            <timeline-badge class="info">
+                              <span style="font-size: 12px">{{ day_label }}</span>
+                            </timeline-badge>
+                            <timeline-panel>
+                              <timeline-heading style="height: 25px"></timeline-heading>
+                              <timeline-content>
+                                {% for channel_name, count, event_interval_ids in agg_data %}
+                                <a href="#" ng-click="openModal('{{event_interval_ids[0]}}', '{{event_interval_ids[1]}}')">{{ channel_name }} ({{ count }})</a>
+                                <br>
+                                {% endfor %}
+                              </timeline-content>
+                            </timeline-panel>
+                          </timeline-node>
+                          {% endfor %}
+                        {% endfor %}
+                        </timeline>
+                    </div>
+                </div>
+
+                <div ng-cloak class="ng-cloak">{% include "flashes.html" %}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

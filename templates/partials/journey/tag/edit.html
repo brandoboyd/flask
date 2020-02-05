@@ -1,0 +1,200 @@
+{% raw %}
+<h3 style="margin-left: 30px">
+    {{ item && item.display_name ? "Update " + "&ldquo;" + item.display_name + "&rdquo;" : "New" }} Journey Tag
+</h3>
+{% endraw %}
+
+<a href="#/journey_tags">
+    <button class="btn btn-default btn-xs" style="position: absolute;top:0" tooltip-placement="top" tooltip="All Journey Tags">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+
+<hr>
+
+<div class="alert alert-info" ng-show="formState.isSaved">
+  The journey tag settings have been saved. <br />
+  You can keep editing this tag or you can <a ng-click="openNewForm()"  class="link">create a new one.</a>
+</div>
+
+{% macro journey_tag_form() %}
+  <form name="form" class="form-horizontal" novalidate>
+    <fieldset>
+
+      <div class="form-group" ng-class="{'has-error': form.journeyType.$dirty && form.journeyType.$error.required}">
+        <label class="col-sm-3 control-label" for="journey_type">Journey Type <span class="asterisk">*</span></label>
+        <div class="col-sm-9">
+          <select class="form-control"
+                  id="journey_type"
+                  name="journeyType"
+                  ui-select2
+                  ng-disabled="item.id"
+                  ng-model="item.journey_type_id"
+                  ng-required="true">
+            <option ng-value="jt.id" ng-repeat="jt in journey_types">{{ 'jt.display_name'|ng }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="{'has-error': form.title.$dirty && form.title.$invalid || form.title.$overflow}">
+        <label class="col-sm-3 control-label" for="title">Tag Name <span class="asterisk">*</span></label>
+        <div class="col-sm-9">
+          <input type="text" id="title" name="title" class="form-control" required
+                 placeholder="Tag names need to be unique per account"
+                 ng-model="item.display_name"
+                 my-maxlength="17"
+                 >
+          <span class="help-block error"
+                ng-show="form.title.$dirty && form.title.$invalid">Tag name is required
+          </span>
+          <span class="help-block error"
+                ng-show="form.title.$overflow">Tag name should be a maximum of 17 characters
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="{'has-error': form.description.$dirty && form.description.$invalid}">
+        <label class="col-sm-3 control-label" for="description">Description</label>
+        <div class="col-sm-9">
+          <input type="text" id="description" name="description" class="form-control"
+                 placeholder="Describe the reason behind the creation of this journey tag"
+                 ng-model="item.description"
+                 >
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="tracked_stage_sequences">Stage Sequences</label>
+        <div class="col-sm-9">
+          <select id="tracked_stage_sequences" class="form-control"
+                  placeholder="Select stage types to filter customer journeys"
+                  ui-select2
+                  multiple="multiple"
+                  ng-model="item.tracked_stage_sequences"
+                  >
+            <option ng-value="js.id" ng-repeat="js in journey_stages[item.journey_type_id]">{{ 'js.display_name'|ng }}</option>
+          </select>
+          <div class="q-sign" style="position:absolute; right:-4px; top: 4px"
+               tooltip-placement="left"
+               tooltip-trigger="mouseenter"
+               tooltip="A customer journey must contain these stages in order for the tag to be applied.">
+            <span class="icon-iw-active-circle-question"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="tracked_customer_segments">Customer Segments</label>
+        <div class="col-sm-9">
+          <select id="tracked_customer_segments" class="form-control"
+                  placeholder="Select customer segments to filter customer journeys"
+                  ui-select2
+                  multiple="multiple"
+                  ng-model="item.tracked_customer_segments"
+                  >
+            <option ng-value="cs.id" ng-repeat="cs in customer_segments">{{ 'cs.display_name'|ng }}</option>
+          </select>
+          <div class="q-sign" style="position:absolute; right:-4px; top: 4px"
+               tooltip-placement="left"
+               tooltip-trigger="mouseenter"
+               tooltip="A customer journey must contain these customer segments in order for the tag to be applied.">
+            <span class="icon-iw-active-circle-question"></span>
+          </div>
+        </div>
+      </div>
+
+        <div class="form-group" style="position:relative;">
+            <label class="col-sm-3 control-label" for="nps_range">NPS</label>
+            <div class="col-sm-8" style="padding-left: 22px;">
+                <slider ng-model="item.nps_range"
+                        id="nps_range"
+                        style="padding: 15px 0"
+                        min="0" step="1"
+                        slider-tooltip="hide" range="true"></slider>
+            </div>
+            <div class="col-sm-1">
+                <input type="text" class="pull-right input-sm"
+                       style="width: 50px"
+                       ng-value="item.nps_range.join(' - ')"
+                       disabled="disabled">
+            </div>
+            <div class="q-sign" style="position:absolute; right:-4px; top: 4px"
+                 tooltip-placement="left"
+                 tooltip-trigger="mouseenter"
+                 tooltip="A journeys's NPS value must fall in this range in order for the tag to be applied.">
+                <span class="icon-iw-active-circle-question"></span>
+            </div>
+        </div>
+
+        <div class="form-group" style="position:relative;">
+            <label class="col-sm-3 control-label" for="csat_score_range">CSAT Score</label>
+            <div class="col-sm-8" style="padding-left: 22px;">
+                <slider ng-model="item.csat_score_range"
+                        id="csat_score_range"
+                        style="padding: 15px 0"
+                        min="0" step="1"
+                        slider-tooltip="hide" range="true"></slider>
+            </div>
+            <div class="q-sign" style="position:absolute; right:-4px; top: 4px"
+                 tooltip-placement="left"
+                 tooltip-trigger="mouseenter"
+                 tooltip="A journeys's CSAT score must fall in this range in order for the tag to be applied.">
+                <span class="icon-iw-active-circle-question"></span>
+            </div>
+            <div class="col-sm-1">
+                <input type="text" class="pull-right input-sm"
+                   style="width: 50px"
+                   ng-value="item.csat_score_range.join(' - ')"
+                   disabled="disabled">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="id_smart_tags">Must Contain</label>
+            <div class="col-sm-9" style="position:relative">
+                <select id="id_smart_tags"
+                        class="form-control"
+                        ui-select2
+                        multiple="multiple"
+                        ng-model="item.key_smart_tags">
+                    {% raw %}
+                    <option ng-value="o.id" ng-repeat="o in smart_tags.list | filter:filterSkipTags">{{ o.display_name }}</option>
+                    {% endraw %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="id_skip_smart_tags">Must Not Contain</label>
+            <div class="col-sm-9" style="position:relative">
+                <select id="id_skip_smart_tags"
+                        class="form-control"
+                        ui-select2
+                        multiple="multiple"
+                        ng-model="item.skip_smart_tags">
+                    {% raw %}
+                    <option ng-value="o.id" ng-repeat="o in smart_tags.list | filter:filterKeyTags">{{ o.display_name }}</option>
+                    {% endraw %}
+                </select>
+            </div>
+        </div>
+
+      <div class="form-group form-actions">
+        <div class="col-sm-offset-3 col-sm-4">
+          <button type="button" class="btn btn-primary"
+                  ng-click="save()"
+                  ng-disabled="!form.$valid"
+                  >{{"title"|ng}}
+          </button>
+        </div>
+      </div>
+
+
+
+    </fieldset>
+  </form>
+{% endmacro %}
+
+<div style="width:70%;">
+  {{ journey_tag_form() }}
+</div>

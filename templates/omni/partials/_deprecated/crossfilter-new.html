@@ -1,0 +1,67 @@
+<div class="col-sm-12 col-sm-offset-4">
+<div class="row">
+    <div class="col-sm-12" style="margin-top: 15px;">
+        <div class="row">
+            <div class="col-sm-4">
+                <a ng-click="resetAll()" class="btn btn-default">Reset All</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-xs-6 col-md-3">
+        <h4>Net Promoters</h4>
+        <div class="dc-chart" id="chart-rating-count"></div>
+    </div>
+    <div class="col-xs-6 col-md-3">
+        <h4>Journey Status</h4>
+        <div class="dc-chart" id="chart-ring-status"></div>
+    </div>
+    <div class="col-xs-6 col-md-3">
+        <h4>Journey Type</h4>
+        <div class="dc-chart" id="chart-ring-journey-type"></div>
+    </div>
+    <div class="col-xs-6 col-md-3">
+        <h4>Current Stage</h4>
+        <div class="dc-chart" id="chart-ring-stage"></div>
+    </div>
+</div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>CSAT</h4>
+            <div class="dc-chart" id="chart-line-nps-by-time"></div>
+        </div>
+    </div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h4>Journeys</h4>
+        <table class="table table-default" id="data-table">
+            <thead>
+            <tr class="header">
+                <th>Name</th>
+                <th>CSAT</th>
+                <th>NPS</th>
+                <th>Type</th>
+                <th>Current Stage</th>
+                <th>Status</th>
+                <th>Start</th>
+                <th>End</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+</div>
+<style>
+    .dc-chart{
+        padding: 0;
+    }
+    .dc-chart g.row text, .dc-chart .pie-slice {
+        fill: #333;
+    }
+
+</style>

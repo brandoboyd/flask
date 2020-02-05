@@ -1,0 +1,42 @@
+<div>
+    <h3>Open Rooms</h3>
+    <button class="btn btn-primary" ng-click="refresh()">
+        Refresh
+    </button>
+</div>
+<table class="table table-striped table-responsive" ng-switch="!rooms.length">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Available</th>
+        <th>Owner</th>
+        <th>Users</th>
+        <th>Sockets Open</th>
+    </tr>
+    </thead>
+    <tbody ng-switch-when="true">
+    <tr>
+        <td colspan="10" class="text-center">
+            <h3>
+                <i class="fa fa-exclamation-circle fa-2x"></i>
+                <p>No open rooms to display</p>
+            </h3>
+        </td>
+    </tr>
+    </tbody>
+    <tbody ng-switch-default>
+        <tr ng-repeat="room in rooms">
+            <td><span ng-bind="room.name"></span></td>
+            <td><span ng-bind="room.available"></span></td>
+            <td>
+                <a title="{{room.owner.name}}"
+                   ng-href=""
+                   style="cursor:pointer">
+                    <span ng-bind="room.owner.name"></span>
+                </a>
+            </td>
+            <td><div ng-repeat="user in room.users" style="margin-bottom:10px">{{user.name}}</div></td>
+            <td><div ng-repeat="user in room.users" style="margin-bottom:10px">{{user.socksNum}}</div></td>
+        </tr>
+    </tbody>
+</table>

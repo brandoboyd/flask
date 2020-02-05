@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/static/assets/img/gen_logomark_16px_col.ico">
+    <!-- Le styles -->
+
+    <!-- bootstrap v3:css -->
+    <link rel="stylesheet" href="/static/chat/public/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/chat/public/vendor/font-awesome/css/font-awesome.min.css">
+    <!-- endinject -->
+
+    <link rel="stylesheet" href="/static/chat/public/css/app.css">
+    <link rel="stylesheet" href="/static/chat/public/css/agent-desktop.css">
+    <script>
+        HOST_DOMAIN = '{{config.HOST_DOMAIN}}'
+        SOCKET_DOMAIN = '{{config.SOCKET_DOMAIN}}'
+    </script>
+</head>
+
+<body ng-app="journey">
+<div class="container" ng-controller="DemoIndexCtrl">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="/landing" class="navbar-brand">
+                    Demo Control Center
+                </a>
+            </div>
+        </div>
+    </div>
+    <ul class="nav nav-tabs">
+        <li ui-sref-active="active">
+            <a ui-sref="demo.agents">Agents</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="demo.customers">Customers</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="demo.predictors">Predictors</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="demo.stats">Open Rooms</a>
+        </li>
+        <li class="pull-right">
+
+            <div class="btn-group">
+                <button type="button"
+                        class="btn btn-default dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-expanded="false">
+                    Manage Demo <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href=""
+                           ng-click="resetAll()">Reset Sessions</a></li>
+                    <li><a href=""
+                           ng-click="doStateRecover('reset')">Reset Models</a></li>
+                    <li><a href=""
+                           ng-click="doStateRecover('reload')">Reset System</a></li>
+                    <li class="divider"></li>
+                    <li><a href=""
+                           ng-click="doStateRecover('save')">Save System</a></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button type="button"
+                        class="btn btn-default dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-expanded="false">
+                    Launch <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a href=""
+                           ng-click="goToSupervisor()">Supervisor</a>
+                    </li>
+                    <li>
+                        <a href=""
+                           ng-click="goToAnonymous()">Anonymous</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        </ul>
+        <div class="tab-content">
+            <div ui-view></div>
+        </div>
+</div>
+
+
+
+
+
+<script type="text/ng-template" id="reset-confirm-modal.html">
+    <div class="modal-header">
+        <h3 class="modal-title" ng-bind="body.title"></h3>
+    </div>
+    <div class="modal-body">
+        <p ng-bind="body.content"></p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">Dismiss</button>
+    </div>
+</script>
+
+<script src="/static/assets/vendor/jquery/jquery.js"></script>
+<script src="/static/assets/vendor/angular/angular.min.js"></script>
+<!--<script src="/static/assets/vendor/angular-route/angular-route.js"></script>-->
+<!--<script src="/static/assets/vendor/angular-resource/angular-resource.js"></script>-->
+<script src="/static/assets/vendor/angular-sanitize/angular-sanitize.js"></script>
+<script src="/static/assets/vendor/angular-animate/angular-animate.js"></script>
+<!--<script src="/static/assets/vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>-->
+<script src="/static/chat/public/vendor/angular-bootstrap/ui-bootstrap-tpls-modified.js"></script>
+<script src="/static/chat/public/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/assets/vendor/angular-ui-router/angular-ui-router.min.js"></script>
+<script src="/static/chat/public/vendor/angular-ui-slider/slider.js"></script>
+<script src="/static/assets/vendor/lodash/lodash.compat.js"></script>
+
+
+<script src="http://{{config.SOCKET_DOMAIN}}/socket.io/socket.io.js"></script>
+<script src="/static/chat/public/js/demo-app.js"></script>
+<script src="/static/chat/public/js/services.js"></script>
+<script src="/static/chat/public/js/api-services.js"></script>
+<script src="/static/chat/public/js/directives.js"></script>
+
+
+<script src="/static/chat/public/js/demo-index-controller.js"></script>
+<script src="/static/chat/public/js/agent-list-controller.js"></script>
+<script src="/static/chat/public/js/predictors-list-controller.js"></script>
+<script src="/static/chat/public/js/customers-list-controller.js"></script>
+<script src="/static/chat/public/js/stats-controller.js"></script>
+
+
+
+</body>
+
+</html>

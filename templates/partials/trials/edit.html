@@ -1,0 +1,128 @@
+<h3 style="margin-left: 10%;">New Trial</h3>
+<a class="btn btn-xs btn-default" style="position:absolute;top:0" tooltip-placement="top" tooltip="All Trials" ng-click="redirectAll()"><span class="fonticon icon-arrow-left"></span></a>
+<hr/>
+
+<form class="form form-horizontal"
+      name="trialForm"
+      id="trialForm">
+    <fieldset>
+        {% raw %}
+        <div class="form-group">
+            <label class="control-label col-sm-2"
+                   for="id_account">Account Name
+                <span class="asterisk">*</span>
+            </label>
+            <div class="col-sm-4">
+                <input type="text"
+                       ng-model="item.account_name"
+                       name="account"
+                       ng-minlength="2"
+                       my-maxlength="20"
+                       ng-required="true"
+                       placeholder="Company name, or name of brand"
+                       class="form-control"
+                       required>
+
+                <span class="help-block error"
+                      ng-show="trialForm.account.$error.minlength && trialForm.account.$dirty">
+                      Account name must be 2-20 characters long</span>
+                <span class="help-block error"
+                      ng-show="trialForm.account.$overflow">
+                      Account name must be 2-20 characters long</span>
+                <span class="help-block error"
+                      ng-show="trialForm.account.$error.required && trialForm.account.$dirty">Account name must not be empty</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2"
+                   for="FirstName">Admin First Name
+                <span class="asterisk">*</span>
+            </label>
+            <div class="col-sm-4">
+                <input type="text"
+                       ng-model="item.first_name"
+                       name="firstName"
+                       class="form-control"
+                       required>
+                <span class="help-block error"
+                      ng-show="trialForm.firstName.$error.required && trialForm.firstName.$dirty">You need to provide user's First Name</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2"
+                   for="LastName">Admin Last Name
+                <span class="asterisk">*</span>
+            </label>
+            <div class="col-sm-4">
+                <input type="text"
+                       ng-model="item.last_name"
+                       name="lastName"
+                       class="form-control"
+                       required>
+                <span class="help-block error"
+                      ng-show="trialForm.lastName.$error.required && trialForm.lastName.$dirty">You need to provide user's Last Name</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2"
+                   for="Email">Admin Email
+                <span class="asterisk">*</span>
+            </label>
+            <div class="col-sm-4">
+                <input type="email"
+                       ng-model="item.email"
+                       ng-pattern="pattern.EMAIL_REGEXP"
+                       class="form-control"
+                       name="email"
+                       required>
+                <span class="help-block error"
+                      ng-show="trialForm.email.$error.required && trialForm.email.$dirty">You need to provide user's email</span>
+                <span class="help-block error"
+                      ng-show="trialForm.email.$error.pattern">Not valid email!</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">&nbsp;
+            </label>
+            <div class="col-sm-4 form-inline">
+
+                <input type="text"
+                       ui-jq="datepicker"
+                       ui-options="options.start_date"
+                       class="form-control"
+
+                       ng-model="item.start_date"
+                       placeholder="Trial Start Date"
+                       style="width:105px"/>&nbsp;&nbsp;&rarr;&nbsp;&nbsp;
+
+                <input type="text"
+                       ui-jq="datepicker"
+                       name="endDate"
+                       ui-options="options.end_date"
+                       class="form-control"
+
+                       ng-model="item.end_date"
+                       date-is-greater-than="item.start_date"
+                       placeholder="Trial End Date"
+                       style="width:105px"/>
+
+                <span class="help-block error"
+                      ng-show="trialForm.endDate.$error.dateIsGreaterThan">End date must be greater than start date</span>
+            </div>
+        </div>
+        {% endraw %}
+
+        <div class="form-group form-actions">
+            <div class="col-sm-offset-2 col-sm-4">
+            <button class="btn btn-primary"
+                    ng-click="save()"
+                    ng-disabled="!trialForm.$valid">Create
+                	</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+
+

@@ -1,0 +1,89 @@
+<!-- vendor:js -->
+<script src="/static/dist/vendor-d1ca692c.js"></script>
+<!-- endinject -->
+
+<!-- angular:js -->
+<script src="/static/dist/angular-26f655ae.js"></script>
+<!-- endinject -->
+
+<!-- dev:js -->
+<!-- endinject -->
+
+<!-- commons:js -->
+<script src="/static/dist/ng-custom/commons-2f6c1b79.js"></script>
+<!-- endinject -->
+
+
+{% if section in ('dashboard') %}
+    <!-- dashboard:js -->
+    <script src="/static/dist/ng-custom/dashboard-628d6dba.js"></script>
+    <!-- endinject -->
+{% endif %}
+
+{% if section in ('engage', 'inbox') %}
+    <!-- inbox:js -->
+    <script src="/static/dist/ng-custom/inbox-917149ba.js"></script>
+    <!-- endinject -->
+
+{% elif section in  ('inbound', 'outbound') %}
+    <!-- interactions:js -->
+    <script src="/static/dist/ng-custom/interactions-5f1593bc.js"></script>
+    <!-- endinject -->
+
+{% elif section == 'reports' %}
+    <!-- reports:js -->
+    <script src="/static/dist/ng-custom/reports-54a3ff46.js"></script>
+    <!-- endinject -->
+
+{% elif section == 'predictors' %}
+    <!-- predictors:js -->
+    <script src="/static/dist/ng-custom/predictors-3ca60806.js"></script>
+    <!-- endinject -->
+
+{% elif section == 'jobs' %}
+    <!-- jobs:js -->
+    <script src="/static/dist/ng-custom/jobs-70e79754.js"></script>
+    <!-- endinject -->
+    
+{% elif section == 'configure' %}
+    <!-- configure:js -->
+    <script src="/static/dist/ng-custom/configure-5482d75e.js"></script>
+    <!-- endinject -->
+
+{% elif parent == 'test' %}
+    <!-- test:js -->
+    <script src="/static/dist/ng-custom/test-6277db56.js"></script>
+    <!-- endinject -->
+
+{% elif parent == 'test_agents' %}
+    <script src="/static/assets/js/app/controller-test-agents.js"></script>
+
+{% elif section == 'voc' %}
+    <!-- voc:js -->
+    <script src="/static/dist/ng-custom/voc-dda8e761.js"></script>
+    <!-- endinject -->
+
+{% elif section in ('customers', 'agents', 'journeys', 'dashboard') %}
+    <!-- omni-commons:js -->
+    <script src="/static/dist/ng-custom/omni.commons-fff9b00d.js"></script>
+    <!-- endinject -->
+{% endif -%}
+
+{% if section in ('journeys') %}
+    <!-- omni-journeys:js -->
+    <script src="/static/dist/ng-custom/omni.journeys-cd5274e6.js"></script>
+    <!-- endinject -->
+{% endif -%}
+
+{% if section in ('customers') %}
+    <!-- omni-customers:js -->
+    <script src="/static/dist/ng-custom/omni.customers-dd0d6e4c.js"></script>
+    <!-- endinject -->
+{% endif -%}
+
+{% if section in ('agents') %}
+    <!-- omni-agents:js -->
+    <script src="/static/dist/ng-custom/omni.agents-49841ba8.js"></script>
+    <!-- endinject -->
+{% endif -%}
+

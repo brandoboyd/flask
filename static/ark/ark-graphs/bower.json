@@ -1,0 +1,75 @@
+{
+  "name": "Ark Graphs",
+  "description": "Ark Graphs is a D3-based component that aims to solve graph needs of Ark based products.",
+  "version": "1.0.0-0",
+  "main": [
+    "./release/ark-graphs.lib.js",
+    "./release/ark-graphs.js",
+    "./release/ark-graphs.css"
+  ],
+  "dependencies": {
+    "underscore": {
+      "repository": "ag-thirdparty-prod",
+      "group_id": "ark",
+      "name": "underscore",
+      "ext": "tar.gz",
+      "version": "1.6.0"
+    },
+    "angular": {
+      "repository": "ag-thirdparty-prod",
+      "group_id": "ark",
+      "name": "angular",
+      "ext": "tar.gz",
+      "version": "1.2.16"
+    },
+    "ark-style": {
+      "group_id": "com.genesyslab.ark",
+      "name": "ark-style",
+      "ext": "tar.gz",
+      "version": "*"
+    },
+    "d3": "3.5.5"
+  },
+  "devDependencies": {
+    "angular-mocks": "1.2.16",
+    "angular-scenario": "1.2.16",
+    "angular-sanitize": "1.2.16",
+    "angular-route": "1.2.16",
+    "ark-components": "http://ark.genesys.com/downloads/ark-components/build/dev/latest"
+  },
+  "authors": [
+    {
+      "name": "Jorge Barnaby",
+      "email": "jorge.barnaby@genesys.com",
+      "username": "camelot\\jbarnaby",
+      "publisher": true
+    },
+    {
+      "name": "Ark Developers",
+      "email": "arkdevelopers@genesys.com"
+    }
+  ],
+  "src-repository": {
+    "type": "HG",
+    "url": "http://hg.genesyslab.com/hgweb.cgi/ark_graphs",
+    "project-root": "/"
+  },
+  "tag": "release-1.0.0-1",
+  "reviewers": [
+    {
+      "role": "Ark Team",
+      "name": "ARK Developers",
+      "email": "arkdevelopers@genesys.com"
+    },
+    {
+      "role": "UX",
+      "name": "Trixie Pama",
+      "email": "trixie.pama@genesys.com"
+    },
+    {
+      "role": "FOSS",
+      "name": "Alex Lee",
+      "email": "alex.lee@genesys.com"
+    }
+  ]
+}

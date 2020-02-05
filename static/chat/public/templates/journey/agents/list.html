@@ -1,0 +1,52 @@
+<h3>Agent List</h3>
+<table class="table table-striped table-responsive" ng-switch="!agents.length">
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>Name</th>
+        <th>Gender</th>
+
+        <th>Age</th>
+        <th>Seniority</th>
+        <th>Skills</th>
+    </tr>
+    </thead>
+    <tbody ng-switch-when="true">
+    <tr>
+        <td colspan="10" class="text-center">
+            <h3>
+                <i class="fa fa-exclamation-circle fa-2x"></i>
+                <p>No agents to display</p>
+            </h3>
+        </td>
+    </tr>
+    </tbody>
+    <tbody ng-switch-default>
+    <tr ng-repeat="agent in agents | orderBy : 'agent_full_name'">
+        <td>
+            <span>{{$index + 1}}</span>
+        </td>
+        <td>
+            <i class="fa fa-external-link-square"></i>
+            <a target="_blank"
+               ng-href="/journey/agent/{{agent.id}}"
+               style="cursor:pointer">
+                 {{agent.agent_full_name}}
+            </a>
+        </td>
+        <td>
+            <span>{{agent.agent_gender}}</span>
+        </td>
+
+        <td>
+            <span>{{agent.agent_age}}</span>
+        </td>
+        <td>
+            <span>{{agent.agent_seniority}}</span>
+        </td>
+        <td>
+            <div ng-repeat="skill in agent.agent_skillset">{{skill}}</div>
+        </td>
+    </tr>
+    </tbody>
+</table>

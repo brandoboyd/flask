@@ -1,0 +1,39 @@
+<h3>Customers List</h3>
+<table class="table table-striped table-responsive">
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Age</th>
+
+        <th>Location</th>
+        <th>Phone</th>
+        <th>Products</th>
+        <th>Segment</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="user in customers" ng-if="user.customer_full_name != null">
+        <td><span ng-bind="$index+1"></span></td>
+        <td>
+
+            <i class="fa fa-external-link-square"></i>
+            <a target="_blank"
+               title="{{user.id}}"
+               ng-href="http://{{SOCKET_DOMAIN}}/landing/{{user.id}}"
+               style="cursor:pointer">
+                <span ng-bind-template="{{user.customer_full_name}}"></span>
+            </a>
+            
+        </td>
+        <td><span ng-bind="user.customer_gender"></span></td>
+        <td><span ng-bind="user.customer_age"></span></td>
+
+        <td><span ng-bind="user.customer_location"></span></td>
+        <td><span ng-bind="user.customer_phone"></span></td>
+        <td><div ng-repeat="product in user.customer_products">{{product}}</div></td>
+        <td><span ng-bind="user.customer_seniority"></span></td>
+    </tr>
+    </tbody>
+</table>

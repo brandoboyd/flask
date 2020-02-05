@@ -1,0 +1,21 @@
+{% extends "playground/base.html" %}
+
+{% block tool_output %}
+    {% if lang %}
+        <div class="clear">{{lang}}</div><br>
+    {% endif %}
+    {% if result %}
+        <fieldset>
+        <legend>Tree</legend>
+        <pre style="white-space: pre;">{{ result.tree }}</pre>
+        </fieldset>
+        <fieldset>
+        <legend>Chunks</legend>
+        <pre style="white-space: pre;">{{ result.chunks }}</pre>
+        </fieldset>
+        <fieldset>
+        <legend>Topics</legend>
+        <pre style="white-space: pre;">{{ result.topics }}</pre>
+        </fieldset>
+    {% endif %}
+{% endblock %}

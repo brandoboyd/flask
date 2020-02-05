@@ -1,0 +1,56 @@
+<h1>Trials</h1>
+<hr />
+
+<div class="row form-group">
+    <div class="col-md-12">
+        {% if user.is_admin or user.is_staff %}
+        <button ng-click="create()" class="btn btn-primary"><span class="fonticon icon-add"></span>&nbsp;Add Trial</button>
+        {% endif %}
+        <div class="pull-left">
+            <div class="pull-right btn-icon-group"  style="margin-left: 10px;">
+
+            </div>
+        </div>
+        <div class="pull-right">
+            <div class="filter-block">
+                <select class="form-control"
+                        ng-model="filters.status"
+                        ng-change="refresh()">
+                    <option value="">-- All Statuses--</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info text-center" ng-show="!items.length"><i class='icon-alert-triangle'></i> No trials</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-default" ng-show="items.length">
+            <thead>
+            <tr>
+                <th sorter="table.sort" data-title="Account Name" data-predicate="account_name"></th>
+                <th sorter data-title="Status" data-predicate="status"></th>
+                <th sorter data-title="Start Date" data-predicate="start_date"></th>
+                <th sorter data-title="End Date" data-predicate="end_date"></th>
+                <th sorter data-title="Vol. this Month" data-predicate="item.stats.number_of_posts"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in items | filter:filterPredicate | orderBy: table.sort.predicate: table.sort.reverse">
+                <td style="position: relative;">
+                    <span class="decorator" ng-class="{'inactive' : 'error', 'active' : 'success'}[item.status]"></span>
+                    <a ng-click="openAccountView(item)" class="link" ng-bind="item.account_name"></a>
+                </td>
+                <td><span ng-bind="item.status"></span></td>
+                <td><span ng-bind="item.start_date | momentutc" style="white-space: nowrap"></span></td>
+                <td><span ng-bind="item.end_date | momentutc"></span></td>
+                <td><span ng-class="volClass(item.stats.number_of_posts)" ng-bind="item.stats.number_of_posts"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

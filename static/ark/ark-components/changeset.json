@@ -1,0 +1,537 @@
+{
+  "allChangesets": [{
+    "title": "Release 1.0.0-30",
+    "timeStamp": "May 15, 2015",
+    "body": [{
+      "component": "General",
+      "changeInfo": [
+        "[JIRA:ARK-548]: Package version in bower inside build not reflecting latest release."
+      ]
+    }, {
+      "component": "Ark Core",
+      "changeInfo": [
+        "Refactoring and improving developing workflow.",
+        "Cleaning up and refactoring development gallery.",
+        "[JIRA:ARK-529]: Replace Jekyll with Grunt Connect for the documentation."
+      ]
+    }, {
+      "component": "Ark Dashboard",
+      "changeInfo": [
+        "[JIRA:ARK-521]: New version release with bug fixes and patches."
+      ]
+    }, {
+      "component": "Ark Timepicker",
+      "changeInfo": [
+        "[JIRA:ARK-511]: Add timezone support."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-29",
+    "timeStamp": "Apr 19, 2015",
+    "body": [{
+      "component": "General",
+      "changeInfo": [
+        "Overall documentation improved."
+      ]
+    }, {
+      "component": "Ark Dashboard",
+      "changeInfo": [
+        "Releasing this new Ark Components module aimed at building Dashboard-like applications."
+      ]
+    }, {
+      "component": "Ark Footer",
+      "changeInfo": [
+        "[JIRA:ARK-271]: Add functionality to bind version number in directive attribute."
+      ]
+    }, {
+      "component": "Ark Login",
+      "changeInfo": [
+        "[JIRA:ARK-359]: Fixing spelling on demo error message."
+      ]
+    }, {
+      "component": "Ark Navbar",
+      "changeInfo": [
+        "[JIRA:ARK-443]: Fixes issue with menu alignment.",
+        "[JIRA:ARK-450]: Increase Unit Tests coverage."
+      ]
+    }, {
+      "component": "Ark Nested Tree Search",
+      "changeInfo": [
+        "[JIRA:ARK-304]: Implementation of a callback feature.",
+        "[JIRA:ARK-368]: Adding an X to clear search box."
+      ]
+    }, {
+      "component": "Ark ngGrid",
+      "changeInfo": [
+        "[JIRA:ARK-307]: Navigation bar not working after upgrading to AngularJS v1.2.16."
+      ]
+    }, {
+      "component": "Ark Slider",
+      "changeInfo": [
+        "[JIRA:ARK-440]: Increase Unit Tests coverage."
+      ]
+    }, {
+      "component": "Ark Sidebar",
+      "changeInfo": [
+        "[JIRA:ARK-310]: New component."
+      ]
+    }, {
+      "component": "Ark Timepicker",
+      "changeInfo": [
+        "[JIRA:ARK-371]: Add more spacing between hour and minute."
+      ]
+    }, {
+      "component": "Ark Toolbar",
+      "changeInfo": [
+        "[JIRA:ARK-262]: Search bar width changes when clear button is present."
+      ]
+    }, {
+      "component": "Ark UI Bootstrap - Modal",
+      "changeInfo": [
+        "[JIRA:ARK-296]: Added optional new style / theme."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-28",
+    "timeStamp": "Mar 17, 2015",
+    "body": [{
+      "component": "Ark ngGrid",
+      "changeInfo": [
+        "[JIRA:ARK-242]: Add ability to deselect all in column if not all have been selected, added ability to select all / none from dropdown."
+      ]
+    }, {
+      "component": "Ark Login",
+      "changeInfo": [
+        "[JIRA:ARK-128]: Forgot Password should receive either a function or a plain text URL. NOTE: API RELATED TO FORGOT PASSWORD CHANGED, PLEASE REVIEW DOCUMENTATION."
+      ]
+    }, {
+      "component": "Ark Nested Tree",
+      "changeInfo": [
+        "[JIRA:ARK-273]: Enhance nested tree with inline controls and more callbacks.",
+        "[JIRA:ARK-229]: Add ability to hide checkbox for nodes when required by attribute 'needCheckbox'."
+      ]
+    }, {
+      "component": "Ark Select",
+      "changeInfo": [
+        "[JIRA:ARK-233]: Cannot set with multiple choice in toolbar."
+      ]
+    }, {
+      "component": "Ark UI Bootstrap",
+      "changeInfo": [
+        "[JIRA:ARK-253]: Reposition tooltip to keep it inside viewport.",
+        "[JIRA:ARK-294]: Dropdown should open up if opening down goes off screen (ie at bottom of page)"
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-27 (Skipped)"
+  }, {
+    "title": "Release 1.0.0-26",
+    "timeStamp": "Mar 3, 2015",
+    "body": [{
+      "component": "Ark ngGrid",
+      "changeInfo": [
+        "[JIRA:ARK-245]: Change behavior of << >> buttons to first and last page.",
+        "[JIRA:ARK-249]: Selection in top row remains while moving to next/prev page.",
+        "[JIRA:ARK-256]: It's possible to insert illegal values into Pages textbox."
+      ]
+    }, {
+      "component": "Ark Login",
+      "changeInfo": [
+        "[JIRA:ARK-272]: Loading screen able to handle multiple languages.",
+        "[JIRA:ARK-263]: Make error messages more flexible from loginService reponse and make password mandatory configurable."
+      ]
+    }, {
+      "component": "Ark Loading Bar",
+      "changeInfo": [
+        "[JIRA:ARK-202]: Improved documentation."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-25",
+    "timeStamp": "Feb 13, 2015",
+    "body": [{
+      "component": "Ark ngGrid",
+      "changeInfo": [
+        "[JIRA:ARK-228]: Added ngGrid column menu to the documentation.",
+        "[JIRA:ARK-234]: Missing strings with i18n support added.",
+        "[JIRA:ARK-243]: When manually select all elements in the grid one by one header selection element is not become checked.",
+        "[JIRA:ARK-244]: Fixed page counter issue during race conditions."
+      ]
+    }, {
+      "component": "Ark Datepicker",
+      "changeInfo": [
+        "[JIRA:ARK-265]: Fixed 'date-disabled' option for the popup datepicker."
+      ]
+    }, {
+      "component": "Ark Loading Bar",
+      "changeInfo": [
+        "[JIRA:ARK-220]: Updated to match Design Guidelines."
+      ]
+    }, {
+      "component": "Ark Login",
+      "changeInfo": [
+        "[JIRA:ARK-264]: Add support for a remote message (required by Advisors)."
+      ]
+    }, {
+      "component": "Ark Navbar",
+      "changeInfo": [
+        "[JIRA:ARK-173]: IE issue, icon remains in clicked form."
+      ]
+    }, {
+      "component": "Ark Side Tabs",
+      "changeInfo": [
+        "New parameter `active-tab` added, so a specific tab can be set as default on load."
+      ]
+    }, {
+      "component": "Ark Slider",
+      "changeInfo": [
+        "[JIRA:ARK-250]: Changing value to 0 doesn't move slider."
+      ]
+    }, {
+      "component": "Ark Tags",
+      "changeInfo": [
+        "Transition effect updated from linear to cubic-bezier.",
+        "[JIRA:ARK-238]: Last element deleted when deleting first in Firefox.",
+        "[JIRA:ARK-251]: IE issue, input box cropped bottom."
+      ]
+    }, {
+      "component": "Ark Timepicker",
+      "changeInfo": [
+        "[JIRA:ARK-260]: Issue where PM dates are not accepted fixed."
+      ]
+    }, {
+      "component": "Ark Toolbar",
+      "changeInfo": [
+        "[JIRA:ARK-174]: IE issue when hovering.",
+        "[JIRA:ARK-246]: Clear button is absent in input item."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-24",
+    "timeStamp": "Nov 25, 2014",
+    "body": [{
+      "component": "Global",
+      "changeInfo": [
+        "ArkComponents does not depend on AngularResource and AngularRoute anymore.",
+        "Last release build process bug fixed (bower.json file in tar file was out of place)."
+      ]
+    }, {
+      "component": "Ark Toaster",
+      "changeInfo": [
+        "[JIRA:ARK-222]: Updated Ark Toaster design."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-23",
+    "timeStamp": "Nov 24, 2014",
+    "body": [{
+      "component": "Ark Toolbar",
+      "changeInfo": [
+        "[JIRA:ARK-209]: Blue theme removed.",
+        "[JIRA:ARK-223]: Ability to add event handlers to the search bar of the toolbar."
+      ]
+    }, {
+      "component": "Ark Navbar",
+      "changeInfo": [
+        "[JIRA:ARK-224]: Search bar should be displayed as a drop down on click of a 'search-item'"
+      ]
+    }, {
+      "component": "Ark Nested Tree",
+      "changeInfo": [
+        "[JIRA:ARK-225]: Implemented feature to add Icons to items in the ark nested tree."
+      ]
+    }, {
+      "component": "Ark Slider",
+      "changeInfo": [
+        "[JIRA:ARK-219]: Update style/design to match AppliedWork guidelines."
+      ]
+    }, {
+      "component": "Ark Tooltip",
+      "changeInfo": [
+        "[JIRA:ARK-218]: Update style/design to match AppliedWork guidelines."
+      ]
+    }, {
+      "component": "Ark ngGrid",
+      "changeInfo": [
+        "[JIRA:ARK-198]: Column selector menu styled according to ArkStyle."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-22",
+    "timeStamp": "Oct 27, 2014",
+    "body": [{
+      "component": "Ark ngGrid",
+      "changeInfo": [
+        "[JIRA:ARK-210]: Paging panel missing fixed.",
+        "[JIRA:ARK-211]: Row height change problem fixed."
+      ]
+    }, {
+      "component": "Ark Footer",
+      "changeInfo": [
+        "Better responsive support."
+      ]
+    }, {
+      "component": "Internal Struture",
+      "changeInfo": [
+        "Internal directory structure updated to support modularized components."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-21",
+    "timeStamp": "Oct 16, 2014",
+    "body": [{
+      "component": "Style / CSS",
+      "changeInfo": [
+        "Prefixed ark-components styles for usage in mixed environment (such as with GAX or other libraries) to avoid collisions."
+      ]
+    }, {
+      "component": "Ark Tooltip",
+      "changeInfo": [
+        "[JIRA:ARK-207]: Style updates to match Design Guidelines, this includes a new `default` positioning which positions relative to cursor location."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-20",
+    "timeStamp": "Oct 14, 2014",
+    "body": [{
+      "component": "Ark Footer",
+      "changeInfo": [
+        "Footer styling adjusted to match Hub."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-19",
+    "timeStamp": "Sept 29, 2014",
+    "body": [{
+      "component": "Ark Popover",
+      "changeInfo": [
+        "HTML content support in Popover."
+      ]
+    }, {
+      "component": "Ark Toaster",
+      "changeInfo": [
+        "CSS refactored but no visual change."
+      ]
+    }, {
+      "component": "Ark Navbar",
+      "changeInfo": [
+        "[JIRA:ARK-179]: Changed caret icon to chevron icon in docs.",
+        "[JIRA:ARK-180]: Items with no route are no longer clickable."
+      ]
+    }, {
+      "component": "Ark Nested Tree",
+      "changeInfo": [
+        "[JIRA:ARK-160]: Lazy Loading support for tree structure.",
+        "[JIRA:ARK-183]: New feature to enable develpers change models and add or delete nodes manually.",
+        "[JIRA:ARK-170]: New feature to enable highlight mode on the nested tree."
+      ]
+    }, {
+      "component": "Ark Nested Search",
+      "changeInfo": [
+        "[JIRA:ARK-185]: Fixed issue with the Ark-Nested-Search not highlighting when edit-mode is enabled."
+      ]
+    }, {
+      "component": "Ark UI Bootstrap",
+      "changeInfo": [
+        "Tabs are now enabled and ready for use."
+      ]
+    }, {
+      "component": "Ark ngGrid",
+      "changeInfo": [
+        "[JIRA:ARK-161]: Integrated ng-grid into ark-components",
+        "[JIRA:ARK-164]: Fixed styling of ng-grid and implemented dropdown tables"
+      ]
+    }, {
+      "component": "Ark Toolbar",
+      "changeInfo": [
+        "[JIRA:ARK-187]: Added a close icon to the search bar in the ark toolbar.",
+        "[JIRA:ARK-186]: Fixed IE issue with the inline flexbox not being inline."
+      ]
+    }, {
+      "component": "Ark Filter Bar",
+      "changeInfo": [
+        "[JIRA:ARK-172]: Removed the extra 'x' generated from IE"
+      ]
+    }, {
+      "component": "Ark Select",
+      "changeInfo": [
+        "[JIRA:ARK-169]: Fixed the Trigger click in Select for IE"
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-18 (Skipped)"
+  }, {
+    "title": "Release 1.0.0-17",
+    "timeStamp": "Sept 15, 2014",
+    "body": [{
+      "component": "Global",
+      "changeInfo": [
+        "[JIRA:ARK-118]: Underscore 1.6.0 library added as a dependency (from Nexus).",
+        "Including non-minified version of components inside bower.json ([LINK:see discussion here|http://rhodecode.genesyslab.com:5000/ark_components/changeset/628073e77444c78971e78d696e05c2009de5d8e0#comment-1040])."
+      ]
+    }, {
+      "component": "Ark Slider",
+      "changeInfo": [
+        "[JIRA:ARK-154]: Implemented Ark Slider."
+      ]
+    }, {
+      "component": "Ark Nested Search",
+      "changeInfo": [
+        "[JIRA:ARK-158]: Button and input misalignment on IE and Firefox fixed."
+      ]
+    }, {
+      "component": "Ark Time Picker",
+      "changeInfo": [
+        "[JIRA:ARK-136]: Implemented press and hold event for arrows.",
+        "[JIRA:ARK-133]: Implemented new feature that enables developers to have the added option of displaying only the input fields of the  Ark Time Picker.",
+        "[JIRA:ARK-135]: Implemented the ability for a developer to set the initial time based on the model value."
+      ]
+    }, {
+      "component": "Ark Loading Bar",
+      "changeInfo": [
+        "Implemented Ark Loading Bar",
+        "[JIRA:ARK-151]: Added documentation to Gallery."
+      ]
+    }, {
+      "component": "Ark Login",
+      "changeInfo": [
+        "[JIRA:ARK-134]: Fixed a bug where show-language-bar and the show-password-link attributes were not working. Developers now have the option to display the language bar and forgor-password-link or not."
+      ]
+    }, {
+      "component": "Ark Nested Tree",
+      "changeInfo": [
+        "[JIRA:ARK-152]: Added an option for Nested Tree to configure label editing.",
+        "[JIRA:ARK-155]: Refactored Less code."
+      ]
+    }, {
+      "component": "Ark Footer",
+      "changeInfo": [
+        "[JIRA:ARK-138]: Implemented the Ark Footer.",
+        "Made the ark footer flexible with the option to eihter display your application's version, terms of service link and privacy policy link or not."
+      ]
+    }, {
+      "component": "Ark Widget Layout & Ark Widget",
+      "changeInfo": [
+        "Removed from the library as current version is still not ready for use.",
+        "Updated version is in the works."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-16: Ark UI Bootstrap Integration with Ark-Components",
+    "timeStamp": "Aug 26, 2014",
+    "body": [{
+      "component": "New Directory Structure",
+      "changeInfo": [
+        "New structure now includes ark-components as well as a folder for all additional third party modules.",
+        "Please read the README file."
+      ]
+    }, {
+      "component": "Integration of Ark UI Bootstrap Widgets",
+      "changeInfo": [
+        "Implemented based on [JIRA:ARK-82].",
+        "Accordion.",
+        "Buttons.",
+        "Collapse.",
+        "Dropdown.",
+        "Modal.",
+        "Popover."
+      ]
+    }, {
+      "component": "Ark Select",
+      "changeInfo": [
+        "Fixed: module dependency issues with UI-Bootstrap Tooltip Module."
+      ]
+    }, {
+      "component": "Ark Login",
+      "changeInfo": [
+        "Remove spinner css as it is in Ark Style.",
+        "Removed css body color changes.",
+        "Fix a bug where changing language is not functioning."
+      ]
+    }, {
+      "component": "Ark Toolbar",
+      "changeInfo": [
+        "Ark Toolbar revamped with new features.",
+        "Supports: icons, text, HTMLtemplates, functions, input fields, single and multi selects."
+      ]
+    }, {
+      "component": "Ark Toaster",
+      "changeInfo": [
+        "Implemented based on [JIRA:ARK-141].",
+        "Supports: error, info, success, warning."
+      ]
+    }, {
+      "component": "Ark Filter Bar",
+      "changeInfo": [
+        "Remove spinner css as it is in Ark Style."
+      ]
+    }, {
+      "component": "Ark Side Tab",
+      "changeInfo": [
+        "Now support inline HTML",
+        "Fix a bug where switch reloading attribute is not working.",
+        "Now tab contents have a minimum height of 500px."
+      ]
+    }, {
+      "component": "Grunt Build Task",
+      "changeInfo": [
+        "grunt debug - new task to build ark-components while using non-minified JS files for browser debugging.",
+        "Now uses grunt-contrib-less instead of recess for compiling LESS files into CSS files [JIRA:ARK-143]."
+      ]
+    }]
+  }, {
+    "title": "Release 1.0.0-15 (Skipped)"
+  }, {
+    "title": "Release 1.0.0-14: 10 more Ark components widgets.",
+    "timeStamp": "Aug 1, 2014",
+    "body": [{
+      "component": "Ark Nested Tree",
+      "changeInfo": [
+        "Implemented new component: Ark Nested Tree Display."
+      ]
+    }, {
+      "component": "Ark Nested Search",
+      "changeInfo": [
+        "Implemented new component: Search Component for any custom Nested Tree Display."
+      ]
+    }, {
+      "component": "Ark Tags",
+      "changeInfo": [
+        "Implemented new component: Custom Tag Box."
+      ]
+    }, {
+      "component": "Ark Select",
+      "changeInfo": [
+        "Implemented new component: Angular Bootstrap Select using AngularStrap."
+      ]
+    }, {
+      "component": "Ark Login",
+      "changeInfo": [
+        "Ark login widget successfully ported over from Ark Sample app.",
+        "Added several attributes to allow user to customize their widget.",
+        "Updated service file and JSON structure."
+      ]
+    }, {
+      "component": "Ark Filter Bar",
+      "changeInfo": [
+        "Implemented feature based on [JIRA:ARK-84]."
+      ]
+    }, {
+      "component": "Ark Tool Bar",
+      "changeInfo": [
+        "Implemented new component: Toolbar component.",
+        "Supports: icons, text, HTMLtemplates, functions."
+      ]
+    }, {
+      "component": "Ark Side Tabs",
+      "changeInfo": [
+        "Implemented new component: based on [JIRA:ARK-96]."
+      ]
+    }, {
+      "component": "Ark Time Picker",
+      "changeInfo": [
+        "Implemented new component: based on [JIRA:ARK-100]."
+      ]
+    }]
+  }]
+}

@@ -1,0 +1,108 @@
+<div class="row user-info">
+    <div class="col-sm-1" style="text-align: center; padding: 15px 0;">
+        <img src="/static/chat/public/images/no-photo.jpg">
+    </div>
+    <div class="col-sm-7">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:120px;"></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Name: </strong></td>
+                    <td><span ng-bind="agent.name"></span></td>
+                </tr>
+                <tr>
+                    <td><strong>Gender: </strong></td>
+                    <td><span ng-bind="agent.gender"></span></td>
+                </tr>
+                <tr>
+                    <td><strong>Date of birth: </strong></td>
+                    <td><span ng-bind="agent.date_of_birth"></span></td>
+                </tr>
+                <tr>
+                    <td><strong>Date of hire: </strong></td>
+                    <td><span ng-bind="agent.date_of_hire"></span></td>
+                </tr>
+                <tr>
+                    <td><strong>Location: </strong></td>
+                    <td><span ng-bind="agent.location"></span></td>
+                </tr>
+                <tr>
+                    <td><strong>Skills: </strong></td>
+                    <td><span ng-repeat="(key, value) in agent.skills">{{key}} </span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+
+</div>
+
+    <div class="row section-message">
+        <div class="col-sm-6 section-chat">
+            <h3>Chat</h3>
+            <div class="chat-messages">
+                <div class="col-sm-12" ng-repeat="message in customer.messages track by $index"
+                     ng-class="{dark: $index % 2 === 0}">
+                    <strong>{{ message.name }}</strong>: {{ message.message }}
+                </div>
+            </div>
+            <div>
+                <form id="frm-send-message" class="input-append" role="form" ng-show="user.owns || user.inroom">
+                    <input type="text"
+                           placeholder="Enter message"
+                           ng-model="message"
+                           name="message"
+                           id="message"
+                           ng-keypress="typing($event, user.inroom)"
+                           on-focus="focus(true)"
+                           on-blur="focus(false)"
+                           ng-disabled="!customer.isConnected">
+                    <button class="btn btn-default pull-right"
+                            ng-click="send()"
+                            ng-disabled="!customer.isConnected">Send</button>
+                </form>
+                <small ng-if="error" class="help-block text-warning">{{ error.send }}</small>
+                <ul ng-if="customer.isTyping" class="help-block unstyled">
+                    <li><small>Customer is typing</small></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-6 section-log">
+
+            <ul class="nav nav-tabs" role="tablist" id="agentTablist">
+                <li role="presentation"
+                    ng-class="{active: currentSubTab === 'tab-summary'}">
+                    <a ng-click="selectSubTab('tab-summary')">Summary</a>
+                </li>
+                <li role="presentation" ng-class="{active: currentSubTab === 'tab-suggestions'}">
+                    <a ng-click="selectSubTab('tab-suggestions')">Suggestions</a>
+                </li>
+                <li role="presentation"
+                    ng-class="{active: currentSubTab === 'tab-disposition'}"
+                    ng-show="viewDispositionTab">
+                    <a ng-click="selectSubTab('tab-disposition')">Disposition</a>
+                </li>
+                <li role="presentation" ng-class="{active: currentSubTab === 'tab-tagging'}">
+                    <a ng-click="selectSubTab('tab-tagging')">Tagging</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" ng-class="{active: currentSubTab === 'tab-suggestions'}">
+
+                    <ul>
+                        <li><a ng-click="toggleModal('welcome')">Welcome</a></li>
+                        <li><a ng-click="toggleModal('resource')">Resource</a></li>
+                        <li><a ng-click="toggleModal('search')">Search</a></li>
+                    </ul>
+
+                </div>
+
+            </div>
+        </div>
+    </div>

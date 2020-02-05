@@ -1,0 +1,40 @@
+#surveyModal(ng-controller="surveyModalCtrl")
+   script(type="text/ng-template" id="app/templates/surveyModal.html")
+      .modal-header
+         button.close(ng-click="cancel()")
+            span(aria-hidden="true") &times;
+         h4.modal-title How are we doing?
+      #surveyModalBody.modal-body
+         p Our mission is simple - we're here to provide first-class service while helping people start, run and grow their own ventures. Please fill out the survey below based on your most recent customer support interaction.
+         p.text-right
+            font *required
+         h5 Recent Experience
+         li(ng-repeat="item in itemRates") {{item.title}} 
+            font {{item.required? '*':''}}
+            .sliderBox
+               .row
+                  .col-md-4
+                     p Dissatisfied
+                  .col-md-4
+                     p.text-center Neutral
+                  .col-md-4
+                     p.text-right Very Satisfied
+               div(ui-slider="colorpicker.options" min="-1" max="10" ng-model="surveys.selVal[$index]")
+               .row.text-center
+                  .col-md-1
+                  .col-md-1 0
+                  .col-md-1 1
+                  .col-md-1 2
+                  .col-md-1 3                  
+                  .col-md-1 4
+                  .col-md-1 5                  
+                  .col-md-1 6
+                  .col-md-1 7                  
+                  .col-md-1 8
+                  .col-md-1 9                  
+                  .col-md-1 10
+         li Please provide any comments:
+         textarea.form-control(ng-model="surveys.comment")
+      .modal-footer
+         button.btn.btn-default(ng-click="cancel()") Close
+         button.btn.btn-primary(ng-click="rateChatbox()" ng-disabled="slidedRate") Submit

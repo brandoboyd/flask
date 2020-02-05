@@ -1,0 +1,686 @@
+{% macro configure_filters(type) %}
+<form class="form-horizontal">
+    {# Thresholds and Intentions #}
+    <div ng-model="modalShown" class="modal" ng-cloak>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Relevance Threshold<br /> <span style="white-space: nowrap; font-size: 11px; color:#999">Moderated vs. Automated</span></label>
+                        <div class="col-sm-4">
+                            <fieldset style="position:relative;">
+                                <input type="text" readonly
+                                       id="relevance_threshold"
+                                       name="relevance_threshold"
+                                       class="form-control text-center"
+                                        />
+                                <div id="relevance_slider"
+                                     style="width:220px; position: absolute; left:110px; top:10px; font-size: 10px"
+                                     {% if type == 'create' %}
+                                ui-slider-create
+                                {% else %}
+                                ui-slider2
+                                {% endif %}></div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Intention Threshold<br /> <span style="white-space: nowrap; font-size: 11px; color:#999">Moderated vs. Automated</span></label>
+                    <div class="col-sm-4">
+                        <fieldset style="position:relative;">
+                            <input type="text" readonly id="intention_threshold" name="intention_threshold"class="form-control text-center" />
+                            <div id="intention_slider"
+                                 style="width:220px; position: absolute; left:110px; top:10px; font-size: 10px"
+                                 {% if type == 'create' %}
+                            ui-slider-create
+                            {% else %}
+                            ui-slider2
+                            {% endif %}></div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Filter by Intentions</label>
+                <div class="col-sm-4" style="padding-top:8px">
+                    <ul style="list-style-type: none">
+                        <li ng-repeat="intention in intentions_filter">
+                            <label class="checkbox">
+                                <input type="checkbox" ng-model="intention.enabled" class="ark-checkbox" /><span></span>
+                                <span class="label {{'{{intention.label}}'}}" >{{ '{{ intention.label }}' }}</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a ng-click="modalShown=false" class="btn">Close</a>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="form-group">
+        <div class="form-group form-actions"
+             style="background-color: #fff; margin: 0; padding-bottom: 0;"
+             {% if type == 'create' %}
+        ng-show="channel_type != 'compound'"
+        {% else %}
+        ng-show="channel.type != 'CompoundChannel'"
+        {% endif %} >
+        <a class="btn btn-default" ng-click="modalShown=!modalShown"><span class="icon-filter"></span> Post Filters</a>
+    </div>
+    </div>
+</form>
+{% endmacro %}
+
+
+{% macro channels_form(type, user) %}
+<form class="form-horizontal" name="ChannelUpdateForm" {% if type == 'create' %} ng-show="channel_id" {% endif %}>
+<fieldset>
+    <div ng-switch="channel.type">
+        <!--
+        note that auto refresh div should be moved out of ng-switch
+        when Enterprise channels are removed
+        -->
+        <div ng-switch-when="TwitterServiceChannel">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Languages <span class="asterisk">*</span></label>
+                <div class="col-sm-4">
+                    <input ui-select-languages
+                           data-language-set="twitter"
+                           ng-disabled="account.is_locked"
+                           name="languageTags"
+                           class="form-control"
+                           placeholder="Type a language and hit tab" />
+                </div>
+            </div>
+
+
+
+            <div class="form-group" ng-class="{'has-error': ChannelUpdateForm.keywordsTags.$error.required}">
+                <label class="col-sm-2 control-label">Keywords <span class="asterisk">*</span></label>
+                <div class="col-sm-4">
+                    <div popover-placement="right"
+                         arrow-placement="top"
+                         popover-trigger="mouseenter"
+                         popover-title="Keywords are important!"
+                         popover-append-to-body="true"
+                         popover-html-unsafe="<p>Your channel will store posts that
+                                contain the exact words or phrases you
+                                enter as <b>keywords</b>.</p>
+                                <p>You should check out your company’s or brand’s activity on Twitter.com to figure out the best keywords to use.</p>
+                                <p>Using generic keywords such as ‘car’ or ‘hello’ will cause a lot of irrelevant posts to appear in your channel.
+                                Type a word or a string of words and hit enter.</p>">
+                        <input ui-select-keywords
+                               name="keywordsTags"
+                               ng-model="keywords"
+                               class="form-control"
+                               ng-required="true"
+                               ng-disabled="account.is_locked"
+                               required
+                               placeholder="Type a keyword/search term and hit tab" />
+                      <span class="help-block error"
+                            ng-show="ChannelUpdateForm.keywordsTags.$error.required">Keywords are required</span>
+                    </div>
+                </div>
+            </div>
+
+            <!--div class="form-group">
+                <label class="col-sm-2 control-label" for="id_skipwords">Skipwords</label>
+                <div class="col-sm-4">
+                    <div popover-placement="right"
+                         popover-trigger="mouseenter"
+                         popover-title="Skipwords are optional."
+                         popover-append-to-body="true"
+                         popover-html-unsafe="<p>Any words or phrases you enter in the skipwords field will be excluded from your channel.</p>">
+                        <input ui-select-skipwords
+                               name="skip-words"
+                               ng-disabled="account.is_locked"
+                               ng-model="skipwords"
+                               placeholder="Type a skipword and hit tab"
+                               class="form-control"/>
+                    </div>
+                    <div style="margin-top:5px">
+                        <a href="" style="color:#4A4A4A;" ng-click="changeStatus()"><span ng-class="evaluateIcon()"></span> Advanced</a>
+                    </div>
+                </div>
+            </div-->
+
+            <div class="form-group" ng-if="evaluate()">
+                <label class="col-sm-2 control-label"
+                       for="watchwords-tags">Actionable Words</label>
+                <div class="col-sm-4">
+                    <div popover-placement="right"
+                         arrow-placement="top"
+                         popover-trigger="mouseenter"
+                         popover-title="Actionable words are optional."
+                         popover-append-to-body="true"
+                         popover-html-unsafe="<p>Actionable words may be used to help the system define which posts should be classed as actionable. If your company is an airline for example, adding actionable words such as 'flight delay' and 'lost luggage' might be a useful way to increase the precision around accurately identifying actionable posts.</p>">
+                        <input ui-select-watchwords
+                               name="watchwords-tags"
+                               ng-disabled="account.is_locked"
+                               ng-model="watchwords"
+                               class="form-control"
+                               placeholder="Type an actionable word and hit tab"/>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div ng-show="!account.is_locked" class="form-group">
+                <label class="col-sm-2 control-label" for="skip_retweets">Skip Retweets</label>
+                <div class="col-sm-4 btn-toolbar">
+                    <div class="toggle-switch">
+                        <input type="checkbox"
+                               name="css-toggle-on-off-label"
+                               class="toggle-switch-checkbox"
+                               ng-model="channel.skip_retweets"
+                               ng-click="channel.skip_retweets = !channel.skip_retweets"
+                               id="css-toggle-on-off-label">
+                        <label class="toggle-switch-label" for="css-toggle-on-off-label">
+                            <span class="toggle-switch-inner"></span>
+                            <span class="toggle-switch-switch"></span>
+                        </label>
+                        <label for="css-toggle-on-off-label" class="toggle-switch-label-text"><span
+                                class="toggle-switch-on-label-text">Yes</span><span class="toggle-switch-off-label-text">No</span></label>
+                    </div>
+                </div>
+                <!--<div class="col-sm-4">-->
+                    <!--<label class="checkbox">-->
+                        <!--<input type="checkbox" class="ark-checkbox" ng-checked="channel.skip_retweets" id="skip_retweets"-->
+                               <!--ng-disabled="account.is_locked"-->
+                               <!--ng-model="channel.skip_retweets"><span></span>-->
+                    <!--</label>-->
+                <!--</div>-->
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': ChannelUpdateForm.usersTags.$error.required}">
+                <label class="col-sm-2 control-label">Twitter Handle(s) <span class="asterisk">*</span></label>
+                <div class="col-sm-4">
+                    <div popover-placement="right"
+                         arrow-placement="top"
+                         popover-trigger="mouseenter"
+                         popover-title="Twitter handle(s)."
+                         popover-append-to-body="true"
+                         popover-html-unsafe="<p>Enter your company or brand Twitter handle. It needs to be a valid Twitter handle.</p>
+                                                <p>This is a required field.</p>
+                                                <p>Type your handle and hit enter.</p>">
+                        <input ui-select-users
+                               name="usersTags"
+                               ng-model="usernames"
+                               ng-disabled="account.is_locked"
+                               placeholder="Twitter handle(s) that your company uses to post and reply"
+                               ng-required="true"
+                               class="form-control"
+                               required />
+
+                      <span class="help-block error"
+                            ng-show="ChannelUpdateForm.usersTags.$error.required">Twitter Handle is required</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-switch-when="CompoundChannel">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Primitive Channels</label>
+                <div class="col-sm-4" ng-controller="PrimitiveChannelSelectCtrl">
+                    <select ui-select2
+                            multiple="true"
+                            ng-disabled="account.is_locked"
+                            name="primitive_channels"
+                            ng-model="options.selected"
+                            class="form-control">
+                        {% raw %}
+                        <option value="{{ o.id }}" ng-repeat="o in options.options">{{ o.title }}</option>
+                        {% endraw %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div ng-switch-when="FollowerTrackingChannel">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Users</label>
+                <div class="col-sm-4">
+
+                    <input name="users-tags" value="" class="form-control"
+                        ng-model="usernames"
+                        ui-select-users
+                        style="width: 350px"
+                        ng-disabled="account.is_locked" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Tracking Mode</label>
+                <div class="col-sm-4 controls">
+
+                    <label class="radio inline">
+                        <input type="radio" class="ark-radiobtn" ng-model='channel.tracking_mode' value="Passive"><span></span>
+
+                    </label>
+                    <label class="radio inline">
+                        <input type="radio"
+                               class="ark-radiobtn"
+                               ng-model='channel.tracking_mode'
+                               ng-disabled="account.is_locked"
+                               value="Active"><span></span>
+                        Active
+                    </label>
+
+                </div>
+            </div>
+        </div>
+
+        <div ng-switch-when="UserTrackingChannel">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Users</label>
+                <div class="col-sm-4">
+
+                    <input name="users-tags" class="form-control" value=""
+                           ng-disabled="account.is_locked"
+                           ng-model="usernames" ui-select-users />
+
+                </div>
+            </div>
+        </div>
+
+        <div ng-switch-when="KeywordTrackingChannel">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Keywords</label>
+                <div class="col-sm-4">
+
+                    <input name="keywords-tags"
+                           ui-select-keywords
+                           ng-disabled="account.is_locked"
+                           value=''
+                           ng-model="keywords"
+                           class="form-control"  />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Watchwords</label>
+                <div class="col-sm-4">
+
+                    <input name="watchwords-tags"
+                           ui-select-watchwords
+                           ng-disabled="account.is_locked"
+                           value=''
+                           ng-model="watchwords"
+                           class="form-control"  />
+
+                </div>
+            </div>
+        </div>
+
+        <div ng-switch-when="FacebookServiceChannel">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="">Outbound Channel</label>
+                <div class="col-sm-4">
+                    <select class="form-control"
+                            ng-model="channel.dispatch_channel"
+                            ng-options="o.key as o.title for o in options.dispatch_channels">
+                        <option value="">Select one to input Facebook pages and events</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="facebook_page_id">Facebook Pages</label>
+                <div class="col-sm-4">
+                    <input type="text"
+                           ui-select-facebook-pages="outboundChannelConfigured"
+                           class="form-control"
+                           id="facebook_page_id"
+                           ng-model="channel.facebook_page_ids"
+                           ng-disabled="account.is_locked || !channel.dispatch_channel"
+                           >
+                        <span class="help-block error"
+                              ng-show="ChannelUpdateForm.facebookPages.$dirty && !isChannelTypeValid()">Please select pages you want to track.
+                        </span>
+                </div>
+            </div>
+            <!--<div class="form-group">-->
+            <!--<label class="col-sm-2 control-label" for="facebook_group_id">Facebook Groups</label>-->
+            <!--<div class="col-sm-4">-->
+            <!--<input ui-select-facebook-groups-->
+            <!--ng-model="channel.facebook_group_ids" class="form-control" id="facebook_group_id">-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="facebook_event_id">Facebook Events</label>
+                <div class="col-sm-4">
+                    <input type="text"
+                           ui-select-facebook-events="outboundChannelConfigured"
+                           class="form-control"
+                           id="facebook_event_id"
+                           ng-model="channel.facebook_event_ids"
+                           ng-disabled="account.is_locked || !channel.dispatch_channel">
+                        <span class="help-block error"
+                              ng-show="ChannelUpdateForm.facebookEvents.$dirty && !isChannelTypeValid()">Please select events you want to track.
+                        </span>
+                </div>
+            </div>
+
+            <!--<div class="form-group">-->
+                <!--<label class="col-sm-2 control-label" for="fb_pull_mode">Channel pull mode</label>-->
+                <!--<div class="col-sm-4">-->
+                    <!--<select type="text"-->
+                           <!--class="form-control"-->
+                           <!--id="fb_pull_mode"-->
+                           <!--ng-model="channel.fb_pull_mode"-->
+                           <!--ng-disabled="account.is_locked">-->
+                        <!--<option value="0">Automatic</option>-->
+                        <!--<option value="1">Rare</option>-->
+                        <!--<option value="2">Normal</option>-->
+                        <!--<option value="3">Fast</option>-->
+                    <!--</select>-->
+                        <!--<span class="help-block error"-->
+                              <!--ng-show="ChannelUpdateForm.facebookEvents.$dirty && !isChannelTypeValid()">Please select events you want to track.-->
+                        <!--</span>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        </div>
+
+        <div ng-switch-when="VOCServiceChannel">
+        </div>
+
+        <div ng-switch-when="ChatServiceChannel">
+        </div>
+        <div ng-switch-when="EmailServiceChannel">
+        </div>
+
+        <div ng-switch-when="EnterpriseFacebookChannel"
+             ng-init="passTheScope(this)">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" ng-hide="facebook_profile">Authorize Social account</label>
+                <label class="col-sm-2 control-label" ng-show="facebook_profile">Your Social account</label>
+                <div class="col-sm-4">
+
+                    {% raw %}
+                    <div ng-show="facebook_profile">
+
+                        You are logged in as <a href="{{ facebook_profile.link }}" target="_blank">{{ facebook_profile.name }}</a>
+                        <a ng-click="account.is_locked || facebook_logout()"
+                           ng-disabled="account.is_locked"
+                           target="_blank"
+                           class="btn btn-danger"> Logout </a>
+
+                    </div>
+                    <div ng-hide="facebook_profile">
+                        <a ng-click="account.is_locked || facebook_request_token()"
+                           ng-disabled="channel.status == 'Suspended'"
+                           class="btn btn-info"
+                           ng-hide="facebook_profile"><span class="icon-facebook-square"></span> Login to Facebook </a>
+                    </div>
+                    {% endraw %}
+
+                </div>
+            </div>
+
+            {#
+            {% if user.current_account.account_type != 'GSE' %}
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="fb_review_outbound">Review outbound messages</label>
+                <div class="col-sm-4">
+                    <label class="checkbox">
+                        <input id="fb_review_outbound"
+                               type="checkbox"
+                               class="ark-checkbox"
+                               ng-model="channel.review_outbound"
+                               ng-disabled="account.is_locked"
+                                >
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+            #}
+
+            <div class="form-group" ng-show="channel.review_outbound">
+                <label class="col-sm-2 control-label" for="fb_review_outbound">Review team</label>
+                <div class="col-sm-4">
+                    <input id="fb_review_team"
+                           class="form-control"
+                           ng-model="channel.review_team"
+                           ng-disabled="account.is_locked"
+                           ui-select-review-team
+                           style="width: 350px"
+                            >
+                </div>
+            </div>
+        </div>
+
+        <div ng-switch-default ng-init="passTheScope(this)" ng-cloak>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Twitter handle*</label>
+                <div class="col-sm-4">
+                    <input type="text"
+                           name="input"
+                           class="form-control"
+                           ng-model="channel.twitter_handle"
+                           ng-disabled="true">
+
+                </div>
+                    <span ng-show="channel.twitter_handle"
+                          class="help-block" style="color:#ea4f6b">The twitter handle for the account</span>
+
+                <span ng-hide="channel.twitter_handle"
+                      class="help-block error">You need to set a twitter handle by using the Log In button below</span>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Authorize Social account</label>
+                <div class="col-sm-4">
+                    <fieldset style="position:relative;">
+                        {% raw %}
+                        <div ng-show="twitter_profile">
+                            <div>To revoke this permissions
+                                <a target="_blank"
+                                   class="link"
+                                   ng-click="account.is_locked || twitter_logout()"
+                                   ng-disabled="account.is_locked">Logout</a>
+                                ({{ twitter_profile.screen_name }}) or remove Solariat Twitter application from your <a href="https://twitter.com/settings/applications" target="_blank" class="link"> twitter settings applications tab </a></div>
+                            <div><img ng-src="{{ twitter_profile.profile_image_url }}"/></div>
+                        </div>
+                        <a ng-click="account.is_locked || twitter_request_token()"
+                           ng-disabled="account.is_locked"
+                           class="btn btn-info"
+                           style="background: #55acee; border-color: #55acee"
+                           ng-hide="twitter_profile"><span class="icon-twitter"></span> Login to Twitter </a>
+                        {% endraw %}
+                    </fieldset>
+                </div>
+            </div>
+
+            {#
+            {% if user.current_account.account_type != 'GSE' %}
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="tw_review_outbound">Review outbound messages</label>
+                <div class="col-sm-4">
+                    <input id="tw_review_outbound"
+                           type="checkbox"
+                           ng-model="channel.review_outbound"
+                           ng-disabled="account.is_locked"
+                           class="ark-checkbox">
+                    <span></span>
+                </div>
+            </div>
+            {% endif %}
+            #}
+
+            <div class="form-group" ng-show="channel.review_outbound">
+                <label class="col-sm-2 control-label" for="fb_review_outbound">Review team</label>
+                <div class="col-sm-4">
+                    <input id="tw_review_team"
+                           ng-model="channel.review_team"
+                           ng-disabled="account.is_locked"
+                           ui-select-review-team
+                           class="form-control" />
+                    >
+                </div>
+            </div>
+        </div>
+
+        <div ng-show="channel.view.special_account_options" class="form-group">
+            <label class="col-sm-2 control-label" for="history_time_period">Queue history window</label>
+            <div class="col-sm-4">
+                <div popover-placement="right"
+                     arrow-placement="top"
+                         popover-trigger="mouseenter"
+                         popover-title="Queue horizon (seconds)"
+                         popover-append-to-body="true"
+                         popover-html-unsafe="<p>The time in seconds after which we consider posts we stored in the queue irrelevant.</p>
+                                              <p>Older entries will be purged on any query. Valid Values: 1800–1209600 (30 min-2 weeks)</p>">
+                    <label class="checkbox">
+                        <input type="number" class="form-control" id="history_time_period"
+                               min="1800"
+                               max="1209600"
+                               ng-disabled="account.is_locked"
+                               ng-model="channel.history_time_period">
+                        <span ng-show="isHistoryPeriodValid(channel.history_time_period) == false"
+                              class="help-block"
+                              style="color:#ea4f6b">Valid values are  1800 – 1209600 (30 min-2 weeks)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div ng-if="!account.is_locked && account.selected_app == 'GSE' && ['FacebookServiceChannel','TwitterServiceChannel'].indexOf(channel.type)>-1"
+         class="form-group">
+        <label class="col-sm-2 control-label">Data Recovery</label>
+        <div class="col-sm-4">
+            <label class="checkbox">
+                <input type="checkbox"
+                       ng-class="{'ark-checkbox': outboundChannelConfigured}"
+                       ng-model="recovery.isOpened"
+                       ng-disabled="!outboundChannelConfigured"
+                       ng-click="recovery.toggle()">
+                <span ng-if="!outboundChannelConfigured"
+                      class="icon-iw-active-circle-question"
+                      tooltip-placement="top" tooltip="Please create and authorise an outbound channel before using the 'Data Recovery' option">
+                </span>
+                <span></span>
+            </label>
+            <div ng-if="recovery.isOpened" class="col-sm-12 row" style="margin-top:10px">
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="id_recovery_from" ng-bind="recovery.label.from"
+                           style="text-align:left">From (UTC)</label>
+                    <div class="col-sm-5">
+                        <input id="id_recovery_from"
+                               type="text"
+                               class="form-control"
+                               ui-jq="datetimepicker"
+                               ui-options="recoveryFromOptions"
+                               ng-model="recovery.current.from_date"
+                               ng-disabled="!recovery.canStart()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="id_recovery_to" ng-bind="recovery.label.to"
+                           style="text-align:left">To (UTC)</label>
+                    <div class="col-sm-5">
+                        <input id="id_recovery_to"
+                               type="text"
+                               class="form-control"
+                               ui-jq="datetimepicker"
+                               ui-options="recoveryToOptions"
+                               ng-model="recovery.current.to_date"
+                               ng-disabled="!recovery.canStart()">
+                    </div>
+                </div>
+                <div ng-if="['FacebookServiceChannel'].indexOf(channel.type)>-1">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="id_recovery_type">Recovery type</label>
+                        <div class="col-sm-4">
+                            <select class="form-control"
+                                    id="id_recovery_type"
+                                    ng-model="recovery.current.type">
+                                <option value="">All</option>
+                                <option value="pm">Private Messages</option>
+                                <option value="page">Pages and comments</option>
+                                <option value="event">Events and comments</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="recovery.canStart()">
+                    <div class="col-sm-offset-3 col-sm-4">
+                        <button class="btn btn-primary"
+                                ng-click="recovery.start()"
+                                ng-disabled="!(recovery.current.to_date && recovery.current.from_date)">Recover data</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <p ng-show="recovery.isRunning()"><b>The recovery is in progress</b></p>
+                        <div ng-repeat="bar in recovery.progressBars">
+                            {% raw %}
+                            <label>{{bar.hint}} (state: {{bar.status}})</label>
+                            <progressbar
+                                    animate="false"
+                                    value="bar.value"
+                                    max="100"
+                                    type="success">
+                                <b>{{bar.title}}</b></progressbar>
+                            {% endraw %}
+                        </div>
+                        <button class="btn"
+                                ng-show="recovery.isRunning() && recovery.canStop()"
+                                ng-click="recovery.stop()">Stop</button>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="recovery.isFinished() || recovery.isResumable()">
+                    <div class="col-sm-offset-3 col-sm-4">
+                        <button class="btn"
+                                ng-click="recovery.startNew()">Create New Recovery</button>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="recovery.isResumable()">
+                    <div class="col-sm-offset-3 col-sm-4">
+                        <button class="btn"
+                                ng-click="recovery.resume()">Resume Recovery</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <label class="col-sm-2 control-label outer-div">Do not store personal data</label>
+        <div class="col-sm-4">
+            <label class="checkbox">
+                <input type="checkbox"
+                       ng-class="{'ark-checkbox': outboundChannelConfigured}"
+                       ng-model="channel.remove_personal"
+                       ng-disabled="!outboundChannelConfigured">
+                <span></span>
+            </label>
+        </div>
+
+        {% if user.is_superuser  %}
+        <label class="col-sm-2 control-label outer-div">Enable Post tracking</label>
+        <div class="col-sm-4">
+            <label class="checkbox">
+                <input type="checkbox"
+                       ng-class="{'ark-checkbox': outboundChannelConfigured}"
+                       ng-model="channel.posts_tracking_enabled"
+                       ng-disabled="!outboundChannelConfigured">
+                <span></span>
+            </label>
+        </div>
+        {% endif %}
+
+
+    </div>
+
+</fieldset>
+</form>
+
+{% endmacro %}

@@ -1,0 +1,100 @@
+    {% extends "base.html" %}
+
+{% block title %}
+{{ "Journeys - %s" % user.account.selected_app }}
+{% endblock %}
+
+{% from "_macros/journeys-details.html" import render_journeys with context -%}
+{% from "_macros/plotter.html"   import render_plot         -%}
+
+{% from "_macros/facets.html"    import
+facet_journey_types,
+facet_journey_statuses,
+facet_channels,
+facet_segments,
+render_facet_tags -%}
+
+{% set ngApp        = 'omni.journeys' %}
+{% set section      = section  %}
+
+{% block body %}
+<script>
+    var OMNI_SECTION = "{{ section }}"; // customers or agents
+    var OMNI_ID = "{{ mongo_id }}";  // id of a customer or agent
+</script>
+
+<div class="container-fluid" ng-controller="OmniJourneysCtrl">
+    <div class="row" style="position: relative">
+        {% raw %}
+        <ul class="nav nav-tabs fixed-nav"
+            style="left: 0;">
+            <li ng-repeat="tab in tabs" ui-sref-active="active"
+                style="cursor: pointer;" ng-cloak>
+                <a ui-sref="{{tab.sref}}">
+                    <span class="fonticon {{tab.icon}}"></span>&nbsp;&nbsp;{{tab.name}}
+                </a>
+            </li>
+        </ul>
+        {% endraw %}
+        <div class="fixed-nav" style="right: 25px;">
+            <div>
+                <button class="btn btn-default"
+                        ng-hide="currentTab==='reports'"
+                        onclick="angular.element('#analysis').toggle('fast')">Analysis</button>
+            </div>
+            <div ng-hide="currentTab=='details' || currentTab=='flow' || currentTab == 'path'" class="pull-left">
+                {% raw %}
+                    <button ng-click="widget.remove()"
+                       class="btn btn-xs btn-default pull-right"
+                       ng-show="widget.item"
+                       ui-jq="tooltip"
+                       data-original-title="Cancel widget edit mode"
+                            ><span class="icon-small-close" style="font-size:15px"></span></button>
+                    {% endraw %}
+                    <button href=""
+                       ng-show="widget.item"
+                       widget-dialog
+                       data-widget="widget.item"
+                       data-settings="widget.getParams()"
+                       ui-jq="tooltip"
+                       data-original-title="Update: {{'{{widget.item.title}}'}}"
+                       class="btn btn-xs btn-warning pull-right"><i class="icon-dash" style="font-size:15px"></i>
+                    </button>
+                <button href=""
+                   ng-cloak
+                   ng-hide="widget.item || currentTab == 'reports'"
+                   data-widget="widget.item"
+                   data-settings="widget.getParams()"
+                   widget-dialog
+                   ui-jq="tooltip"
+                   data-original-title="Add to Dashboard"
+                   class="btn btn-xs btn-default"><i class="icon-dash" style="font-size:15px"></i>
+                </button>
+            </div>
+            <div>
+                <date-range-dropdown current-date="currentDate" ng-if="currentTab != 'reports'"></date-range-dropdown>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:40px;">
+        <span class="fonticon icon-circle-arrow-up to-top-scroller" to-top-scroller style="display: none"></span>
+        <div class="col-sm-12">
+            <div class="tab-content" style="overflow: visible;">
+                <div class="tab-pane active">
+                    <div ui-view></div>
+                    {% raw %}
+                    <div id="analysis"
+                         analysis-panel
+                         ng-if="filters.journey_type && analysis.filters"
+                         analysis-filters="analysis.filters"
+                         analysis-extra-params="analysis.params"
+                         style="display: none;z-index:10;border: 1px solid #e4e9f0;box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20);background: white;width: 300px;right: 5px;bottom: 0;position: fixed;top: 92px;">
+                    </div>
+                    {% endraw %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

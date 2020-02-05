@@ -1,0 +1,31 @@
+{%- from "_macros/predictors.facets.html" import render_predictorsFacets -%}
+
+<div class="col-sm-2 sidebar">
+    {{ render_predictorsFacets() }}
+</div>
+
+<div class="col-md-10 col-md-offset-2" ng-show="!predictors.length">
+    <h2 class="text-center">No Predictors</h2>
+</div>
+
+<div class="col-sm-10 col-sm-offset-2" ng-show="predictors.length">
+    <h1>{{'{{predictor.name}}'}}</h1>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-md-3">
+            <span style="line-height: 25px">Plot by</span>
+            <select class="form-control"
+                    ng-model="selectedDistribGrouping"
+                    ng-options="item.type for item in distribGroupings">
+                <option value="" ng-if="false"></option>
+            </select>
+        </div>
+    </div>
+
+    <div id="chartDistribution" class="analysis-card" style="margin-top:20px;height: 420px;"
+         ng-repeat="chart in charts">
+        <chart chart-data="chart.data" settings="chart.settings"></chart>
+    </div>
+</div>

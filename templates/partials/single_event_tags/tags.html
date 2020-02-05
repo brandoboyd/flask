@@ -1,0 +1,149 @@
+<h4>
+    {% if user.is_admin or user.is_staff or user.is_analyst %}
+    <a class="btn btn-success btn-mini"
+       ng-click="createSingleEventTag()"
+       tooltip-placement="top" tooltip="New Single Event Tag">
+        <i class="icon-plus"></i>
+    </a>
+    {% endif %}
+    Settings - Single Event Tags
+</h4>
+
+<span class="alert alert-default" ng-show="single_event_tags.length <= 0">No smart tags found</span>
+
+<table class="table table-bordered"
+       ng-init="orderByPredicate='title';orderByReverse=false">
+    <thead>
+        {% if user.is_admin or user.is_staff or user.is_analyst %}
+        <th colspan="2" style="width:10%">
+            <div class="btn-group pull-left">
+                <span class="btn btn-mini" >
+                    <input type="checkbox"
+                           value="all"
+                           ng-model="all_selected"
+                           ng-init="all_selected=false"
+                           ng-change="selectAll()"
+                           style="margin:-2px 0 2px 0;font-size: 10px"/></span>
+
+                <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a ng-click="activate()"><i class="icon-play"></i> Activate</a></li>
+                    <li><a ng-click="deactivate()"><i class="icon-pause"></i> Deactivate</a></li>
+                </ul>
+            </div>
+        </th>
+        {% endif %}
+        <th><a style="width: 100%;display: block;"
+               ng-click="orderByPredicate='title';orderByReverse=!orderByReverse">
+                Title
+                <span class="pull-right">
+                    <i class="icon-caret-up"
+                       ng-show="orderByPredicate=='title'&&orderByReverse"></i>
+                    <i class="icon-caret-down"
+                       ng-show="orderByPredicate=='title'&&!orderByReverse"></i>
+                </span>
+            </a>
+        </th>
+        <th>Description</th>
+        <th>
+            <a style="width: 100%;display: block;"
+               ng-click="orderByPredicate='created_at';orderByReverse=!orderByReverse">
+                Created
+                <span class="pull-right">
+                    <i class="icon-caret-up"
+                       ng-show="orderByPredicate=='created_at'&&orderByReverse"></i>
+                    <i class="icon-caret-down"
+                       ng-show="orderByPredicate=='created_at'&&!orderByReverse"></i>
+                </span>
+            </a>
+        </th>
+        <th>
+            <div tooltip="Total number of posts analyzed in relation to this tag"
+                 tooltip-placement="left">
+                Posts
+            </div>
+        </th>
+        <th>
+            <div tooltip="Posts that were NOT tagged with the related tag by the system, but a user subsequently added a tag."
+                 tooltip-placement="left">
+                FN
+            </div>
+        </th>
+        <th>
+            <div tooltip="Total number of posts that are incorrectly tagged with the related tag. A user has taken steps to remove the tag from the post."
+                 tooltip-placement="left">
+                TP
+            </div>
+        </th>
+        <th>
+            <div tooltip="A post where a tag was assigned and is confirmed by a user."
+                 tooltip-placement="left">
+                FP
+            </div>
+        </th>
+        <th>
+            <div tooltip="TP / (TP+FP)"
+                 tooltip-placement="left">
+                Precision
+            </div>
+        </th>
+        <th>
+            <div tooltip="TP / (TP + FN)"
+                 tooltip-placement="left">
+                Recall
+            </div>
+        </th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="tag in single_event_tags | filter:filterPredicate | orderBy: orderByPredicate: orderByReverse"
+            ng-class="{'Suspended' : 'error', 'Active' : 'success'}[tag.status]">
+            {% if user.is_admin or user.is_staff or user.is_analyst %}
+            <td>
+                {% raw %}
+                <input type="checkbox"
+                       value="{{ tag.id }}"
+                       ng-checked="all_selected"
+                       ng-model="tag.is_selected" />
+                {% endraw %}
+            </td>
+            <td>
+                <span>
+                   <a class="btn btn-small btn-success"
+                      ng-show="tag.status == 'Suspended'"
+                      ng-click="activate(tag)"
+                      title="Activate"><i class="icon-play"></i></a>
+                   <a class="btn btn-small btn-danger"
+                      ng-show="tag.status == 'Active' && tag.perm != 'r'"
+                      ng-click="deactivate(tag)"
+                      title="De-activate"><i class="icon-pause"></i></a>
+                </span>
+            </td>
+            {% endif %}
+            {% raw %}
+            <td><a ng-click="createSingleEventTag(tag)">{{ tag.display_name }}</a></td>
+            <td>{{ tag.description }}</td>
+            <td>{{ tag.created|date }}</td>
+           <td><span class="pull-right"
+                     tooltip-placement="top" tooltip
+                     title="Number of posts">TODO</span></td>
+           <td><span class="pull-right"
+                     tooltip-placement="top" tooltip
+                     title="">TODO</span></td>
+           <td><span class="pull-right"
+                     tooltip-placement="top" tooltip
+                     title="">TODO</span></td>
+           <td><span class="pull-right"
+                     tooltip-placement="top" tooltip
+                     title="">TODO</span></td>
+           <td><span class="pull-right"
+                     tooltip-placement="top" tooltip
+                     title="">TODO</span></td>
+           <td><span class="pull-right"
+                     tooltip-placement="top" tooltip
+                     title="">TODO</span></td>
+           {% endraw %}
+        </tr>
+    </tbody>
+</table>

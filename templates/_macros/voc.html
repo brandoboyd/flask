@@ -1,0 +1,50 @@
+{% macro voc_distribution() %}
+{% raw %}
+<style>
+    .voc-inner:hover {
+        opacity:0.8;
+    }
+</style>
+<div class="well">
+    <div class="col-sm-4">
+        <p class="text-right" style="font-weight:bold">Legend</p>
+    </div>
+    <div class="col-sm-4">
+        <div ng-repeat="nps in nps_horizontal_bars"
+             class="voc-legend-block pull-left">
+            <div class="voc-legend-item pull-left {{nps.class}}"></div><p>{{nps.title}}</p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<table class="table voc-table">
+    <thead>
+    <tr>
+        <th style="width: 25%;">Tag Name</th>
+        <th style="width: 60px;"># Posts</th>
+        <th>Distribution</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="tag in smart_tag_data" ng-hide="isTagEmpty(tag)" class="voc-wrap">
+        <th style="vertical-align: middle;"><a ng-click="filterByTag(tag)"><span ng-bind="tag.title"></span></a></th>
+        <td>{{tag.total}}</td>
+        <td style="vertical-align: middle;">
+            <div class="voc-outer">
+                <div ng-repeat="bar in nps_horizontal_bars"
+                     ng-hide="tag.counts[bar.title] == undefined || !tag.counts[bar.title]"
+                     ng-cloak
+                     ng-click="getPosts(tag, bar.title)"
+                     tooltip-html-unsafe="{{getTooltip(tag, bar.title)}}"
+                     tooltip-popup-delay="600"
+                     class="voc-inner pull-left {{bar.class}}"
+                     style="width:{{tag.percentages[bar.title].toFixed(1)}}%;
+                        cursor: pointer; text-align: center; border-right: 2px solid white">
+                </div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+{% endraw %}
+{% endmacro %}

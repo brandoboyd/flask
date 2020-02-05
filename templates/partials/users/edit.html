@@ -1,0 +1,134 @@
+{%- macro user_edit_details() %}
+<form class="form-horizontal">
+    <fieldset>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="name">Name <span class="asterisk">*</span></label>
+
+            <div class="col-sm-4 form-inline">
+                <input type="text"
+                       id="name"
+                       ng-model="user.first_name"
+                       class="form-control"
+                       placeholder="First name">
+                <input type="text"
+                       id="name"
+                       ng-model="user.last_name"
+                       placeholder="Last name"
+                       class="form-control"
+                       style="margin-left: 10px;">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Email <span class="asterisk">*</span></label>
+
+            <div class="col-sm-4">
+                <input type="text"
+                       id="email"
+                       ng-model="user.email"
+                       class="form-control"
+                       placeholder="Only one email per account allowed">
+                    <span ng-show="user.email && !EMAIL_REGEXP.test(user.email)"
+                          class="help-block error">Email is not valid</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="roles">Roles <span class="asterisk">*</span></label>
+
+            <div class="col-sm-4">
+                {% raw %}
+                <ui-select id="roles" multiple ng-model="chosenRoles" theme="select2" ng-disabled="disabled"
+                           class="form-control" on-select="addRole($item)" on-remove="removeRole($item)">
+                    <ui-select-match placeholder="The roles for this user">{{$item.value}}</ui-select-match>
+                    <ui-select-choices
+                        repeat="o in fullRoles | propsFilter: {id: $select.search, value: $select.search}">
+                        <div ng-bind-html="o.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                {% endraw %}
+
+                    <span ng-show="changingRolesIds.length === 0"
+                          class="help-block error">At least one role needs to be selected</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="groups">Groups</label>
+
+            <div class="col-sm-4">
+                {% raw %}
+                <ui-select id="groups" multiple ng-model="chosenGroup" theme="select2" ng-disabled="disabled"
+                           class="form-control" on-select="addGroup($item)" on-remove="removeGroup($item)">
+                    <ui-select-match placeholder="If no specific groups are set, will use groups based on roles">
+                        {{$item.name}}
+                    </ui-select-match>
+                    <ui-select-choices
+                        repeat="o in fullGroups | propsFilter: {id: $select.search, name: $select.search}">
+                        <div ng-bind-html="o.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                {% endraw %}
+            </div>
+        </div>
+
+        {% if user.account.selected_app != 'GSE' %}
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="signature">Signature</label>
+
+            <div class="col-sm-4">
+                <input type="text"
+                       id="signature"
+                       ng-model="user.signature"
+                       class="form-control"
+                       placeholder="Needs to be unique per account">
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group form-actions">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="button" class="btn btn-primary"
+                        ng-click="save()"
+                        ng-show="isCreationMode()"
+                        ng-disabled="saveButtonDisabled()">Create
+                </button>
+                <button type="button" class="btn btn-primary"
+                        ng-click="save()"
+                        ng-hide="isCreationMode()"
+                        ng-disabled="saveButtonDisabled()">Update
+                </button>
+
+                <button type="button"
+                        ng-confirm
+                        action-text="You are about to delete the user from Genesys Social Analytics. This step can not be undone, are you sure you want to proceed?"
+                        action-function="deleteUser()"
+                        action-button-text="Yes"
+                        cancel-button-text="No"
+                        tooltip-placement="top" tooltip="Delete"
+                        class="btn btn-danger"
+                        ng-show="deleteButtonDisabled()">Delete user
+                </button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+{% endmacro -%}
+
+
+<h3 style="margin-left: 10%;margin-top: 16px;">
+    {% raw %}
+    {{title == 'Create' ? 'New' : 'Update'}} User
+    {% endraw %}
+    {% if user.is_staff %}
+    or <a class="btn btn-default" style="margin-left: 35px;" ng-click="add()"><span class="fonticon icon-add"></span>&nbsp;Add existing one</a>
+    {% endif %}
+</h3>
+<a class="btn btn-xs btn-default" style="position:absolute; top:0" ng-click="list()" tooltip-placement="top" tooltip="All Users"><span
+    class="fonticon icon-arrow-left"></span></a>
+<hr/>
+
+
+<div>
+    {{ user_edit_details() }}
+</div>
+

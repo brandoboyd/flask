@@ -1,0 +1,342 @@
+{% macro multi_channel_tag_form(keepSearchButton=False, inModal=False) %}
+<form name="MultiTagChannelForm" class="form-horizontal" ng-class="{true : 'form-narrow'}[is_modal]" novalidate>
+
+    <fieldset>
+        <div class="control-group">
+            <label class="control-label" for="sTitle">Tag Name <span class="asterisk">*</span></label>
+            <div class="controls">
+                <input type="text"
+          	       placeholder="Tag title need to be unique per account"
+                       ng-model="edited_tag.display_name"
+                       my-maxlength="17"
+                       name="sTitle"
+                       class="input-block-level"
+                       required />
+
+                <span ng-show="form.sTitle.$dirty && form.sTitle.$invalid"
+                      class="help-block error">Tag name is required</span>
+                <span ng-show="form.sTitle.$overflow"
+                      class="help-block error">Tag name should be a maximum of 17 characters</span>
+
+            </div>
+        </div>
+
+        <div class="control-group" style="">
+            {% if inModal == True %}
+              {% raw %}<label class="description-label-modal control-label"  for="sDescription">Tag Description <span class="asterisk">*</span></label>{% endraw %}
+            {% else %}
+              {% raw %}<label class="description-label-non-modal control-label"  for="sDescription">Tag Description <span class="asterisk">*</span></label>{% endraw %}
+            {% endif %}
+            
+            <div class="controls">
+                <input type="text"
+                       placeholder="Describe the reason behind the creation of the smart tag"
+                       ng-model="edited_tag.description"
+                       name="sDescription"
+                       class="input-block-level"
+                       required />
+                <span ng-show="form.sDescription.$dirty && form.sDescription.$invalid"
+                      class="help-block error">Description is required</span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="channels">Channels</label>
+            <div class="controls">
+                <select id="channels"
+                        style="width: 545px;"
+                        ui-select2
+                        multiple="multiple"
+                        ng-model="edited_tag.channels"
+                        style="width: 350px">
+                    {% raw %}
+                    <option value="{{ o.id }}" ng-repeat="o in aveilable_channels">{{ o.title }}</option>
+                    {% endraw %}
+                </select>
+
+            </div>
+        </div>
+
+      <div class="control-group">
+            <label class="control-label" for="sPrecondition">Precondition</label>
+            <div class="controls">
+                <input type="text"
+          	           placeholder="This rule must match in order for tag to be considered"
+                       ng-model="edited_tag.precondition"
+                       name="sPrecondition"
+                       class="input-block-level"
+                       required />
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="sMatching">Matching rule</label>
+            <div class="controls">
+                <input type="text"
+          	           placeholder="Tag names need to be unique per account"
+                       ng-model="edited_tag.acceptance_rule"
+                       name="sMatching"
+                       class="input-block-level"
+                       required />
+            </div>
+        </div>
+
+
+        <div class="form-actions" ng-hide="is_modal">
+            <button type="button"
+                    class="btn btn-primary"
+                    ng-click="save()">Save</button>
+        </div>
+        {% if keepSearchButton and keepSearchButton == True %}
+
+            <div class="form-actions">
+            <button type="button"
+                    class="btn btn-primary"
+                    ng-click="save()">Save</button>
+            </div>
+
+        {% endif %}
+    </fieldset>
+</form>
+{% endmacro %}
+
+
+{% macro single_event_tag_form(keepSearchButton=False, inModal=False) %}
+<form name="SingleEventTagForm" class="form-horizontal" ng-class="{true : 'form-narrow'}[is_modal]" novalidate>
+
+    <fieldset>
+
+        <div class="control-group">
+            <label class="control-label" for="selected_platform">Platform <span class="asterisk">*</span></label>
+            <div class="controls">
+                {% raw %}
+                <select id="selected_platform"
+                        ui-select2
+                        ng-model="selected_platform"
+                        class="input-block-level"
+                        required>
+                    <option value="{{ type }}" ng-repeat="type in available_types">{{ type }}</option>
+                </select>
+                {% endraw %}
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="sTitle">Tag Name <span class="asterisk">*</span></label>
+            <div class="controls">
+                <input type="text"
+          	       placeholder="Tag name need to be unique per account"
+                       ng-model="edited_tag.display_name"
+                       my-maxlength="17"
+                       name="sTitle"
+                       class="input-block-level"
+                       required />
+
+                <span ng-show="form.sTitle.$dirty && form.sTitle.$invalid"
+                      class="help-block error">Tag name is required</span>
+                <span ng-show="form.sTitle.$overflow"
+                      class="help-block error">Tag name should be a maximum of 17 characters</span>
+
+            </div>
+        </div>
+
+        <div class="control-group" style="">
+            {% if inModal == True %}
+              {% raw %}<label class="description-label-modal control-label"  for="sDescription">Tag Description <span class="asterisk">*</span></label>{% endraw %}
+            {% else %}
+              {% raw %}<label class="description-label-non-modal control-label"  for="sDescription">Tag Description <span class="asterisk">*</span></label>{% endraw %}
+            {% endif %}
+
+            <div class="controls">
+                <input type="text"
+                       placeholder="Describe the reason behind the creation of the smart tag"
+                       ng-model="edited_tag.description"
+                       name="sDescription"
+                       class="input-block-level"
+                       required />
+                <span ng-show="form.sDescription.$dirty && form.sDescription.$invalid"
+                      class="help-block error">Description is required</span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="available_channels">Channels</label>
+            <div class="controls">
+                <select id="available_channels"
+                        style="width: 545px;"
+                        ui-select2
+                        multiple="multiple"
+                        ng-model="edited_tag.channels"
+                        style="width: 350px">
+                    {% raw %}
+                    <option value="{{ o.id }}" ng-repeat="o in available_channels">{{ o.title }}</option>
+                    {% endraw %}
+                </select>
+
+            </div>
+        </div>
+
+        <div ng_show="selected_platform == 'Chat'">
+            <hr>
+            <label>Chat features</label>
+
+           <div class="control-group" style="margin-left:100px">
+            {% if inModal == True %}
+              {% raw %}<label class="control-label" for="id_keywords" ng-class="keyword-label-modal">Keywords</label>{% endraw %}
+            {% else %}
+                {% raw %}<label class="control-label" for="id_keywords" ng-class="keyword-label-non-modal">Keywords</label>{% endraw %}
+            {% endif %}
+
+            <div class="controls" style="position:relative">
+              {% if inModal == True %}
+                  {% raw %}<input id="id_keywords"
+                      class="keyword-input-modal input-block-level"
+                      ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                      ng-model="edited_tag.features_metadata.chat.keywords"
+                      placeholder="Type a keyword/search term and hit tab"/>
+                  {% endraw %}
+              {% else %}
+                  {% raw %}<input id="id_keywords"
+                      class="keyword-input-non-modal input-block-level"
+                      ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                      ng-model="edited_tag.features_metadata.chat.keywords"
+                      placeholder="Type a keyword/search term and hit tab"/>
+                  {% endraw %}
+              {% endif %}
+             </div>
+           </div>
+
+          <div class="control-group" style="margin-left:100px">
+            <label class="control-label" for="id_watchwords">Watch Words</label>
+              <div class="controls" style="position:relative">
+                {% if inModal == True %}
+                  {% raw %}<input id="id_watchwords"
+                        placeholder="Type a keyword/search term and hit tab"
+                        class="watchword-input-modal input-block-level"
+                        ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                        ng-model="edited_tag.features_metadata.chat.watchwords"/>
+                  {% endraw %}
+                {% else %}
+                  {% raw %}<input id="id_watchwords"
+                        placeholder="Type a keyword/search term and hit tab"
+                        class="watchword-input-non-modal input-block-level"
+                        ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                        ng-model="edited_tag.features_metadata.chat.watchwords"/>
+                  {% endraw %}
+                {% endif %}
+              </div>
+          </div>
+
+            <div class="control-group" style="margin-left:100px">
+                <label class="control-label" for="id_matching_regex">Matching Regex</label>
+                  <div class="controls" style="position:relative">
+                    {% if inModal == True %}
+                      {% raw %}<input id="id_matching_regex"
+                            placeholder="Type a regex/search term and hit tab"
+                            class="watchword-input-modal input-block-level"
+                            ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                            ng-model="edited_tag.features_metadata.chat.matching_regex"/>
+                      {% endraw %}
+                    {% else %}
+                      {% raw %}<input id="id_matching_regex"
+                            placeholder="Type a regex/search term and hit tab"
+                            class="watchword-input-non-modal input-block-level"
+                            ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                            ng-model="edited_tag.features_metadata.chat.matching_regex"/>
+                      {% endraw %}
+                    {% endif %}
+                  </div>
+              </div>
+      </div>
+
+      <div ng_show="selected_platform == 'Web'">
+          <hr>
+          <label>Web Click Features</label>
+
+          <div class="control-group" style="margin-left:100px">
+            <label class="control-label" for="id_url_regex">URL Regex</label>
+            <div class="controls" style="position:relative">
+              {% if inModal == True %}
+                  {% raw %}<input id="id_url_regex"
+                      class="skipword-input-modal input-block-level"
+                      ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                      ng-model="edited_tag.features_metadata.web.urls_regex"
+                      placeholder="Type a regex/search term and hit tab"/>
+                  {% endraw %}
+              {% else %}
+                  {% raw %}<input id="id_url_regex"
+                      class="skipword-input-non-modal input-block-level"
+                      ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                      ng-model="edited_tag.features_metadata.web.urls_regex"
+                      placeholder="Type a regex/search term and hit tab"/>
+                  {% endraw %}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="control-group" style="margin-left:100px">
+            <label class="control-label" for="id_element_regex">Element Regex</label>
+            <div class="controls" style="position:relative">
+              {% if inModal == True %}
+                  {% raw %}<input id="id_element_regex"
+                      class="skipword-input-modal input-block-level"
+                      ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                      ng-model="edited_tag.features_metadata.web.elements_regex"
+                      placeholder="Type a regex/search term and hit tab"/>
+                  {% endraw %}
+              {% else %}
+                  {% raw %}<input id="id_element_regex"
+                      class="skipword-input-non-modal input-block-level"
+                      ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                      ng-model="edited_tag.features_metadata.web.elements_regex"
+                      placeholder="Type a regex/search term and hit tab"/>
+                  {% endraw %}
+              {% endif %}
+            </div>
+          </div>
+      </div>
+
+      <hr>
+
+      <div class="control-group">
+            <label class="control-label" for="sPrecondition">Precondition</label>
+            <div class="controls">
+                <input type="text"
+          	           placeholder="This rule must match in order for tag to be considered"
+                       ng-model="edited_tag.precondition"
+                       name="sPrecondition"
+                       class="input-block-level"
+                       required />
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="sMatching">Matching rule</label>
+            <div class="controls">
+                <input type="text"
+          	           placeholder="Tag title need to be unique per account"
+                       ng-model="edited_tag.acceptance_rule"
+                       name="sMatching"
+                       class="input-block-level"
+                       required />
+            </div>
+        </div>
+
+
+        <div class="form-actions" ng-hide="is_modal">
+            <button type="button"
+                    class="btn btn-primary"
+                    ng-click="save()">Save</button>
+        </div>
+        {% if keepSearchButton and keepSearchButton == True %}
+
+            <div class="form-actions">
+            <button type="button"
+                    class="btn btn-primary"
+                    ng-click="save()">Save</button>
+            </div>
+
+        {% endif %}
+    </fieldset>
+</form>
+{% endmacro %}

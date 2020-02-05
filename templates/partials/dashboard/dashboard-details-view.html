@@ -1,0 +1,109 @@
+{% from "_macros/posts.html"  import render_posts    with context    -%}
+
+<div ng-controller="DashboardDetailsCtrl" style="padding:10px">
+
+<div class="spinner-container" style="position:absolute;top:300px;left:55%" ng-show="loading">
+    <div class="spin-circle"></div>
+    <div class="spin-inner-circle"></div>
+</div>
+
+<div ng-switch="dashboardType">
+    <div ng-switch-when="journeys">
+        <div infinite-scroll="loadMore()"
+             infinite-scroll-disabled="loading"
+             infinite-scroll-immediate-check="false"
+             infinite-scroll-container="'.dashboard-content-area.details-view'">
+            <table class="table table-default">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th sorter="journeysTable.sort" data-predicate="journey_type_id" data-title="Type"></th>
+                        <th sorter="journeysTable.sort" data-predicate="customer_name" data-title="Name"></th>
+                        <th sorter="journeysTable.sort" data-predicate="status" data-title="Status"></th>
+                        <th>Segments</th>
+                        <th sorter="journeysTable.sort" data-predicate="nps_score" data-title="NPS"></th>
+                        <th sorter="journeysTable.sort" data-predicate="total_effort" data-title="Effort"></th>
+                        <th>Journey Tags</th>
+                        <th sorter="journeysTable.sort" data-predicate="start_date" data-title="Start Date"></th>
+                        <th sorter="journeysTable.sort" data-predicate="end_date" data-title="End Date"></th>
+                    </tr>
+                </thead>
+
+                <tbody ng-class="{'details-disabled': loading}">
+                    <tr ng-repeat="item in journeys | orderBy : journeysTable.sort.predicate : journeysTable.sort.reverse">
+                        <td>{{' {{$index + 1}} '}}</td>
+                        <td>
+                            <span class="link" ng-bind="item.journey_type_name"
+                                journey-timeline="{{' {{item}} '}}"
+                                journey-timeline-params="{{' {{getTimelineParams(item)}} '}}">
+                            </span>
+                        </td>
+                        <td>
+                            <span>{{ 'item.customer_name'|ng }}</span>
+                        </td>
+                        <td><span ng-bind="item.status"></span></td>
+                        <td><ul style="margin:0; padding:0; list-style: none">
+                            <li ng-repeat="segment in  item.segment_names" ng-bind="segment"></li>
+                        </ul></td>
+                        <td><span ng-bind="item.nps || 'N/A' "></span></td>
+                        <td><span ng-bind="item.total_effort || 'N/A' "></span></td>
+                        <td>
+                            <div class="select2-container-multi">
+                                <ul class="select2-choices"
+                                    style="background:none; border:none"
+                                    ng-if="getJourneyTagName(tag)"
+                                    ng-repeat="tag in item.journey_tags | _:'unique'"
+                                    omni-smart-tag="tag"
+                                    target-facet="facets.journey_tags.list"
+                                    resolve-tag-name="getJourneyTagName(tag)">
+                                </ul>
+                            </div>
+                        </td>
+                        <td><span ng-bind="(item.start_date * 1000 | date : medium)"></span></td>
+                        <td><span ng-bind="(item.end_date * 1000 | date : medium)"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div ng-show="!journeys.length" class="alert alert-info text-center">
+            <i class='icon-alert-triangle'></i> No Data Available
+        </div>
+    </div>
+
+    <div ng-switch-when="nps">
+
+        <h4>Journeys</h4>
+        <table class="table table-default"
+               table-data-chart
+               chart-data="tableData">
+            <thead>
+            <tr class="header">
+                <th>User</th>
+                <th>Verbatim</th>
+                <th>NPS</th>
+                <th>CSAT</th>
+                <th>Department</th>
+                <th>Region</th>
+                <th>Issues</th>
+            </tr>
+            </thead>
+        </table>
+
+    </div>
+
+    <div ng-switch-default>
+        <!--<p style="text-align:center;font-size:40px">Detail View</p>-->
+    </div>
+
+</div>
+</div>
+
+<style>
+    .select2-container-multi .select2-choices .select2-search-choice.active {
+        background-color: #4AC764;
+        color: #112311;
+    }
+    .details-disabled {
+        opacity: 0.2
+    }
+</style>

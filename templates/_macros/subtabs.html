@@ -1,0 +1,25 @@
+{%- macro render_subtabs( title, tabs, name ) -%}
+<div class="sub_panel ui-tabs ui-widget ui-widget-content ui-corner-all" style="margin-left:-10px; margin-right:-10px; padding: 0">
+    <h1 style="margin-left:20px">{{ title }}</h1>
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-corner-all gradient1" style="padding-right:20px">
+        {% for href, id, caption in tabs | reverse %}
+        <li class="ui-state-default ui-corner-top {% if id == name -%} ui-tabs-selected ui-state-active{% endif %}" style="padding:8px;">
+            <a href="{{ href|e }}">{{ caption|e }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endmacro %}
+
+
+{%- macro render_subtabs_as_buttons( tabs, name ) -%}
+<div  id="sub_tabs"  class="clearfix gradient" style="margin-bottom:10px" >
+    <ul>
+        {% for href, id, caption in tabs %}
+        <li class="{% if id == name -%} active{% endif %}">
+            <a href="{{ href|e }}">{{ caption|e }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endmacro %}

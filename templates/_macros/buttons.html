@@ -1,0 +1,10 @@
+{%- macro render_button( class, id, name, label, type='submit', value='' ) -%}
+<button class="{{ 'button ' + class }}" id="{{ id or '' }}" name="{{ name }}" type="{{ type }}" value="{{ value }}">{{ label or "&nbsp;" | safe  }}</button>
+{%- endmacro -%}
+
+
+{%- macro render_share_button(base_view) -%}
+<div style="display: inline-block;">
+    {{ render_button(class='share left', type='button', id='share_button_' + base_view, name='action', label='Share') -}}
+</div>
+{%- endmacro -%}

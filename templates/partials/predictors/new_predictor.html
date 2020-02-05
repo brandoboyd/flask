@@ -1,0 +1,244 @@
+<h3 style="margin-left: 10%;">
+    {{'is_new_predictor ? "New Predictor" : "Update Predictor"'|ng}}
+
+    <span ng-if="!compositePredictors.length">
+    <a class="btn btn-default"
+       style="margin: 0 1em"
+       ng-if='!is_new_predictor'
+       ng-href="#/predictors/{{'predictor.id'|ng}}/models">Models</a>
+    <a class="btn btn-default" ng-if='!is_new_predictor' ng-href="#/predictors/{{'predictor.id'|ng}}/detail">
+        Details
+    </a>
+    </span>
+</h3>
+<a href="#/predictors">
+        <button class="btn btn-default btn-xs"
+                style="position: absolute;top:0"
+                tooltip-placement="top" tooltip="All Predictors">
+            <span class="fonticon icon-arrow-left"></span>
+        </button>
+</a>
+
+
+
+<hr>
+
+<form class="form-horizontal" name="PredictorForm">
+    <div ng-init="setForm(PredictorForm);"></div>
+    <fieldset>
+        {% raw %}
+        <div class="form-group"
+             ng-class="{'has-error': PredictorForm.predictorType.$error.required && PredictorForm.predictorType.$dirty}">
+            <label class="col-sm-2 control-label" for="predictor_type">
+                Predictor Type
+                <span class="asterisk">*</span>
+            </label>
+
+            <div class="col-sm-4">
+                <select class="form-control" name="predictorType" id="predictor_type"
+                        ng-model="predictor.predictor_type"
+                        ng-options="c for c in template.types | filter:shouldShow"
+                        ng-disabled="!is_new_predictor || predictor.predictor_type=='Composite Predictor' "
+                        ng-required="true">
+                    <option value="">-- choose a predictor type --</option>
+                </select>
+        <span ng-show="PredictorForm.predictorType.$error.required && PredictorForm.predictorType.$dirty"
+              class="help-block error">Predictor type is required
+        </span>
+            </div>
+        </div>
+
+        <div class="form-group"
+             ng-class="{'has-error': PredictorForm.predictorName.$error.minlength
+                                     && PredictorForm.predictorName.$dirty
+                                     || PredictorForm.predictorName.$error.required
+                                     && PredictorForm.predictorName.$dirty}">
+            <label class="col-sm-2 control-label" for="predictor_name">
+                Predictor Name
+                <span class="asterisk">*</span>
+            </label>
+
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="predictorName" id="predictor_name"
+                       ng-model="predictor.name"
+                       ng-required="true"
+                       ng-minlength="2"
+                       placeholder="Predictor name must be at least 2 characters long">
+          <span ng-show="PredictorForm.predictorName.$error.minlength && PredictorForm.predictorName.$dirty"
+                class="help-block error">Predictor name must be at least 2 characters long
+          </span>
+          <span ng-show="PredictorForm.predictorName.$error.required && PredictorForm.predictorName.$dirty"
+                class="help-block error">Predictor name must not be empty
+          </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label"
+                   for="description">
+                Description
+            </label>
+
+            <div class="col-sm-4">
+                <textarea class="form-control"
+                          name="description"
+                          id="description"
+                          rows="3"
+                          ng-model="predictor.description">
+                </textarea>
+            </div>
+        </div>
+
+        <div class="form-group" ng-if="!compositePredictors.length">
+            <label class="col-sm-2 control-label" >
+                Reward
+                <span class="asterisk">*</span>
+            </label>
+
+            <div class="col-sm-4">
+                <select class="form-control" name="predictorReward" id="predictor_reward"
+                        ng-model="predictor.reward"
+                        ng-disabled="!predictor.predictor_type || (!is_new_predictor && !predictor.is_reward_editable)"
+                        ng-options="c.display_name as c.var_name for c in template[predictor.predictor_type].rewards"
+                        ng-required="true">
+                    <option value="">-- choose a reward --</option>
+                </select>
+                <span ng-show="PredictorForm.predictorReward.$error.required && PredictorForm.predictorReward.$dirty"
+                      class="help-block error">Predictor reward is required
+                </span>
+                <span ng-show="(!is_new_predictor && !predictor.is_reward_editable)"
+                      class="help-block">Reward field can't be changed, because models for this predictor are already trained for this reward value
+                </span>
+            </div>
+        </div>
+
+
+        <style>
+
+            .panel-body > ul[dnd-list] {
+                padding-left:0;
+            }
+
+            .panel-heading h4.panel-title {
+                margin-top:5px;
+            }
+
+            .panel-body > ul[dnd-list] > li {
+                list-style-type:none;
+                padding: 12px 13px;
+                margin-bottom:-1px;
+                border: 1px solid #eee;
+                background-color: #FFF;
+                color: #333;
+                font-size: 14px;
+                cursor: pointer;
+            }
+
+            .panel-body > ul[dnd-list] > li.selected {
+                background-color: #dff0d8;
+                color: #3c763d;
+            }
+
+
+            .editor {
+                overflow: auto;
+                min-height: 140px;
+            }
+        </style>
+        <div class="form-group" ng-if="compositePredictors.length">
+
+            <div class="col-sm-6 panel panel-info">
+                <div class="panel-heading">
+                    <div class="col-sm-4">
+                        <h4 class="panel-title ng-binding">Predictors</h4>
+                    </div>
+                    <div class="col-sm-8">
+                        <select class="form-control"
+                                ng-model="c"
+                                ng-disabled="simplePredictors.length == 0"
+                                ng-change="addPredictor(c.id)"
+                                ng-options="c.name for c in simplePredictors">
+                            <option value="">-- ADD NEW PREDICTOR --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="panel-body ng-scope" style="clear: both;padding-bottom: 10px;">
+
+                    <ul dnd-list="compositePredictors">
+
+                        <li ng-repeat="item in compositePredictors"
+                            ng-class="{'selected': predictors.selected === item}">
+
+
+                            <button class="btn btn-default btn-sm"
+                                    ng-confirm
+                                    tooltip-placement="top" tooltip="Delete"
+                                    action-text="When you delete an predictor, all of the data associated with that predictor will be lost. Are you sure you want to delete?"
+                                    action-function="deletePredictorFromComposite(item)"
+                                    action-button-text="Yes"
+                                    cancel-button-text="No">
+                                <span class="fonticon icon-trash"></span>
+                            </button>
+
+                            {{item.name}}
+
+
+                        </li>
+                    </ul>
+
+
+
+                </div>
+
+
+
+                <span class="icon-iw-active-circle-question" tooltip="Use @ hotkey to get Predictors" tooltip-placement="top"></span>
+                <textarea mentio
+                          mentio-trigger-char="'@'"
+                          mentio-items="_predictors"
+                          mentio-template-url="/predictors.tpl"
+                          mentio-search="searchPredictors(term)"
+                          mentio-select="getPredictorTextRaw(item)"
+                          class="editor form-control"
+                          ng-model="predictor.raw_expression"
+                          ng-trim="false"
+                          rows="6">
+                        </textarea>
+
+
+
+
+                <br />
+
+
+
+
+
+
+
+            </div>
+
+        </div>
+
+
+
+        {% endraw %}
+    </fieldset>
+</form>
+
+<form class="form-horizontal">
+    <div class="form-group form-actions">
+        <div class="col-sm-offset-2 col-sm-4">
+            <button class="btn btn-primary"
+                    ng-disabled="PredictorForm.$invalid"
+                    ng-click="save()">{{'is_new_predictor ? "Create" : "Update"'|ng}}
+            </button>
+        </div>
+    </div>
+</form>
+
+
+
+
+

@@ -1,0 +1,21 @@
+Cloud upgrade notification
+Dear Valued Customer,
+
+To improve your experience, Genesys Journey Optimization Team will implement a scheduled maintenance to upgrade the Journey Optimization Cloud Environment on the following date and time for the _REGION NAMES GO HERE_ region:
+
+REGION NAME: DATE, TIME in EST
+REGION NAME: DATE, TIME in EST
+
+This scheduled maintenance requires a service event planned for approximately _NUMBER_ hours in each location. Upgrade will be performed on _SERVICE NAME_ and we expect to minimize any interruption in service during this event.
+
+As always, Genesys Customer Care is available to answer any questions you may have regarding this service event. If you have service issues after the service event, please contact Genesys Customer Care by opening a case in the My Support Portal, or call Customer Care at:
+North America (USA and Canada)
++506-674-6767 (International)
++888-369-5555 (Toll-free, N. America only)
+Europe, Middle, East, Africa
++44 (0) 127-645-7002 (International)
+Asia Pacific
++61-7-3368-6868 (International)
+
+Best Regards,
+Genesys Journey Optimization Operations Team

@@ -1,0 +1,377 @@
+{% macro smart_tag_form(keepSearchButton=False, inModal=False) %}
+<!--<form name="SmartTagForm" class="form-horizontal" ng-class="{true : 'form-narrow'}[is_modal]" novalidate>-->
+<style>
+    .tooltip {
+        z-index: 1060;
+    }
+</style>
+<form name="form" class="form-horizontal" ng-class="{true : 'form-narrow'}[is_modal]" novalidate>
+
+    <fieldset>
+        <div class="form-group" ng-hide="is_modal">
+            <label class="col-sm-3 control-label" for="channels">Channel <span class="asterisk">*</span></label>
+            <div class="col-sm-9">
+                {% raw %}
+                <select id="channels"
+                        ui-select2
+                        s2-readonly="{{mode == 'edit'}}"
+                        ng-model="tagItem.channel"
+                        class="form-control"
+                        required>
+                    <option value="{{ o.id }}" ng-repeat="o in selectOptions.channels">{{ o.title }}</option>
+                </select>
+                {% endraw %}
+            </div>
+        </div>
+
+        <div class="form-group" ng-hide="is_modal">
+            <label class="col-sm-3 control-label" for="groups">Groups&nbsp;</label>
+            <div class="col-sm-9">
+                {% raw %}
+                <ui-select id="groups" multiple ng-model="chosenSTGroups" theme="select2" ng-disabled="tagItem.perm=='r'"
+                           class="form-control" on-select="addSTGroup($item)" on-remove="removeSTGroup($item)">
+                    <ui-select-match placeholder="The groups that will have access to this tag" ng-cloak>{{$item.name}}</ui-select-match>
+                    <ui-select-choices repeat="o in fullGroups | propsFilter: {id: $select.search, name: $select.search}">
+                        <div ng-cloak ng-bind-html="o.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                {% endraw %}
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{'has-error': form.sTitle.$dirty && form.sTitle.$invalid || form.sTitle.$overflow}">
+            <label class="col-sm-3 control-label" for="sTitle">Tag Name <span class="asterisk">*</span></label>
+            <div class="col-sm-9">
+                <input type="text"
+          	           placeholder="Tag names need to be unique per channel"
+                       ng-model="tagItem.title"
+                       ng-disabled="tagItem.perm == 'r'"
+                       my-maxlength="17"
+                       name="sTitle"
+                       id="sTitle"
+                       class="form-control"
+                       required />
+
+                <!--<span ng-hide="form.sTitle.$dirty && form.sTitle.$invalid || form.sTitle.$overflow || is_modal"
+                      class="help-block error">Tag names need to be unique per channel</span>-->
+
+                <span ng-show="form.sTitle.$dirty && form.sTitle.$invalid"
+                      class="help-block error">Tag name is required</span>
+                <span ng-show="form.sTitle.$overflow"
+                      class="help-block error">Tag name should be a maximum of 17 characters</span>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="bound_type">Direction</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="bound_type"
+                        ng-model="tagItem.direction" ng-options="dir.type as dir.type for dir in directions">
+                </select>
+
+                <div class="q-sign" style="position:absolute; right:-16px; top: 4px"
+                     tooltip-placement="left"
+                     tooltip-trigger="mouseenter"
+                     tooltip="Specify Smart Tag's direction to apply it to appropriate events">
+                    <span class="icon-iw-active-circle-question"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{'has-error': form.sDescription.$dirty && form.sDescription.$invalid}">
+            <!--<label ng-class="getClassForLabel(_is_modal, 'sDescription')" class="col-sm-2 control-label"  for="sDescription">Tag Description <span class="asterisk">*</span></label>-->
+            <label class="col-sm-3 control-label"  for="sDescription">Tag Description <span class="asterisk">*</span></label>
+            <div class="col-sm-9">
+                <input type="text"
+                       placeholder="Describe the reason behind the creation of the smart tag"
+                       ng-model="tagItem.description"
+                       ng-disabled="tagItem.perm == 'r'"
+                       name="sDescription"
+                       id="sDescription"
+                       class="form-control"
+                       required />
+                <!--<div class="q-sign"
+                     ng-show="is_modal"
+		                 style="padding-top: 28px;"
+                     tooltip="Describe the reason behind the creation of the smart tag"
+                     tooltip-placement="left"><span class="icon-iw-active-circle-question"></span></div>-->
+                <!--<span  ng-hide="form.sDescription.$dirty && form.sDescription.$invalid || is_modal"
+                       class="help-block error">Describe the reason behind the creation of the smart tag</span>-->
+
+                <span ng-show="form.sDescription.$dirty && form.sDescription.$invalid"
+                      class="help-block error">Tag description is required</span>
+            </div>
+        </div>
+
+  	    <div class="form-group">
+            <!--<label class="col-sm-2 control-label" for="id_keywords" ng-class="getClassForLabel(_is_modal, 'id_keywords')">Must Contain</label>-->
+            <label class="col-sm-3 control-label" for="id_keywords">Must Contain</label>
+            <div class="col-sm-9" style="position:relative">
+            <input id="id_keywords"
+                  ng-class="getClassForInputFields(_is_modal, 'id_keywords')"
+                  class="form-control"
+                  ng-disabled="tagItem.perm == 'r'"
+                  ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                  ng-model="tagItem.keywords"
+                  placeholder="Type a keyword/search term and hit tab"/>
+            <div class="q-sign" style="position:absolute; right:-16px; top: 9px"
+                tooltip-placement="left"
+                tooltip-trigger="mouseenter"
+                tooltip="A post must contain terms in this field in order for the tag to be applied"><span class="fonticon icon-iw-active-circle-question"></span>
+            </div>
+            <span class="help-block" style="margin-top:0.6em;">
+                <a class="link" ng-click="changeStatus()"><span ng-class="evaluateIcon()"></span>&nbsp;Advanced</a>
+            </span>
+            <!--<span class="help-block" ng-hide="is_modal">Add key words to include posts</span>-->
+        </div>
+      </div>
+
+      <div class="form-group" ng-if="evaluate()">
+        <label class="col-sm-3 col-sm-offset-1 control-label" for="id_watchwords">Watch Words</label>
+          <div class="col-sm-8">
+            <input id="id_watchwords"
+                    ng-class="getClassForInputFields(_is_modal, 'id_watchwords')"
+                    placeholder="Type a keyword/search term and hit tab"
+                    class="form-control"
+                    ng-disabled="tagItem.perm == 'r'"
+                    ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                    ng-model="tagItem.watchwords"/>
+            <div class="q-sign" style="position:absolute; right:-16px; top: 9px"
+                  tooltip-placement="left"
+                  tooltip-trigger="mouseenter"
+                  tooltip="Watch Words may help the system tag posts correctly"><span class="fonticon icon-iw-active-circle-question"></span>
+            </div>
+          </div>
+      </div>
+
+      <div class="form-group" ng-if="evaluate()">
+        <label class="col-sm-3 col-sm-offset-1 control-label" for="id_skip_keywords">Must Not Contain</label>
+        <div class="col-sm-8">
+          <input id="id_skip_keywords"
+                  ng-class="getClassForInputFields(_is_modal, 'id_skip_keywords')"
+                  class="form-control"
+                  ng-disabled="tagItem.perm == 'r'"
+                  ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                  ng-model="tagItem.skip_keywords"
+  		            placeholder="Type a keyword/search term and hit tab"/>
+          <div class="q-sign" style="position:absolute; right:-16px; top: 9px"
+                tooltip-placement="left"
+                tooltip-trigger="mouseenter"
+                tooltip="A post must not contain terms in this field in order for the tag to be applied"><span class="fonticon icon-iw-active-circle-question"></span>
+          </div>
+          <!--<span class="help-block" ng-hide="is_modal">Add key words to filter out posts.</span>-->
+        </div>
+      </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Contact Labels</label>
+            <div class="col-sm-9" style="position:relative">
+                <select id="id_labels"
+                        placeholder="Add contact labels that you want to use to filter the posts"
+                        class="form-control"
+                        ng-disabled="tagItem.perm == 'r'"
+                        ui-select2
+                        multiple="multiple"
+                        ng-model="tagItem.labels">
+                    {% raw %}
+                    <option value="{{ o.label }}" ng-repeat="o in selectOptions.labels">{{ o.display }}</option>
+                    {% endraw %}
+                </select>
+                <div class="q-sign" style="position:absolute; right:-16px; top: 9px"
+                     ng-show="is_modal"
+                     tooltip="Add contact labels that you want to use to filter the posts"
+                     tooltip-placement="left"><span class="icon-question-sign"></span></div>
+
+                <!--<span class="help-block"
+                      ng-hide="is_modal"
+                      style="margin-top:9px">Add contact labels that you want to use to filter the posts.</span>-->
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="id_intentions">Intentions</label>
+            <div class="col-sm-9">
+                {% raw %}
+                <ui-select id="id_intentions" multiple ng-model="chosenSTIntenions" theme="select2" ng-disabled="tagItem.perm=='r'"
+                           class="form-control" on-select="addSTIntenion($item)" on-remove="removeSTIntenion($item)">
+                    <ui-select-match placeholder="Select intentions that you want to use to filter posts">{{$item.display}}
+                    </ui-select-match>
+                    <ui-select-choices
+                            repeat="o in selectOptions.intentions | propsFilter: {label: $select.search, display: $select.search}">
+                        <div ng-bind-html="o.display | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                {% endraw %}
+                <div class="q-sign"
+                     style="position:absolute; right:-16px; top: 9px;"
+                     ng-show="is_modal"
+                     tooltip="Select intentions that you want to use to filter posts"
+                     tooltip-placement="left"><span class="fonticon icon-iw-active-circle-question"></span></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="Options for email notifications">
+                Enable Alerts
+            </label>
+            <div class="col-sm-9">
+                <div style="margin-left:15px">
+                    <div class="form-group">
+
+                        <div class="toggle-switch" style="margin-top: 7px;float:left;">
+                            <input type="checkbox" ng-model="tagItem.alert.is_active" ng-chnage="tagItem.alert.emails = ['{{ user.email }}'];tagItem.alert.posts_limit = tagItem.alert.posts_limit || tagItemDefaults.alert.posts_limit" name="css-toggle-on-off-label" class="toggle-switch-checkbox" id="css-toggle-on-off-label" checked>
+                            <label class="toggle-switch-label" for="css-toggle-on-off-label">
+                                <span class="toggle-switch-inner"></span>
+                                <span class="toggle-switch-switch"></span>
+                            </label>
+                            <label for="css-toggle-on-off-label" class="toggle-switch-label-text"><span class="toggle-switch-on-label-text">Yes</span><span class="toggle-switch-off-label-text">No</span></label>
+                        </div>
+                        <div style="float: left; margin-left: 40px; margin-top: 3px;">
+                            <div class="q-sign"
+                              tooltip-placement="right"
+                              tooltip-trigger="mouseenter"
+                              tooltip="Selecting 'Yes' enables SocialOptimizr to send alerts to the specified emails whenever the post limit is reached."><i class="icon-iw-active-circle-question"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-show="tagItem.alert.is_active">
+                        <label class="control-label" title="Number of post that will trigger the alert">Alert Post Limit</label>
+                        <div class="row">
+                            <div class="col-sm-3" style="max-width: 110px">
+                                <input type="number" class="form-control"
+                                       ng-model="tagItem.alert.posts_limit"
+                                       min="1"
+                                       max="9999"
+                                        >
+                                <!--<input style="float: right"-->
+                                <!--ng-model="tagItem.alert.posts_limit"-->
+                                <!--type="text"-->
+                                <!--class="input-mini"-->
+                                <!--disabled="disabled">-->
+                                <!--<div id="id_posts_limit_slider"-->
+                                <!--ui-slider='{range: "min",-->
+                                <!--min: 0,-->
+                                <!--max: 9999,-->
+                                <!--step: 100}'-->
+                                <!--ng-model="tagItem.alert.posts_limit"-->
+                                <!--class="slider"></div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-show="tagItem.alert.is_active">
+                        <label class="control-label" for="users">Emails <span class="asterisk">*</span></label>
+                        <div class="row">
+                            <div class="col-sm-10 smart-tag-emails"  style="max-width: 360px">
+                                {#                    <input id="users"#}
+                                                             {#                           name="alertEmails"#}
+                                                             {#                           type="text"#}
+                                                             {#                           ng-list="/[, ]/"#}
+                                                             {#                           placeholder="Alert Email Addresses"#}
+                                                             {#                           ng-model="tagItem.alert.emails"#}
+                                                             {#                           class="input-block-level"#}
+                                                             {#                           #}
+                                                             {#                           required />#}
+                                {#                <span ng-show="SmartTagForm.alertEmails.$dirty && !SmartTagForm.alertEmails.$valid"#}
+                                                        {#                      class="help-block"#}
+                                                        {#                      style="color:red; margin-top:9px">The emails are required if alerts are enabled. Separate them by commas.</span>#}
+                                <select id="users"
+                                        name="sUsers"
+                                        ui-select2
+                                        multiple="multiple"
+                                        ng-model="tagItem.alert.emails"
+                                        class="form-control"
+                                        ng-required="tagItem.alert.is_active"
+                                        placeholder="Select the users who will be notified with the alerts">
+                                    {% raw %}
+                                    <option value="{{ o.email }}" ng-repeat="o in alertCandidateEmails"
+                                            ng-if="o.email != 'super_user@solariat.com'">{{ o.email }}</option>
+                                    {% endraw %}
+                                </select>
+                                <span ng-show="SmartTagForm.sUsers.$dirty && !SmartTagForm.sUsers.$valid"
+                                      class="help-block error">Users are required if alerts are enabled</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{#        <div class="form-group">#}
+{#            <div style="display:inline-block;" class="controls">#}
+{#                <label class="checkbox"#}
+{#                       for="id_adaptive_earning_enabled">#}
+{#                    <input id="id_adaptive_earning_enabled"#}
+{#                       type="checkbox"#}
+{#                       ng-disabled="tagItem.perm == 'r'"#}
+{#                       ng-model="tagItem.adaptive_learning_enabled">#}
+{#                    Enabled Adaptive Learning#}
+{#                    <!--<span tooltip="Checking this box enables SocialOptimizr to learn through usage. When tags are added to a post, or removed from a post, the system learns to automatically tag similar posts the same way, thereby dynamically improving precision. Unchecking this box will mean that this tag may not be manually added nor removed from a post."#}
+{#                          tooltip-placement="top"><span style="color:#999;" class="icon-iw-active-circle-question"></span></span>--></label><div class="q-sign" #}
+{#                      style="margin-top:-22px;"#}
+{#                      tooltip-trigger="mouseenter"#}
+{#                      tooltip="Checking this box enables SocialOptimizr to learn through usage. When tags are added to a post, or removed from a post, the system learns to automatically tag similar posts the same way, thereby dynamically improving precision. Unchecking this box will mean that this tag may not be manually added nor removed from a post."><span class="fonticon icon-iw-active-circle-question"></span></div>#}
+{#		#}
+{#            </div>#}
+{#        </div>#}
+        <div class="form-group form-actions" ng-hide="is_modal">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="button"
+                        class="btn btn-primary"
+                        ng-click="save()"
+                        ng-disabled="!form.$valid || tagItem.perm == 'r'">{{ "{{ title }}" }}</button>
+            </div>
+        </div>
+        {% if keepSearchButton and keepSearchButton == True %}
+
+            <div class="form-group form-actions">
+                <div class="col-sm-offset-2 col-sm-4">
+                <button type="button"
+                        class="btn btn-primary"
+                        ng-click="save()"
+                        ng-disabled="!form.$valid || tagItem.perm == 'r'">{{ "{{ title }}" }}</button>
+                </div>
+            </div>
+
+        {% endif %}
+    </fieldset>
+</form>
+{% endmacro %}
+
+{% macro render_smart_tags() %}
+<div>
+    <div style="background-color:#fff;
+                border-bottom: 1px solid #ddd">
+        <div class="select2-container select2-container-multi ng-cloak clearfix"
+             ng-cloak
+             style="padding: 3px 55px 3px 0;
+                    position: relative;
+                    margin: 0;
+                    width: 100%">
+
+            <ul class="select2-choices"
+                style="float:left;
+                       margin-right:5px;
+                       border:none;
+                       background: transparent none">
+                <li ng-repeat="tag in item.smart_tags"
+                    class="select2-search-choice"
+                    style="line-height: 11px">
+                    <div style="font-size: 11px" ng-bind="tag.title"></div>
+                        <a href=""
+                           class="select2-search-choice-close"
+                           style="top:2px"
+                           tabindex="-1"></a>
+                </li>
+            </ul>
+
+            <button class="btn btn-xs btn-warning"
+                    ng-click="resetAll()"
+                    style="position: absolute; top: 5px; right: 0">Reset All</button>
+
+        </div>
+    </div>
+</div>
+{% endmacro %}

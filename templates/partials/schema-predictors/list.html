@@ -1,0 +1,29 @@
+<h1>Predictor Schemas</h1>
+
+<hr/>
+
+{% raw %}
+<div class="row form-group">
+    <div class="col-md-12">
+        <table class="table table-default">
+            <thead>
+            <tr>
+                <th>Predictor Type</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="(key, value) in schemaList">
+                <td>
+                    <a class="link" ng-click="showPredictorConfiguration(key, value)">{{key}}</a>
+                </td>
+                <td>{{value.description}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div ng-show="!schemaList" class="alert alert-info text-center">
+            <i class='icon-alert-triangle'></i> No Schemas
+        </div>
+    </div>
+</div>
+{% endraw %}

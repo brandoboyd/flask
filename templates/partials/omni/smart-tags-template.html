@@ -1,0 +1,13 @@
+{% raw %}
+    <li class="select2-search-choice"
+        ng-class="{active : isActive}"
+        ng-style="{display: resolveTagName(tag) ? 'block' : 'none'}"
+        style="padding:1px 3px;
+               float:none;
+               text-align: center;
+               text-transform: capitalize;
+               font-weight: 700;
+               font-size:9px">
+        <span>{{resolveTagName(tag)}}</span>
+    </li>
+{% endraw %}

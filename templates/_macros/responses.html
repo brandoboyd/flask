@@ -1,0 +1,107 @@
+{% from "/_macros/posts.html" import render_post with context %}
+
+{%- macro render_responses() -%}
+<div ng-repeat="response in results | filter:search | filter:skipCreativePredicate"
+     class="response-wrap" remove-response>
+
+<table style="width:100%; border-spacing:0"
+       hs-refresh
+       class="response ng-cloak">
+<colgroup style="width:50%"></colgroup>
+<colgroup style="width:50%"></colgroup>
+<tbody style="width:100%">
+<tr>
+    <td class="td-post" style="border-right:1px solid #eee">
+        <div class="inbox-post-wrap">
+            <label class="checkbox">
+                <input type="checkbox"
+                       class="ark-checkbox"
+                       ng-value="response.id"
+                       ng-click="select_item(response)"
+                       ng-checked="master" /><span></span>
+            </label>
+            <span class="label label-plain"
+                  style="color:#333; float:left; margin-top: 20px; font-size: 8px; border:none; padding:2px"
+                  ng-show="response.message_type==1">DM</span>
+                  {{ render_post('response.post', 'response.channel_id', 'response.id', in_modal=False) }}
+        <div>
+    </td>
+    <td class="td-response">
+        <div style="padding:5px 10px">
+            <div response-message="response"></div>
+        </div>
+    </td>
+</tr>
+
+<tr>
+    <td style="border-right:1px solid #eee; height:30px;background-color:#f5f5f5;" class="actions">
+        <div class="pull-left" ng-show="response.platform == 'Twitter'" style="margin:0 5px">
+            <button class    = 'btn btn-xs disabled'
+                    ng-click = 'retweetResponse(response)'
+                    ng-show  = 'response.status != "review-post" && buttonShow.retweet && response.message_type == 0'
+                    ng-disabled = 'response.message_type != 0'><span class="icon-switch"></span> Retweet</button>
+            <button class    = 'btn btn-xs'
+                    ng-click = 'followUser(response)'
+                    ng-hide = '!(response.has_outbound && !response.is_followed)'
+                    ng-disabled="!response.has_outbound"><span class="icon-iw-square-twitter-follow"></span> Follow</button>
+            <button class    = 'btn btn-xs'
+                    ng-click = 'unfollowUser(response)'
+                    ng-hide = '!(response.has_outbound && response.is_followed)'
+                    ng-disabled="!response.has_outbound"><span class="icon-iw-square-twitter-no"></span> Unfollow</button>
+        </div>
+        <div class="pull-left" ng-show="response.platform == 'Facebook'" style="margin:0 5px">
+            <button class    = 'btn btn-xs disabled' ng-hide="response.post.liked || response.post.text.indexOf('Private') != -1"
+                    ng-click = 'likeResponse(response)'><span class="icon-thumbs-up"></span>Like</button>
+            <button class    = 'btn btn-xs disabled'
+                    ng-click = 'likeResponse(response)' ng-hide="!response.post.liked"><span class="icon-thumbs-down"></span>Unlike</button>
+            <!-- <button class    = 'btn btn-xs'
+                    ng-click = 'shareResponse(response)'><span class="icon-iw-square-twitter-follow"></span>Share</button> -->
+            <span ng-show="response.post.has_attachments" class='icon-link'></span>
+            <span ng-show="response.post.has_location" class='icon-pin-time'></span>
+        </div>
+        <div class="pull-right"  style="margin-right:5px;">
+            <a href="" class    = 'btn btn-xs disabled'
+                       ng-click = 'skipResponse(response)'
+                       ng-show  = 'response.status.indexOf("review")==-1 && buttonShow.skip'><span class="icon-control-skip-next"> Skip</a>
+
+            <a href="" class    = 'btn btn-xs disabled'
+                       ng-click = 'rejectResponse(response)'
+                       ng-show  = 'buttonShow.reject'><span class="icon-trash"></span> Reject</a>
+        </div>
+    </td>
+    <td style="height: 30px;background-color:#f5f5f5;" class="actions">
+        <div class="pull-right"
+             style="margin-right:5px"
+             ng-hide="isEditMode">
+            <a href="" class    = 'btn btn-xs disabled'
+                       ng-click = 'openMatchesDialog(response)'
+                       ng-show  = 'showAllBtn(response.has_more_matches)'><span class="icon-view-list"></span> Search</a>
+
+            <a href="" class    = 'btn btn-xs disabled'
+                       ng-click = 'postResponseCreateCase(response)'
+                       ng-show  = 'caseButtonVisibility(response)'><span class="icon-chat-oval"></span> Post&ensp;&amp;&ensp;Create Case</a>
+
+            <button class    = 'btn btn-xs disabled btn-success'
+                    ng-click = 'postResponse(response, "", "public")'
+                    ng-disabled = '!response.has_outbound'
+                    ng-show  = 'showAllBtn(1) && ((response.has_both_pub_and_dm || response.message_type == 0) && buttonShow.post)'><span class="icon-chat-oval icon-white"></span> Post</button>
+            <button class    = 'btn btn-xs disabled btn-success'
+                    ng-click = 'postResponse(response, "", "direct")'
+                    ng-disabled = '!response.has_outbound'
+                    ng-show  = 'showAllBtn(1) && ((response.has_both_pub_and_dm || response.message_type == 1) && buttonShow.post)'><span class="icon-chat-oval icon-white"></span> DM</button>
+        </div>
+    </td>
+</tr>
+</tbody>
+</table>
+</div>
+{% endmacro %}
+
+
+{%- macro stat_label(class, score, label) -%}
+	<div class="intention-labels response"><span class="{{ class }}">{{label}}: {{ score }}</span></div>
+{% endmacro %}
+
+{%- macro action_button(attrs, iconClass, label) -%}
+    <a {{ attrs | default({}) | xmlattr}}><span class="{{ iconClass }}"></span> {{ label }}</a>
+{% endmacro %}

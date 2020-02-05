@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <div class="clearfix">
+        <h3 class="pull-left" ng-bind="modal_title || 'Congratulations!'"></h3>
+        <a class="close pull-right"
+           ng-click="close(result)">
+            <span class="icon-close"></span>
+        </a>
+    </div>
+</div>
+<div class="modal-body">
+    <p>You have successfully setup your Twitter channel on Genesys Social Analytics.</p>
+    <p>The system has just started listening for new tweets so depending on how busy your channel is, it may take a little time before you see activity.</p>
+    <p>In order to log back in later and check activity you'll need to use this URL
+       <a href="https://app.SocialOptimizr.com">app.SocialOptimizr.com</a></p>
+
+<p>Please check out some of the help <a href="https://docs.genesys.com/Documentation/TXT/Current/SocialAnalytics/Welcome">documentation</a>.</p>
+
+<p>Your Customer Success Manager should be contacting you soon to help outline next steps.</p>
+
+<p><img src="/static/assets/img/gs-logo.png" style="height:30px; vertical-align: bottom; margin-right:20px"> <strong>Thanks for signing up :-)</strong></p>
+</div>
+<div class="modal-footer">
+<button ng-click="close(result)" class="btn btn-primary">Close</button>
+</div>

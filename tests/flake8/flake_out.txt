@@ -1,0 +1,95 @@
+./tests/test_tracking.py:364:25: E201 whitespace after '('
+./tests/test_tracking.py:364:25: E201 whitespace after '('
+./tests/test_tracking.py:365:25: E201 whitespace after '('
+./tests/test_tracking.py:366:25: E201 whitespace after '('
+./tests/test_tracking.py:372:25: E201 whitespace after '('
+./tests/test_tracking.py:373:25: E201 whitespace after '('
+./tests/test_tracking.py:364:86: E202 whitespace before ')'
+./tests/test_tracking.py:365:87: E202 whitespace before ')'
+./tests/test_tracking.py:366:87: E202 whitespace before ')'
+./tests/test_tracking.py:372:101: E202 whitespace before ')'
+./tests/test_tracking.py:373:101: E202 whitespace before ')'
+./elasticsearch.py:141:20: E203 whitespace before ':'
+./elasticsearch.py:142:35: E203 whitespace before ':'
+./restapi.py:27:25: E203 whitespace before ':'
+./restapi.py:28:25: E203 whitespace before ':'
+./restapi.py:29:25: E203 whitespace before ':'
+./elasticsearch.py:25:42: E221 multiple spaces before operator
+./elasticsearch.py:115:22: E221 multiple spaces before operator
+./uwsgiapp.py:16:45: E221 multiple spaces before operator
+./uwsgiapp.py:17:45: E221 multiple spaces before operator
+./settings.py:141:28: E221 multiple spaces before operator
+./elasticsearch.py:84:12: E225 missing whitespace around operator
+./restapi.py:300:32: E225 missing whitespace around operator
+./tests/test_topic_trends.py:58:64: E225 missing whitespace around operator
+./tests/test_topic_trends.py:58:67: E225 missing whitespace around operator
+./tests/test_topic_trends.py:81:45: E225 missing whitespace around operator
+./tests/test_topic_trends.py:238:88: E231 missing whitespace after ':'
+./tests/test_channel_stats.py:96:83: E231 missing whitespace after ':'
+./tests/test_channel_stats.py:104:83: E231 missing whitespace after ':'
+./tests/test_channel_stats.py:148:56: E231 missing whitespace after ':'
+./tests/test_channel_stats.py:148:63: E231 missing whitespace after ':'
+./elasticsearch.py:113:31: E251 no spaces around keyword / parameter equals
+./restapi.py:54:13: E251 no spaces around keyword / parameter equals
+./restapi.py:88:20: E251 no spaces around keyword / parameter equals
+./restapi.py:123:15: E251 no spaces around keyword / parameter equals
+./restapi.py:124:17: E251 no spaces around keyword / parameter equals
+./local_settings.py:12:70: E261 at least two spaces before inline comment
+./settings.py:69:33: E261 at least two spaces before inline comment
+./settings.py:70:31: E261 at least two spaces before inline comment
+./settings.py:162:78: E261 at least two spaces before inline comment
+./settings.py:174:20: E261 at least two spaces before inline comment
+./restapi.py:220:37: E272 multiple spaces before keyword
+./tests/test_topic_trends.py:9:28: E272 multiple spaces before keyword
+./tests/test_topic_trends.py:12:23: E272 multiple spaces before keyword
+./tests/test_topic_trends.py:13:23: E272 multiple spaces before keyword
+./tests/test_topic_trends.py:15:23: E272 multiple spaces before keyword
+./elasticsearch.py:19:1: E302 expected 2 blank lines, found 1
+./elasticsearch.py:270:1: E302 expected 2 blank lines, found 1
+./restapi.py:87:1: E302 expected 2 blank lines, found 1
+./settings.py:4:1: E302 expected 2 blank lines, found 1
+./settings.py:9:1: E302 expected 2 blank lines, found 1
+./elasticsearch.py:41:5: E303 too many blank lines (2)
+./elasticsearch.py:54:5: E303 too many blank lines (2)
+./elasticsearch.py:71:5: E303 too many blank lines (2)
+./elasticsearch.py:82:5: E303 too many blank lines (2)
+./elasticsearch.py:113:5: E303 too many blank lines (2)
+./tests/test_topic_trends.py:238:80: E501 line too long (100 characters)
+./tests/test_tracking.py:46:80: E501 line too long (100 characters)
+./tests/test_service_channel.py:113:80: E501 line too long (100 characters)
+./tests/test_tracking.py:379:80: E501 line too long (101 characters)
+./tests/test_tracking.py:406:80: E501 line too long (101 characters)
+./elasticsearch.py:133:17: W291 trailing whitespace
+./elasticsearch.py:146:17: W291 trailing whitespace
+./elasticsearch.py:147:27: W291 trailing whitespace
+./elasticsearch.py:158:17: W291 trailing whitespace
+./elasticsearch.py:159:27: W291 trailing whitespace
+./app.py:22:1: W293 blank line contains whitespace
+./app.py:57:1: W293 blank line contains whitespace
+./elasticsearch.py:29:1: W293 blank line contains whitespace
+./elasticsearch.py:80:1: W293 blank line contains whitespace
+./elasticsearch.py:123:1: W293 blank line contains whitespace
+./tests/test_tracking.py:11: W402 'CHANNEL_TYPES_LIST' imported but unused
+./tests/test_tracking.py:11: W402 'CHANNEL_TYPE_MAP' imported but unused
+./tests/test_smarttag_stats.py:7: W402 'ChannelHotTopics' imported but unused
+./tests/test_conversations.py:26: W402 'MainCase' imported but unused
+./tests/aggregation.py:7: W402 'MongoClient' imported but unused
+./tests/test_conversations.py:186: W806 local variable 'conv' is assigned to but never used
+./tests/aggregation.py:100: W806 local variable 'doc_2' is assigned to but never used
+./tests/test_channel_stats.py:165: W806 local variable 'matchables' is assigned to but never used
+./tests/test_conversations.py:1269: W806 local variable 'message' is assigned to but never used
+./tests/test_topic_trends.py:216: W806 local variable 'post1' is assigned to but never used
+./elasticsearch.py:36:63: E222 multiple spaces after operator
+./tests/test_tracking.py:19:22: E222 multiple spaces after operator
+./tests/test_tracking.py:411:39: E262 inline comment should start with '# '
+./tests/test_tracking.py:432:26: E262 inline comment should start with '# '
+./tests/test_transactions.py:42:29: E262 inline comment should start with '# '
+./tests/test_transactions.py:49:87: E262 inline comment should start with '# '
+./elasticsearch.py:116:19: E711 comparison to None should be 'if cond is not None:'
+./elasticsearch.py:271:30: E712 comparison to True should be 'if cond is True:' or 'if cond:'
+./elasticsearch.py:319:24: E712 comparison to True should be 'if cond is True:' or 'if cond:'
+./__init__.py:5:11: W292 no newline at end of file
+./restapi.py:373:1: W391 blank line at end of file
+./tests/test_groups.py:148:1: W391 blank line at end of file
+./tests/aggregation.py:115:1: W391 blank line at end of file
+./tests/test_service_channel.py:233:1: W391 blank line at end of file

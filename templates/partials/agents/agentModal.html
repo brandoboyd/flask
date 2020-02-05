@@ -1,0 +1,88 @@
+<div class="modal-header">
+    <div class="clearfix">
+        <h3 class="pull-left" ng-bind="modal_title"></h3>
+        <a class="close pull-right"
+           ng-click="close(result)">×</a></div>
+</div>
+<div class="modal-body">
+
+    <div class="alert alert-error" ng-show="!agents && !isRating">
+        <h4>Oops!</h4>
+        <p ng-bind="error"></p>
+    </div>
+    <div class="well" style="padding:0 10px">
+    <table class="table table-compact">
+        {% raw %}
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Call Intent</th>
+            <th>Location</th>
+            <th>Seniority</th>
+            <th>Calls</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{customer.first_name}}</td>
+            <td>{{customer.last_name}}</td>
+            <td>{{customer.sex}}</td>
+            <td>{{customer.age}}</td>
+            <td>{{call_intent_id}}</td>
+            <td>{{customer.location}}</td>
+            <td>
+                <strong>{{customer.seniority}}</strong>
+            </td>
+            <td>{{customer.num_calls}}</td>
+        </tr>
+        </tbody>
+        {% endraw %}
+    </table>
+    </div>
+
+    <table class="table" ng-hide="!agents" class="table table-bordered table-striped table-condensed s-table-common">
+        <thead>
+        <tr>
+
+            <th>Agent Name</th>
+            <th>Level</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Skills</th>
+            <th>English fluency</th>
+            <th><a ng-click="customerCallTable.sort.predicate='match_score'; customerCallTable.sort.reverse = !customerCallTable.sort.reverse;">Reward</a></th>
+            <th><a ng-click="customerCallTable.sort.predicate='ucb_score'; customerCallTable.sort.reverse = !customerCallTable.sort.reverse;">UCB Score</a></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="a in agents | orderBy : customerCallTable.sort.predicate : customerCallTable.sort.reverse"
+            ng-class="{'success' : (a.id == selected_agent_id)}">
+            {% raw %}
+
+            <td>{{a.agent_full_name }}</td>
+            <td>{{a.agent_seniority}}</td>
+            <td>{{a.agent_sex}}</td>
+            <td>{{a.agent_age}}</td>
+
+            <td>
+                <ul>
+                    <li ng-repeat="l in a.agent_skillset">{{l}}</li>
+                </ul>
+            </td>
+
+            <td>{{a.agent_english_fluency}}</td>
+            <td><div rateit score="a.match_score" step="1" max="10" on-rate="rate(agentId, rating)" agent="a"></div></td>
+            <td>{{a.ucb_score}}</td>
+
+            {% endraw %}
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<div class="modal-footer">
+    <button ng-click="close(result)" class="btn btn-primary">Close</button>
+</div>

@@ -1,0 +1,46 @@
+//
+// Text selection
+// --------------------------------------------------
+
+// Normal mode
+::selection {
+  color: @text-selection-normal-color;
+  background-color: @text-selection-normal-bg;
+}
+
+::-moz-selection {
+  color: @text-selection-normal-color;
+  background-color: @text-selection-normal-bg;
+}
+
+::webkit-selection {
+  color: @text-selection-normal-color;
+  background-color: @text-selection-normal-bg;
+}
+
+p.normal-mode-selected-text {
+  color: @text-selection-normal-color;
+  background-color: @text-selection-normal-bg;
+}
+
+// Select mode
+.select-mode ::selection {
+  color: @text-selection-select-color;
+  background-color: @text-selection-select-bg;
+}
+
+.select-mode ::-moz-selection {
+  color: @text-selection-select-color;
+  background-color: @text-selection-select-bg;
+}
+
+.select-mode ::webkit-selection {
+  color: @text-selection-select-color;
+  background-color: @text-selection-select-bg;
+}
+
+p.select-mode-selected-text {
+  color: @text-selection-select-color;
+  background-color: @text-selection-select-bg;
+}
+

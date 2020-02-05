@@ -1,0 +1,84 @@
+<h1>Event Types</h1>
+
+<hr/>
+
+<div class="row form-group" style="margin-bottom: 20px;">
+  <div class="col-md-12">
+    <!--ng-hide="user.is_superuser"-->
+    <div class="pull-left">
+      {% if user.is_staff or user.is_admin %}
+      {% raw %}
+      <a  href="#/event_types/edit/new"
+          class="btn btn-primary"
+          ng-hide="user.is_superuser">
+        <span class="fonticon icon-add"></span>&nbsp;Add Event Type</a>
+      {% endraw %}
+      <button class="btn btn-default"
+              ng-disabled="!selectedList.length"
+              ng-click="applySync()"
+              style="margin-left:10px">
+        Sync Selected
+      </button>
+      <button class="btn btn-default"
+              ng-disabled="!selectedList.length"
+              ng-confirm
+              tooltip-placement="top" tooltip="Delete"
+              action-text="Are you sure you want to delete?"
+              action-function="delete()"
+              action-button-text="Yes"
+              cancel-button-text="No">
+        Delete Selected
+      </button>
+      {% endif %}
+    </div>
+    <div class="pull-right">
+      <div class="filter-block">
+        <search filter="flags.searchTerm" placeholder-text="Search"></search>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% raw %}
+<div class="row">
+  <div class="col-md-12 scroll-x">
+    <table class="table table-default" ng-show="entityList && entityList.length" style="overflow-x: scroll;">
+      <thead>
+      <tr>
+        <th style="width:40px;">
+          <label class="checkbox">
+            <input type="checkbox" class="ark-checkbox" ng-model="flags.selectedAll" ng-click="select()"><span></span>
+          </label>
+        </th>
+        <th style="width:80px;" sorter="table.sort" data-predicate="status" data-title="Status"></th>
+        <th sorter="table.sort" data-predicate="name" data-title="Name"></th>
+        <th sorter="table.sort" data-predicate="type" data-title="Channel Type"></th>
+        <th sorter="table.sort" data-predicate="created_at" data-title="Created"></th>
+        <th sorter="table.sort" data-predicate="lastmodified" data-title="Updated"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="entity in entityList | filter:flags.searchTerm | orderBy: table.sort.predicate: table.sort.reverse">
+        <td>
+          <label class="checkbox">
+            <input type="checkbox" class="ark-checkbox" ng-model="entity.selected" ng-click="select(entity)"><span></span>
+          </label>
+        </td>
+        <td class="text-center">
+          <span ng-class="entity.sync_status === 'IN_SYNC' ? 'icon-alert-checkmark success' : 'icon-alert-octo error'" tooltip-placement="top" tooltip="{{entity.status_display}}"></span>
+        </td>
+        <td>
+          <a class="link" href="#/event_types/edit/{{entity.name}}">{{entity.name}}</a>
+        </td>
+        <td>{{entity.channel_type_name | toTitleCase}}</td>
+        <td>{{entity.created_at * 1000 | moment:'lll'}}</td>
+        <td>{{entity.updated_at * 1000 | moment:'lll'}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div ng-show="!entityList.length" class="alert alert-info text-center">
+      <i class='icon-alert-triangle'></i> No Event Types
+    </div>
+  </div>
+</div>
+{% endraw %}

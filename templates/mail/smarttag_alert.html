@@ -1,0 +1,22 @@
+<html>
+<body>
+    {% if user_name %}
+    <p>Hello {{ user_name }},</p>
+    {% else %}
+    <p>Hello,</p>
+    {% endif %}
+    <p>
+        You’ve chosen to receive alerts regarding the Genesys Social Analytics Channel:
+        {{ tag_title }}
+    </p>
+    <p>
+        The smart tag has reached the threshold volume that you’ve configured.
+    </p>
+    <p><a href="{{ tag_view_url }}">View posts</a></p>
+    <p><a href="{{ tag_edit_url }}">Tag settings</a></p>
+    <p>Thanks,<br>
+        Genesys Social Analytics Team</p>
+    <br/>
+    <p><a href="{{ tag_unsubscribe_url }}">Unsubscribe from this alert</a></p>
+</body>
+</html>

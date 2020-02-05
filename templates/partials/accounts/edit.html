@@ -1,0 +1,430 @@
+{% from './_macros/dialogs.html' import render_account_create_update_dialog, render_share_dialog with context %}
+{% if user.is_admin %}
+<h3 style="margin-left: 30px;">Update &ldquo;{{'{{account.name}}'}}&rdquo; Account
+    {% if user.is_superuser %}
+    or <a href="#/new_account" class="link" tooltip-placement="top" tooltip="New Account">add a new account</a>
+    {% endif %}
+</h3>
+{% endif %}
+
+
+<a href='/configure#/accounts' style="position: absolute;top:0">
+    <button class="btn btn-default btn-xs">
+        <span class="fonticon icon-arrow-left" tooltip-placement="top" tooltip="All Accounts"></span>
+    </button>
+</a>
+
+<hr>
+<div ng-controller="CreateUpdateDialogCtrl">
+    {# below line overwrites $scope.account with bad value, commenting the line just works #}
+    {# don't know why this is needed here, commenting for now #}
+    {# render_account_create_update_dialog() #}
+</div>
+
+
+<form name="AccountForm" class="form-horizontal">
+    <fieldset>
+
+        {# Current Account #}
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_current_acct" style="margin-top:6px">Locked</label>
+
+            <div class="col-sm-4 btn-toolbar">
+                <ark-switch switch-model="account.is_locked"
+                            switch-on="Yes"
+                            switch-off="No"
+                            ng-click="executeAccountStatus(account)"></ark-switch>
+            </div>
+        </div>
+
+
+        <div class="form-group" ng-class="{'has-error': (AccountForm.account_name.$error.minlength || AccountForm.account_name.$error.required) && AccountForm.account_name.$dirty}">
+            <label class="col-sm-2 control-label" for="id_current_acct">Account Name <span class="asterisk">*</span></label>
+
+            <div class="col-sm-4" id="id_current_acct">
+            {% if user.is_staff or user.is_admin %}
+                <input type="text"
+                       class="form-control"
+                       ng-minlength="2"
+                       my-maxlength="20"
+                       ng-required="true"
+                       name="account_name"
+                       ng-model="account.name"
+                       ng-disabled="account.is_locked"
+                       placeholder="Account name">
+                <span class="help-block"
+                      style="font-weight:normal; color:#F52A59;"
+                      ng-show="AccountForm.account_name.$error.minlength && AccountForm.account_name.$dirty">
+                          Account name must have at least 2 characters</span>
+                <span class="help-block"
+                      style="font-weight:normal; color:#F52A59;"
+                      ng-show="AccountForm.account_name.$overflow">
+                          Account name can only be 20 characters long</span>
+                <span class="help-block"
+                      style="font-weight:normal; color:#F52A59;"
+                      ng-show="AccountForm.account_name.$error.required && AccountForm.account_name.$dirty">Account name is required</span>
+                {% else %}
+                <div class="uneditable-input form-control" ng-bind="account.name"></div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if user.is_staff %}
+        {# Customer Success Manager #}
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_csm">Customer Success Manager</label>
+
+            <div class="col-sm-4" id="id_csm">
+                {% if user.is_staff %}
+                <select id="customer-success-manager"
+                        class="form-control"
+                        ng-disabled="account.is_locked"
+                        ng-options="u for u in staff_users"
+                        ng-model="account.customer_success_manager">
+                </select>
+                {% else %}
+                <div class="uneditable-input form-control" ng-bind="account.customer_success_manager"></div>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Customer Admin #}
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_customer_admin">Customer Admin</label>
+
+            <div class="col-sm-4" id="id_customer_admin">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <input type="text"
+                               class="form-control"
+                               name="admin_first"
+                               ng-disabled="account.is_locked"
+                               ng-model="account.admin.first"
+                               id="admin_first" disabled/>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="text"
+                               class="form-control"
+                               name="admin_last"
+                               ng-disabled="account.is_locked"
+                               ng-model="account.admin.last"
+                               id="admin_last" disabled/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Customer Admin Email #}
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_customer_admin_email">Customer Admin Email</label>
+
+            <div class="col-sm-4 controls">
+                <input type="text"
+                       class="form-control"
+                       ng-model="account.admin.email"
+                       id="id_customer_admin_email" disabled>
+            </div>
+        </div>
+        {% endif %}{# user.is_staff #}
+
+        {# Daily Volume #}
+        <div class="form-group" ng-show="account.daily_volume.number_of_posts>=0">
+            <label class="col-sm-2 control-label" for="id_daily_volume">Inbound volume today</label>
+            <div class="col-sm-4" style="height:32px">
+                <span class="badge badge-primary"
+                           tooltip-placement="top" tooltip
+                           title="Number of posts today"
+                           id="id_daily_volume"
+                           style="margin-top:7px"
+                           ng-bind="account.daily_volume.number_of_posts"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_emails">Email re high volumes</label>
+            <div class="col-sm-4 smart-tag-emails">
+                <select id="id_emails"
+                        name="emails"
+                        ui-select2
+                        multiple="multiple"
+                        ng-model="account.daily_volume_notification_emails"
+                        class="form-control"
+                        placeholder="Select the users who will be notified with the alerts">
+                    {% raw %}
+                    <option value="{{ o.email }}" ng-repeat="o in alertCandidateEmails"
+                            ng-if="o.email != 'super_user@solariat.com'">{{ o.email }}</option>
+                    {% endraw %}
+                </select>
+            </div>
+            <div style="float: left;margin-top: 0.3em">
+                    <div class="q-sign"
+                      tooltip-placement="right"
+                      tooltip-trigger="mouseenter"
+                      tooltip="An email will be sent to these addresses each day that daily volumes are greater than 10,000 inbound posts."><i class="icon-iw-active-circle-question"></i>
+                    </div>
+                </div>
+        </div>
+
+        {% if user.is_staff %}
+        {# Recovery Days #}
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_recovery_days">Recovery Limit</label>
+            <div class="col-sm-4">
+                <input type="number"
+                       min="0"
+                       max="31"
+                       class="form-control"
+                       id="id_recovery_days"
+                       placeholder="Recovery limit days for channels in this account"
+                       ng-required="true"
+                       ng-model="account.recovery_days"
+                       ng-disabled="account.is_locked">
+            </div>
+        </div>
+
+        {# Account Type #}
+        {#
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_account_type">Account Type</label>
+
+            <div class="col-sm-4">
+                <select ng-model="account.account_type"
+                        ng-disabled="account.is_locked"
+                        id="id_account_type"
+                        class="form-control"
+                        ng-options="o.value as o.label for o in accountTypeOptions"></select>
+            </div>
+        </div>
+        #}
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Configurable Apps</label>
+            <div class="col-sm-4">
+                <select ui-select2
+                        id="configurable_apps"
+                        multiple="true"
+                        ng-disabled="account.is_locked"
+                        name="configurable_apps"
+                        ng-model="account.configured_apps"
+                        class="form-control">
+                    {% raw %}
+                        <option value="{{ o }}"
+                                ng-repeat="o in account.available_apps">{{ o }}</option>
+                    {% endraw %}
+                </select>
+            </div>
+        </div>
+
+        {# Account Package #}
+        <div class="form-group" ng-show="account.account_type != 'GSE'">
+            <label class="col-sm-2 control-label" for="id_package">Pricing Package:</label>
+            <div class="col-sm-4">
+                <select ng-model="account.package"
+                        ng-disabled="account.is_locked"
+                        class="form-control"
+                        id="id_package">
+                    <option value="Bronze">Bronze</option>
+                    <option value="Silver">Silver</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Platinum">Platinum</option>
+                    <option value="Trial">Trial</option>
+                    <option value="Internal">Internal</option>
+                </select>
+            </div>
+        </div>
+        {% else %}
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Selected app</label>
+                <div class="col-sm-4">
+                    <select ui-select2
+                            ng-disabled="account.is_locked"
+                            name="primitive_channels"
+                            ng-model="account.selected_app"
+                            ng-change="update(true)"
+                            class="form-control">
+                        {% raw %}
+                        <option value="{{ o }}" ng-selected="o == account.selected_app"
+                                ng-repeat="o in account.configured_apps">{{ o }}</option>
+                        {% endraw %}
+                    </select>
+                </div>
+            </div>
+        {% endif %}{# user.is_staff #}
+
+        {# Expires #}
+        <div class="form-group"
+             ng-if="notInternalAccount {% if not user.is_staff %} && account.end_date{% endif %}">
+            <label class="col-sm-2 control-label" for="endDate">Expires</label>
+
+            <div class="col-sm-4">
+                <input type="text"
+                       class="form-control"
+                       {% if not user.is_staff %}
+                       disabled
+                       {% endif %}
+                       ui-jq="datepicker"
+                       id="endDate"
+                       ui-options="options.end_date"
+                       ng-model="account.end_date"
+                       {# check-account-end-date="account" #}
+                       placeholder="Choose a Date"/>
+                {#
+                <span class="help-block error"
+                      ng-show="AccountForm.endDate.$error.checkAccountEndDate">
+                    You need to set expire date for the account
+                </span>
+                #}
+                <span class="help-block error"
+                      ng-show="isExpired(account)">
+                    Account is not active any more
+                </span>
+            </div>
+        </div>
+
+        {# API key #}
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_api_key">API key</label>
+
+            <div class="col-sm-4">
+                <!--<input type="text"
+                     class=form-control"
+                     ng-minlength="40"
+                     ng-maxlength="40"
+                     ng-pattern="/^[a-zA-Z0-9 ]*$/"
+                     name="api_key"
+                     ng-model="account.gse_api_key">-->
+
+                <div class="uneditable-input form-control" ng-bind="account.gse_api_key"
+                     id="id_api_key"
+                     style="cursor: auto">
+                </div>
+
+                <!--<span class="help-block"
+                          style="font-weight:normal; color:#F52A59;"
+                          ng-show="AccountForm.api_key.$error.minlength && AccountForm.api_key.$dirty">
+                          Account API Key must have at least 40 alphanumeric characters</span>
+                <span class="help-block"
+                          style="font-weight:normal; color:#F52A59;"
+                          ng-show="AccountForm.api_key.$error.maxlength && AccountForm.api_key.$dirty">
+                          Account API Key can only have 40 alphanumeric characters</span>
+                <span class="help-block"
+                          style="font-weight:normal; color:#F52A59;"
+                          ng-show="AccountForm.api_key.$error.pattern && AccountForm.api_key.$dirty">
+                          Account API Key can only contain alphanumeric characters</span>-->
+            </div>
+        </div>
+        <!--</div>-->
+
+        {% if user.is_staff -%}
+        <div class="form-group"
+             ng-show="notInternalAccount && account.package != 'Trial'">
+            <div class="col-sm-4 col-sm-offset-2">
+                <label>Package Options</label>
+                <span id="bronze_span"
+                      ng-cloak
+                      ng-show="show_pricing_package_details.Bronze"
+                      class="help-block animate-show">Cost: $500 p/m<br>
+                                                    Volume: 5000 Inbound Posts<br>
+                                                    Storage: Data is stored for 3 months</span>
+                <span id="silver_span"
+                      ng-cloak
+                      ng-show="show_pricing_package_details.Silver"
+                      class="help-block animate-show">Cost: $2000 p/m<br>
+                                                    Volume: 25000 Inbound Posts<br>
+                                                    Storage: Data is stored for 3 months</span>
+                <span id="gold_span"
+                      ng-cloak
+                      ng-show="show_pricing_package_details.Gold"
+                      class="help-block animate-show">Cost: $5000 p/m<br>
+                                                    Volume: 75000 Inbound Posts<br>
+                                                    Storage: Data is stored for 6 months</span>
+                <span id="platinum_span"
+                      ng-cloak
+                      ng-show="show_pricing_package_details.Platinum"
+                      class="help-block animate-show">Cost: $10000 p/m<br>
+                                                    Volume: 200000 Inbound Posts<br>
+                                                    Storage: Data is stored for 13 months</span>
+            </div>
+        </div>
+        {% endif %}{# user.is_staff #}
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <span class="fonticon icon-doc-list" style="font-size: 18px;"></span>&nbsp;
+                <a class="btn-link" ng-click="showAuditTrail()">Audit Trail</a>
+            </div>
+        </div>
+
+    </fieldset>
+</form>
+
+<hr/>
+
+{% if user and (user.is_staff or user.is_admin) %}
+<a class="btn btn-primary"
+   ng-disabled="account.is_locked"
+   tooltip-placement="top" tooltip="New Channel For {{'{{account.name}}'}} Account"
+   ng-href="#/new_channel?account_id={{'account.id'|ng}}">
+  <span class="icon-add">&nbsp;Add Channel For {{'{{account.name}}'}} Account</span></a>
+{% endif %}
+
+<table class="table table-condensed table-default"
+       ng-show="channels && channels.length"
+       style="margin-top:25px;">
+    <thead>
+    <tr>
+        <th sorter="channelsTable.sort" data-predicate="title" data-title="Channel Name"></th>
+        <th>Description</th>
+        <th>Created</th>
+        <th>Platform</th>
+        <th>Type</th>
+        <th>Posts (This Month)</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% raw %}
+    <tr ng-repeat="channel in channels | orderBy: channelsTable.sort.predicate: channelsTable.sort.reverse" id="channel.id">
+        <td><a href="#/update_channel/{{channel.id}}" class="link"
+               ng-show="(channel.perm=='s')||(channel.perm=='rw')">{{channel.title}}</a>
+            <span ng-hide="(channel.perm=='s')||(channel.perm=='rw')">{{ channel.title }}</span>
+        </td>
+        <td>{{channel.description}}</td>
+        <td class="nowrap">{{channel.created_at | date}}</td>
+        <td>{{channel.platform}}</td>
+        <td>{{channel.type_name}}</td>
+        <td><span tooltip-placement="top" tooltip
+                  title="Number of posts"
+                  ng-show="channel.stats.number_of_posts>0">{{ channel.stats.number_of_posts }}</span></td>
+        {% endraw %}
+    </tbody>
+</table>
+<div ng-show="isChannelsEmpty()" style="padding-bottom:25px;"><i>There are no channels configured for this account.</i></div>
+
+{% if user.is_staff or user.is_admin %}
+<form name="AccountNotes" class="form-horizontal" style="margin-top:25px">
+    <fieldset>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_account_notes">Account Notes</label>
+
+            <div class="col-sm-4">
+                <textarea class="form-control" id="id_account_notes" name="account_notes" rows="6"
+                          ng-model="account.notes"></textarea>
+            </div>
+        </div>
+    </fieldset>
+</form>
+{% endif %}
+
+
+{#{{ configure_filters('update') }}#}
+
+{% if user.is_admin %}
+<form class="form-horizontal">
+    <div class="form-group form-actions">
+        <div class="col-sm-offset-2 col-sm-4">
+            <button class="btn btn-primary"
+                    ng-disabled="AccountForm.$invalid || account.is_locked"
+                    ng-click="update()">Update</button>
+        </div>
+    </div>
+</form>
+{% endif %}

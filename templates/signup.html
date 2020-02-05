@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SignUp Wizard</title>
+    <!-- Use LATEST folder to always get the latest version-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/assets/js/plugins/other/_others/select2-3.4.6/select2.css">
+    <link rel="stylesheet" href="/static/assets/css/select2-bootstrap3.css" >
+    <link rel="stylesheet" type="text/css" href="/static/assets/js/app/wizard/wizard.css">
+
+    <style>
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+        .form input.ng-invalid.ng-dirty {
+            background-color: #ffecec;
+        }
+        .form input.ng-valid.ng-dirty {
+            background-color: rgb(222, 254, 224);
+        }
+        .popover {
+            max-width:360px !important;
+            z-index: 2000;
+        }
+        .select2-search-field {
+            min-width:100%;
+        }
+    </style>
+
+</head>
+<body class="fuelux">
+
+<div class="container" style="margin-top:120px; width: 750px">
+    <div class="header" style="position:fixed; top:-10px; left:10px; right:10px">
+        <h3 class="text-muted"><img src="/static/assets/img/gs-sa-logo-small.png" /></h3>
+    </div>
+    <div class="row">
+        <div class="col-sm-12" ng-app="wizard-signup" ng-controller="WizardCtrl">
+            <section ng-cloak>
+                <wizard on-finish="finished()">
+                    <wz-step step-title="Start">
+                        <h3>Set Up a Password</h3>
+                        <hr />
+                        <form class="form form-horizontal" role="form" name="passwordResetForm">
+
+                            <div class="form-group">
+                                <label for="FullName"  class="col-sm-4 control-label">Full Name</label>
+                                <div class="col-sm-8">
+                                    <p class="form-control-static">{{ target_name }}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="Email1" class="col-sm-4 control-label">Email address</label>
+                                <div class="col-sm-8">
+                                    <p class="form-control-static">{{ target_email }}</p>
+                                </div>
+                            </div>
+                            <div class="form-group"
+                                 ng-class="{'has-error' : (  passwordResetForm.password.$error.minlength
+                                                          || passwordResetForm.password.$error.maxlength
+                                                          || passwordResetForm.password.$error.strongpassword )}">
+                                <label for="Password" class="col-sm-4 control-label">Password</label>
+                                <div class="col-sm-8">
+                                    <input type="password"
+                                           class="form-control"
+                                           id="password"
+                                           placeholder="Password"
+                                           ng-model="account.password"
+                                           name="password"
+                                           ng-minlength="8"
+                                           ng-maxlength="18"
+                                           required
+                                           strongpassword
+                                           autofocus>
+                                    <span class="help-block"
+                                          ng-show="passwordResetForm.password.$error.minlength">
+                                        Password must be at least 8 characters long.</span>
+                                    <span class="help-block"
+                                          ng-show="passwordResetForm.password.$error.maxlength">
+                                        Max password length is 18 characters.</span>
+                                    <span class="help-block"
+                                          ng-show="passwordResetForm.password.$error.strongpassword">
+                                        The password is weak.
+                                        <a href=""
+                                           popover-html-unsafe="Your password should contain at least 8 characters from at least 3 of 4 character sets
+                                                                <ul><li>lower case letters a..z</li>
+                                                                <li>upper case letters A..Z</li>
+                                                                <li>digits 0..9</li>
+                                                                <li>special characters _!@#$%^&amp;*()-+{}[]</li></ul>
+                                                                Examples:<ul>
+                                                                <li>asd@123D</li>
+                                                                <li>{3qweasd</li>
+                                                                </ul>"
+                                           popover-title="Secure Password Policy" popover-append-to-body="true">Details.</a></span>
+                                </div>
+                            </div>
+                            <div class="form-group"
+                                 ng-class="{'has-error' : passwordResetForm.password_confirm.$error.equal }">
+                                <label for="password_confirm" class="col-sm-4 control-label">Confirm Password</label>
+                                <div class="col-sm-8">
+                                    <input type="password"
+                                           class="form-control"
+                                           id="password_confirm"
+                                           name="password_confirm"
+                                           id="password_confirm"
+                                           placeholder="Confirm Password"
+                                           ng-model="account.password_confirm"
+                                           equalsto="account.password"
+                                           required >
+                                    <span class="help-block"
+                                          ng-show="passwordResetForm.password_confirm.$error.equal">
+                                        Passwords are not equal.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-8 col-sm-4">
+                                    <button wz-next="logStep()"
+                                            class="btn btn-primary pull-right"
+                                            ng-disabled="passwordResetForm.$invalid"
+                                            value="Click here to continue">Continue</button>
+                                </div>
+                            </div>
+                        </form>
+                    </wz-step>
+
+                    <wz-step step-title="Set up a Channel">
+                        <h3>Create a Channel</h3>
+                        <hr />
+                        <form class="form form-horizontal"
+                              role="form"
+                              name="newChannelForm">
+                            <div class="form-group"
+                                 ng-class="{'has-error' : newChannelForm.channelName.$dirty
+                                                          && (newChannelForm.channelName.$error.required
+                                                          || newChannelForm.channelName.$error.minlength)}">
+                                <label class="col-sm-4 control-label"
+                                       for="ChannelType">Channel Name <span style="font: 15px bold; color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text"
+                                           class="form-control"
+                                           id="channelName" name="channelName"
+                                           placeholder="Enter Channel Title"
+                                           ng-model="account.channel.title"
+                                           ng-minlength="2"
+                                           required>
+                                    <span class="help-block"
+                                          ng-show="newChannelForm.channelName.$error.required
+                                                   && newChannelForm.channelName.$dirty">
+                                        You need to provide Channel Name</span>
+                                    <span class="help-block"
+                                          ng-show="newChannelForm.channelName.$error.minlength
+                                                   && newChannelForm.channelName.$dirty">
+                                        Channel Name should be at least 2 characters long</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group"
+                                 ng-class="{'has-error' : newChannelForm.keyWords.$dirty
+                                                          && (newChannelForm.keyWords.$error.required
+                                                          || newChannelForm.keyWords.$error.minlength)}">
+                                <label class="col-sm-4 control-label"
+                                       for="Industries">Keywords <span style="font: 15px bold; color:red">*</span></label>
+                                <div class="col-sm-8">
+                                  <div popover-placement="right"
+                                       popover-trigger="mouseenter"
+                                       arrow-placement="top"
+                                       popover-title="Keywords are important!"
+                                       popover-append-to-body="true"
+                                       popover-html-unsafe="<p>Your channel will store posts that
+                                                contain the exact words or phrases you
+                                                enter as <b>keywords</b>.</p>
+                                                <p>You should check out your company’s or brand’s activity on Twitter.com to figure out the best keywords to use.
+                                                Using generic keywords such as ‘car’ or ‘hello’ will cause a lot of irrelevant posts to appear in your channel.
+                                                Type a word or a string of words and hit enter.</p>">
+                                        <input class="form-control"
+                                               style="width:100%"
+                                               placeholder="Keywords or phrases to track"
+                                               ui-select-keywords
+                                               ng-model="account.channel.keywords"
+                                               name="keyWords"
+                                               required />
+                                    </div>
+                                    <span class="help-block"
+                                          ng-show="newChannelForm.keyWords.$error.required
+                                                   && newChannelForm.keyWords.$dirty">At least one keyword should be provided</span>
+                                </div>
+                            </div>
+
+                            <!--div class="form-group">
+                                <label class="col-sm-4 control-label"
+                                       for="skipWords">Skipwords</label>
+                                <div class="col-sm-8">
+                                    <div popover-placement="top"
+                                         popover-trigger="mouseenter"
+                                         popover-title="Skipwords are optional."
+                                         popover-append-to-body="true"
+                                         popover-html-unsafe="<p>Any words or phrases you enter in the skipwords field will be excluded from your channel.</p>">
+                                    <input class="form-control"
+                                           style="width:100%"
+                                           name="skipWords"
+                                           placeholder="Keywords or phrases to ignore"
+                                           ui-select2 = "{multiple: true, simple_tags: true, tags: []}"
+                                           multiple="multiple"
+                                           ng-model="account.channel.skipwords" />
+                                    </div>
+                                </div>
+                            </div-->
+
+                            <div class="form-group"
+                                 ng-class="{'has-error' : newChannelForm.userTags.$dirty
+                                                          && (newChannelForm.userTags.$error.required
+                                                          || newChannelForm.userTags.$error.minlength)}">
+                                <label class="col-sm-4 control-label"
+                                       for="userTags">Twitter Handles <span style="font: 15px bold; color:red">*</span></label>
+                                <div class="col-sm-8">
+                                    <div popover-placement="right"
+                                         arrow-placement="top"
+                                         popover-trigger="mouseenter"
+                                         popover-title="Twitter handle(s)."
+                                         popover-append-to-body="true"
+                                         popover-html-unsafe="<p>Enter your company or brand Twitter handle. It needs to be a valid Twitter handle.</p>
+                                                              <p>This is a required field.</p>
+                                                              <p>Type your handle and hit enter.</p>">
+                                    <input class="form-control"
+                                           style="width:100%"
+                                           name="userTags"
+                                           placeholder="Twitter handle(s) that your company uses to post and reply"
+                                           ui-select-users
+                                           ng-model="account.channel.handles"
+                                           required />
+                                     </div>
+                                    <span class="help-block"
+                                          ng-show="newChannelForm.userTags.$error.required
+                                                   && newChannelForm.userTags.$dirty">Twitter Handle is required</span>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-10 col-sm-2">
+                                    <button wz-next="logStep()"
+                                            class="btn btn-success pull-right"
+                                            ng-disabled="newChannelForm.$invalid"
+                                            value="Click here to continue">Create Channel and Proceed to Your Account
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </wz-step>
+                </wizard>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-route.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-sanitize.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
+
+{#-- Angular Sup Libs --#}
+<script src="/static/assets/js/plugins/other/_others/select2-3.4.6/select2.min.js"></script>
+<script src="/static/assets/js/libs/angular-ui/modules/select2.js"></script>
+
+
+<script src="/static/assets/js/app/wizard/ui-bootstrap-tpls-0.11.0.min.js"></script>
+<script src="/static/assets/js/app/wizard/angular-wizard.js"></script>
+<script src="/static/assets/js/app/wizard-signup-controller.js"></script>
+
+</body>
+</html>

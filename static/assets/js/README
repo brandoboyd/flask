@@ -1,0 +1,95 @@
+The Project's JS structure and Style Guide
+
+/this document will continue to be updated/
+
+1. TOP LEVEL JS STRUCTURE
+
+    We are using the Folders-By-Feature Structure
+    https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md#style-y152
+
+    The main principle how we break up files maps more or less strictly to the site's structure.
+    For instance, all the js code related to the site's /interactions section is located
+    in js/app/interactions.
+
+    Also, in js/app folder we have _commons folder which holds the
+    reusable components. If some component/module is used in more than one place across the site it's
+    a good candidate to be placed in _commons folder.
+
+2. MODULARITY
+https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md#style-y160
+
+    The way how we should approach modularity falls into the following:
+
+    2.1 Many Small, Self Contained Modules (There is a room of improvement)
+    2.2 Create an App Module (Each section has a respective app module)
+    2.3 Keep the App Module Thin (There is a room of improvement)
+    2.4 Feature Areas are Modules (We keep feature modules in app/* folders)
+    2.5 Reusable Blocks are Modules (We keep reusable components in app/_commons folder)
+
+
+3. MODULES
+https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md#modules
+
+    3.1 Bellow is the *only* way how we should set/get modules
+    (currently we have no consistency in the way how we set/get modules)
+
+    3.1.1 Declare modules - module setter:
+    -----------------------------------
+    angular
+        .module('app', [
+            'ngAnimate',
+            'ngRoute',
+            'app.shared',
+            'app.dashboard'
+        ]);
+    -----------------------------------
+
+    3.1.2 Use module - module getter:
+    -----------------------------------
+    angular
+        .module('app')
+        .controller('SomeController', SomeController);
+
+    function SomeController() { }
+    -----------------------------------
+
+4. FACTORIES
+
+    4.1 Single Responsibility
+    https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md#style-y050
+
+    4.2 Accessible Members Up Top
+    https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md#style-y052
+
+
+
+5. DIRECTIVES
+https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md#style-y070
+
+    1. Limit 1 Per File
+    ---------------------------------------
+    /* recommended */
+    /* calendar-range.directive.js */
+
+    /**
+    * @desc order directive that is specific to the order module at a company named Acme
+    * @example <div acme-order-calendar-range></div>
+    */
+    angular
+        .module('sales.order')
+        .directive('acmeOrderCalendarRange', orderCalendarRange);
+
+    function orderCalendarRange() {
+        /* implementation details */
+    }
+    ---------------------------------------
+
+
+
+
+
+
+
+
+
+

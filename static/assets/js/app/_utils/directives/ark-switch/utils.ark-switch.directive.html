@@ -1,0 +1,13 @@
+<div class="toggle-switch">
+    <input type="checkbox" name="css-toggle-on-off-label"
+           class="toggle-switch-checkbox"
+           ng-model="switchModel"
+           ng-disabled="disabledCase"
+           id="{{switchId || 'singleId'}}">
+    <label class="toggle-switch-label" for="{{switchId || 'singleId'}}">
+        <span class="toggle-switch-inner"></span>
+        <span class="toggle-switch-switch"></span>
+    </label>
+    <label for="{{switchId || 'singleId'}}" class="toggle-switch-label-text"><span
+            class="toggle-switch-on-label-text">{{switchOn}}</span><span class="toggle-switch-off-label-text">{{switchOff}}</span></label>
+</div>

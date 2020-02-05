@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "Agents - %s" % user.account.selected_app }}
+{% endblock %}
+
+{% from "_macros/customers-details.html" import render_customers with context -%}
+{% from "_macros/plotter.html"   import render_plot         -%}
+
+
+
+{% set ngApp        = 'omni.agents' %}
+{% set section      = section  %}
+
+{% block body %}
+<script>
+    var OMNI_SECTION = "{{ section }}"; // customers or agents
+    var OMNI_ID = "{{ mongo_id }}";  // id of a customer or agent
+</script>
+
+<div class="container-fluid" ng-controller="OmniAgentsCtrl">
+    <div class="row" style="position:relative;">
+        {% raw %}
+        <ul class="nav nav-tabs fixed-nav" style="left:0">
+            <li ui-sref-active="active">
+                <a ui-sref="agents.distribution">
+                    <span class="icon-agent-status-ready-partial"></span> Distribution
+                </a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="agents.details">
+                    <span class="icon-chat-oval-multi"></span> Details
+                </a>
+            </li>
+        </ul>
+        {% endraw %}
+
+        <div class="fixed-nav" style="right: 25px;">
+            <div ng-hide="currentTab=='details'" style="display:inline-block;margin:5px;">
+                {% raw %}
+                    <a ng-click="widget.remove()"
+                       class="btn btn-xs btn-default pull-right"
+                       ng-show="widget.item"
+                       ui-jq="tooltip"
+                       data-original-title="Cancel widget edit mode"
+                            ><span class="icon-small-close" style="font-size:15px"></span></a>
+                    {% endraw %}
+                    <a href=""
+                       ng-show="widget.item"
+                       widget-dialog
+                       data-widget="widget.item"
+                       data-settings="widget.getParams()"
+                       ui-jq="tooltip"
+                       data-original-title="Update: {{'{{widget.item.title}}'}}"
+                       class="btn btn-xs btn-warning pull-right"><i class="icon-dash" style="font-size:15px"></i>
+                    </a>
+                <a href=""
+                   ng-cloak
+                   ng-hide="widget.item"
+                   data-widget="widget.item"
+                   data-settings="widget.getParams()"
+                   widget-dialog
+                   ui-jq="tooltip"
+                   data-original-title="Add to Dashboard"
+                   style="margin-right:5px;"
+                   class="btn btn-xs btn-default pull-right"><i class="icon-dash" style="font-size:15px"></i>
+                </a>
+            </div>
+            <div style="display:inline-block;margin:5px;">
+                <date-range-dropdown class="pull-right" current-date="currentDate"></date-range-dropdown>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:40px;">
+        <span class="fonticon icon-circle-arrow-up to-top-scroller" to-top-scroller style="display: none"></span>
+        <div class="col-sm-12">
+            <div class="tab-content" style="overflow: visible;">
+                <div class="tab-pane active">
+                    <div ui-view></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-cloak class="ng-cloak">{% include "flashes.html" %}</div>
+</div>
+{% endblock %}

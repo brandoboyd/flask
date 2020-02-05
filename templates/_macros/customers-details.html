@@ -1,0 +1,44 @@
+{%- macro render_customers() -%}
+
+  <table class="table table-bordered table-striped table-condensed s-table-common">
+    <thead>
+      <tr>
+        <th sorter data-predicate="first_name+last_name" data-title="Name"></th>
+        <th sorter data-predicate="industry" data-title="Industry"></th>
+        <th sorter data-predicate="age" data-title="Age"></th>
+        <th sorter data-predicate="location" data-title="Location"></th>
+        <th sorter data-predicate="sex" data-title="Gender"></th>
+        <th sorter data-predicate="status" data-title="Status"></th>
+        <th asorter data-predicate="" data-title="Agents">Agents</th>
+        <th asorter data-predicate="" data-title="Journeys">Journeys</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr
+        ng-repeat="item in customers | orderBy : table.sort.predicate : table.sort.reverse"
+        >
+        <td>
+          <a ng-href="/omni/customer/{{'item.id'|ng}}">
+            <span ng-bind-html="item.first_name"></span>
+            <span ng-bind-html="item.last_name"></span>
+          </a>
+        </td>
+        <td ng-bind-html="item.industry"></td>
+        <td ng-bind-html="item.age"></td>
+        <td ng-bind-html="item.location"></td>
+        <td ng-bind-html="item.sex"></td>
+        <td ng-bind-html="item.status"></td>
+        <td>
+          <a ng-href="/omni/agents/customer/{{'item.id'|ng}}" target="_blank"
+             title="Click to see agents whom this customer interacted with."
+             ng-bind-html="item.agents_count"
+             >
+          </a>
+        </td>
+        <td ng-bind-html="item.journeys_count"></td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endmacro %}

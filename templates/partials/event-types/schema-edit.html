@@ -1,0 +1,152 @@
+{% raw %}
+<div class="row edit-tab">
+  <div class="col-md-12">
+    <div class="alert alert-warning text-center" ng-if="entity.discovered_schema.length == 0">
+      <i class='icon-alert-triangle'></i> Please upload data source and derive the schema.
+    </div>
+
+    <div class="alert alert-info text-center" ng-if="entity.sync_status=='SYNCED'">
+      <span ng-if="!rowsLostAfterSync">{{entity.items_synced}} rows have been synchronized.</span>
+      <span ng-if="rowsLostAfterSync > 0">{{entity.items_synced}} rows have been synchronized, {{rowsLostAfterSync}} rows have been dismissed due to type mismatch.</span>
+      <span class="q-sign"
+            ng-if="rowsLostAfterSync > 0"
+            tooltip-placement="right"
+            tooltip-trigger="mouseenter"
+            tooltip="Show synchronization errors"
+            ng-click="onShowErrors()">
+        <i class="icon-iw-active-circle-question"></i>
+      </span>
+      <br/>
+      <br/>
+      <button class="btn btn-default"
+              ng-click="onAcceptSchema()"
+              ng-disabled="entity.items_synced < 1">Accept Schema
+      </button>
+      <button class="btn btn-default"
+              ng-click="onCancelSchema()">Cancel Schema
+      </button>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <form class="form-horizontal" name="SchemaForm">
+      <fieldset ng-disabled="entity.is_locked">
+
+        <div class="form-group" style="margin-bottom:5px;">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-2">Label
+            <span class="q-sign"
+                  tooltip-placement="right"
+                  tooltip-trigger="mouseenter"
+                  tooltip="Type a new label or select from list">
+              <i class="icon-iw-active-circle-question"></i>
+            </span>
+          </div>
+          <div class="col-sm-2">Type</div>
+          <div class="col-sm-5">
+            Expression
+            <span class="icon-iw-active-circle-question"
+                  tooltip="Define expression using arithmetic operations (+, -, *, /), Python 2.7 built-in functions and fields accessing by @ hotkey"
+                  tooltip-placement="top">
+            </span>
+          </div>
+        </div>
+
+        <div class="row form-group" ng-repeat="field in entity.schema track by $index" ng-class-odd="'odd'" ng-class-even="'even'">
+          <div class="col-sm-1">
+            <span class="fonticon icon-circle-close pull-right" style="font-size: 18px;"
+              ng-click="onRemoveField($event, $index)"></span>
+          </div>
+          <div class="col-sm-4">
+            <div class="row form-group">
+              <div class="col-sm-6">
+                <input
+                    ng-if="field.name"
+                    class="form-control"
+                    ng-model="field.name"
+                    ng-disabled="entity.is_locked || !field.is_expression"
+                />
+                <ui-select
+                    class="field-name-{{$index}} form-control"
+                    ng-if="!field.name"
+                    ng-model="field.name"
+                    reset-search-input="false" tagging tagging-label="('new')" theme="select2"
+                    title="Type a new field name or select from list" class="form-control"
+                    on-select="onFieldNameInput($index)">
+                    <ui-select-match placeholder="Type and Press Enter">{{$select.selected}}</ui-select-match>
+                    <ui-select-choices repeat="name in availableFields | filter:$select.search">
+                      <span ng-bind-html="name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+              </div>
+              <div class="col-sm-6"
+                ng-class="{'has-error': !field.type && hasError}">
+                <select class="form-control"
+                        ng-model="field.type"
+                        ng-disabled="entity.is_locked"
+                        ng-options="d.value as d.text for d in schemaFieldTypes">
+                  <option value="">-- field type --</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4"
+              ng-if="field.is_expression"
+              ng-class="{'has-error': field.is_expression && !field.expression && hasError}">
+            <!--Expression builder-->
+            <textarea class="form-control"
+                      ng-model="field.expression"
+                      ng-disabled="entity.is_locked"
+                      rows="1"
+                      id="expression_builder"
+                      mentio
+                      mentio-id="'expression_builder'"
+                      mentio-typed-term="typedTerm"></textarea>
+
+            <mentio-menu mentio-for="'expression_builder'"
+                         mentio-trigger-char="'@'"
+                         mentio-items="_availableFields"
+                         mentio-template-url="/expressions.tpl"
+                         mentio-search="searchExpressions(term)"
+                         mentio-select="getTextRaw(item)" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-4 col-sm-offset-1">
+            <button class="btn btn-default" ng-click="onAddField($event)">
+              Add New Field
+            </button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+    <form class="form-horizontal">
+      <div class="form-group form-actions">
+        <div class="col-sm-5 col-sm-push-1">
+          <button
+              ng-click="onApplySchema()"
+              ng-if="entity.sync_status==='OUT_OF_SYNC' && hasSchema"
+              class="btn btn-default">Sync Schema
+          </button>
+        </div>
+        <div class="col-sm-4">
+          <button class="btn btn-primary pull-right"
+                  ng-disabled="entity.is_locked"
+                  ng-click="onSaveSchema()">Save Schema
+          </button>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/ng-template" id="/expressions.tpl"">
+  <ul class="list-group fields-search" ng-if="items" style="height: 300px;overflow-y: scroll;">
+    <li mentio-menu-item="exp" ng-repeat="exp in items" class="list-group-item">
+      <span ng-bind-html="exp | mentioHighlight:typedTerm:'menu-highlighted' | unsafe"></span>
+    </li>
+  </ul>
+</script>
+{% endraw %}

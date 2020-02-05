@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "Test - %s" % user.account.selected_app }}
+{% endblock %}
+
+{% set ngApp = "test" %}
+
+
+{% block body %}
+
+<div class="container">
+<div ng-controller="TestCtrl">
+
+    {% include "partials/test_subtabs.html" %}
+
+    <div class="alert alert-success" id="channelReset"
+         ng-show="channelClassifier" >
+        <a class="close" ng-click="refreshChannelReset()">&times;</a>
+        <span ng-bind-html="ClassifierResult"></span>
+    </div>
+
+    <div class="alert alert-success" id="matchingReset"
+         ng-show="channelMatching" >
+        <a class="close" ng-click="refreshMatcherReset()">&times;</a>
+        <span ng-bind-html="MatchingResult"></span>
+    </div>
+
+    <div class="pull-right" style="margin-bottom:-60px;">
+        <a class="btn btn-default"
+           ng-hide="channelClassifier"
+           ng-click="retrain()"><span class="icon-refresh"></span> Retrain</a>
+        <a class="btn btn-warning"
+           ng-hide="channelClassifier"
+           ng-click="reset()"><span class="icon-refresh"></span> Reset Classifier</a>
+        <a class="btn btn-danger"
+           ng-click="resetMatching()"><span class="icon-refresh"></span> Reset Matching</a>
+        <a class="btn btn-info"
+           ng-click="purgeTopics()"><span class="icon-refresh"></span> Purge Topics</a>
+    </div>
+    <div class="row" style="margin-top:20px; width:80%;">
+        <div class="col-sm-12">
+            <form class="form-horizontal" ng-submit="submitPost()">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="textarea">Channel:</label>
+                        <div class="col-sm-3">
+                            <select ng-model="channel" ng-options="c.title for c in channels" class="form-control">
+                                <option>Loading...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="textarea">User Tag:</label>
+                        <div class="col-sm-3">
+                            <input type="text" value="" ng-model="user_tag" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="message_type">Direct message:</label>
+                        <div class="col-sm-6">
+                            <label class="checkbox">
+                                <input type="checkbox" class="ark-checkbox" ng-model="message_type" id="message_type"/><span></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="textarea">Test Post:</label>
+                        <div class="col-sm-8">
+                            <textarea ng-model="post" class="form-control" id="textarea" rows="7"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="row" ng-show="submittedPost.speech_acts">
+        <div class="col-sm-12">
+            <h2 ng-bind="submittedPost.status_display"></h2>
+            <hr style="margin:5px 0"/>
+        </div>
+    </div>
+    <div ng-repeat="sa in submittedPost.speech_acts">
+
+        <div class="row" style="margin-top: 20px">
+            <div class="col-sm-4">
+                <h3 ng-bind="sa.content"></h3>
+            </div>
+            <div class="col-sm-8">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th>Confidence</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>Intention Type</th>
+
+                        <td ng-bind="sa.intention_type"></td>
+                        <td ng-bind="sa.intention_type_conf | number:2"></td>
+
+                    </tr>
+                    <tr>
+                        <th>Intention Topic</th>
+
+                        <td ng-bind="sa.intention_topics.join(', ')"></td>
+                        <td ng-bind="sa.intention_topic_conf | number:2"></td>
+
+                    </tr>
+                    <tr>
+                        <th>Language</th>
+
+                        <td ng-bind="sa.language"></td>
+                        <td ng-bind="sa.language_conf | number:2"></td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px">
+        <div class="col-sm-12">
+
+            <div ng-show="submittedPost.matchables">
+                <h2>Matches</h2>
+                <br />
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Creative</th>
+                        <th>Topics</th>
+                        <th>Landing URL</th>
+                        <th>Relevance</th>
+                        <th>Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="matchable in submittedPost.matchables">
+
+                        <td>{{ "{{ matchable.creative }}" }}</td>
+                        <td>{{ "{{ matchable.intention_topics.join(', ') }}" }}</td>
+                        <td ng-bind-html="matchable.landing_url | linky"></td>
+                        <td>{{ "{{ matchable.relevance | number:2 }}" }}</td>
+                        <td>{{ "{{ matchable.score | number:2 }}" }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+{% endblock %}

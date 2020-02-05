@@ -1,0 +1,275 @@
+<div class="modal-header" style="text-align: center;" ng-hide="flags.showErrMsg || flags.showEmptyMsg">
+    <span class="fonticon icon-close" ng-click="close()" style="position: absolute;top: 30px;right: 50px;cursor:pointer;font-size: 14px;"></span>
+</div>
+<div class="modal-body">
+  <div class="container-fluid" style="min-height: 500px;margin:1px;">
+    <div class="row" style="position:relative;">
+            <span class="fonticon icon-minimize toggleJourneys" onclick="collapseJourneys()" ng-if="flags.stagesPipeline"></span>
+      <div id="topLevel" style="margin:1px;height:100%; float:left; width:100%; border:1px solid #ccc;padding: 1px">
+        <div class="col-xs-2" style="height:200px;" ng-hide="flags.showErrMsg || flags.showEmptyMsg">
+          <div style="min-width:150px;padding:10px;overflow-y:scroll;overflow-x:hidden;max-height: 100%">
+            <!--
+            <h1 ng-show="customer_name">{{ customer_name }}</h1>
+            !-->
+            <h5 ng-repeat="(k, v) in customer" ng-show="v">
+              <span>{{k}}:&nbsp;</span>
+              <span>{{v.toString()}}</span>
+            </h5>
+          </div>
+        </div>
+        <div class="col-xs-9" style="float:right;">
+          <div id="horizontal">
+            <!-- HORIZONTAL TIMELINE -->
+            <div style="padding:10px; ">
+              <div style="margin-left: 36%;">
+                <h3 ng-show="flags.showEmptyMsg">No Data Available</h3>
+
+                <h3 ng-show="flags.showErrMsg">Invalid Data</h3>
+              </div>
+              <span class="fonticon icon-chevron-left slideChevron nav-previous" style="left:-25px;"
+                    ng-hide="flags.showErrMsg || flags.showEmptyMsg"></span>
+              <span class="fonticon icon-chevron-right slideChevron nav-next" style="right:25px;"
+                    ng-hide="flags.showErrMsg || flags.showEmptyMsg"></span>
+
+              <horizontal-timeline source="horizontalTimeline"
+                                   height="180"
+                                   width="95%"
+                                   start-zoom-adjust="{{zoomAdjust}}"
+                                   start-at-end="true"
+                                   start-at-slide="{{startAt}}"
+                                   hash-bookmark="false"
+                                   lang="en"
+                                   debug="false"
+                                   ng-hide="flags.showErrMsg"
+                                   ng-if="horizontalTimeline"
+                                   day-events="horizontalTimeline.timeline.date"
+                                   show-data="showData(index)"></horizontal-timeline>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-xs-10 col-xs-offset-1"
+           style="background: rgb(239, 239, 239);margin-top: 10px;padding-bottom: 10px;border: 1px solid #d4d4d4;border-radius: 2px;"
+           ng-hide="flags.showErrMsg || flags.showEmptyMsg">
+        <div class="row">
+          <div class="col-xs-10">
+            <div>
+              <h2 style="float:left;">{{ journey.type }}&nbsp;Journey is&nbsp;<span
+                ng-class="journey.status" style="font-weight: bold;">{{ journey.status }}</span>.
+                Current Stage is&nbsp;{{ stage.headline }}</h2>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="select2-container-multi" style="margin-top: 10px;"
+                 ng-if="assignedTags.length">
+              <ul class="select2-choices list-inline" style="background:none; border:none">
+                <li class="select2-search-choice" style="cursor:pointer;"
+                    ng-repeat="tag in assignedTags">
+                  <span ng-click="navigateToTag(tag.id)">{{ tag.title }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="position: absolute;top: 20px;right: 20px;">
+          <button class="btn btn-primary" onclick="angular.element('#scoresChart').slideToggle();">Summary
+          </button>
+        </div>
+      </div>
+      <div id="scoresChart" style="margin-top: 20px;display: none;"
+           ng-class="journey.NPS === null || journey.CSAT === null ? 'col-xs-8 col-xs-offset-4' : 'col-xs-10 col-xs-offset-2'">
+        <!--<svg style="height:200px; width:350px;float:left;"-->
+             <!--ng-if="journey.NPS && journey.CSAT "></svg>-->
+        <div class="journeyOutcome">
+          {{ outcome }}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row" ng-if="flags.stagesPipeline">
+      <div class="col-xs-11 col-xs-offset-1">
+
+        <ul class="timeline-stage">
+          <li style="margin-left: 0;margin-right:10px;z-index: 10;">
+            <div class="timeline-badge-stage"></div>
+          </li>
+          <li ng-repeat="stage in journey.stages track by $index" style="width: 150px;cursor: pointer;"
+              ng-click="showEvents($index, $event)">
+            <span class="decoratorStage"></span>
+            <div class="timeline-panel-stage"
+                 ng-class="{'pill0': stage.stageName === selectedStage.stageName}"
+            >{{ stage.stageName }}
+            </div>
+          </li>
+          <li style="margin-left: 35px;z-index: 10;">
+            <div class="timeline-badge-stage"></div>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+
+    <div class="row" ng-hide="flags.showErrMsg">
+      <div class="col-xs-6 col-xs-offset-3">
+        <!-- VERTICAL TIMELINE -->
+        <timeline ng-hide="flags.isEventsFetched">
+
+          <timeline-node ng-repeat="event in verticalTimeline track by $index"
+                         id="{{event.assignedTags.join('-').toString()}}" side="left">
+            <timeline-badge class="info">
+              <span style="font-size: 12px;" ng-if="!event.isFirstOrLast">{{ event.content[0]._created * 1000 | date: 'MMM d, HH:mm a' }}</span>
+              <span style="font-size: 12px;"
+                    ng-if="event.isFirstOrLast">{{ event.time | moment:'llll'}}</span>
+            </timeline-badge>
+            <timeline-panel>
+              <timeline-content>
+                <div ng-if="!event.isFirstOrLast">
+                                    <span class="fonticon {{event.icon}}"
+                                          ng-if="event.platform !=='NPSOutcome'" id="platformIcon"
+                                          ng-click="showEventContent(event.class)"></span>
+                  <span class="fonticon" ng-if="event.platform =='NPSOutcome'" id="platformIcon"
+                        ng-click="showEventContent(event.class)"
+                        ng-class="'icon-' + getNPSIcon(event)"></span>
+                  <a href ng-click="showEventContent(event.class)" class="large-body"
+                     style="margin-left:20px;"
+                     ng-class="{'eventPlatform': !event.agents.length}">{{ event.platform }}&nbsp;
+                    <span ng-hide="event.platform == 'BranchEvent'">({{event.messagesCount }})</span></a>
+                  <br/>
+                  <span class="large-body" ng-repeat="agent in event.agents"
+                        style="margin-left:20px;float:left;">{{ agent }}</span>
+                </div>
+                <div style="float:right;margin-top:-20px;">
+                  <div class="select2-container-multi">
+                    <ul class="select2-choices list-inline" style="background:none; border:none">
+                      <li class="select2-search-choice" style="background: #e4e4e4;"
+                          ng-repeat="channel in event.channels">
+                        <span>{{ channel }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div ng-if="event.isFirstOrLast">
+                  <span ng-repeat="ec in event.content">{{ ec.content }}&nbsp;{{ ec.time | moment:'llll' }}</span>
+                </div>
+              </timeline-content>
+            </timeline-panel>
+            <timeline-panel ng-repeat="c in event.content" ng-if="!event.isFirstOrLast && c.content"
+                            class="{{event.class}} eventPanel"
+                            style="display: none;position:relative;"
+                            ng-class="{'branchEvent': event.platform == 'BranchEvent'}">
+              <timeline-content>
+                <div class="response" style="margin-top: -5px; margin-bottom: 5px;">
+                                    <span class="label" ng-class="c.intention_name"
+                                          ng-if="c.intention_name && c.intention_name !== null">{{c.intention_name.toUpperCase()}}</span>
+                  <span ng-repeat="speech in c.speech_acts" class="label" ng-class="speech.className"
+                        ng-if="c.intention_name == null">
+                        {{speech.className.toUpperCase()}}
+                    </span>
+                </div>
+                <div ng-include="'event'"></div>
+              </timeline-content>
+            </timeline-panel>
+          </timeline-node>
+
+        </timeline>
+
+
+        <div class="spinner-container fast-spinner" style="margin:10% 0 10% 50%;"
+             ng-show="flags.isEventsFetched">
+          <div class="spin-circle"></div>
+          <div class="spin-inner-circle"></div>
+        </div>
+      </div>
+    </div>
+    <h2 id="noResults" style="margin:auto;text-align:center;display: none;">No Events</h2>
+  </div>
+</div>
+
+
+<script type="text/ng-template" id="event">
+  <small class="created" style="float: right; color: #aaa">
+    {{ c._created * 1000 | date:'MMM d, y HH:mm:ss a' }}
+  </small>
+
+  <div ng-if="['Twitter', 'Facebook'].indexOf(event.platform) >= 0">
+    <div class="pull-left">
+      <img class="img-thumbnail" ng-src="{{ event.extraFields.interaction.author.avatar }}"/>
+      <span class="img-thumbnail fonticon icon-person" style="font-size: 32px;"
+            ng-if="!event.extraFields.interaction.author.avatar"></span>
+    </div>
+    <div style="margin-left: 60px;">
+      <div>
+        <a ng-href="{{ event.extraFields.interaction.author.link || c.url }}" class="link">
+          {{ event.extraFields.interaction.author.username || event.extraFields.from.name }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="['Twitter', 'Facebook'].indexOf(event.platform) < 0">
+    <div ng-if="c.actor_id === customer.id">
+      <div class="pull-left" style="margin-right:15px;">
+        <span class="fonticon icon-person" style="font-size: 32px;float: left;margin-top: -10px;"></span>
+      </div>
+      <!--
+      <div style="margin-left: 40px;">
+        <div>
+          <span style="font-weight: 600">{{ customer_name }}</span>
+        </div>
+      </div>
+      !-->
+    </div>
+    <div ng-if="c.actor_id !== customer.id">
+      <div class="pull-left">
+        <span class="fonticon icon-agent" style="font-size: 32px;float: left;margin-top: -10px;"></span>
+      </div>
+      <div style="margin-left: 40px;">
+        <div>
+          <span style="font-weight: 600">{{ c.summary.agents[0].first_name || 'Agent' }}&nbsp;{{ c.summary.agents[0].last_name }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content" ng-if="event.platform == 'FAQQueryEvent'">{{ c.query }}</div>
+  <div class="content" style="margin-left: 45px;">
+    {{ c.content }}
+
+    <div class="select2-container-multi" style="margin-top:5px;margin-left:-5px;">
+      <ul class="select2-choices list-inline" style="background:none; border:none">
+        <li class="select2-search-choice" ng-repeat="jTag in c.journey_tags">
+          <span>{{jTag.title}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/javascript">
+  function collapseJourneys() {
+    var el = angular.element('.toggleJourneys');
+    if (el.hasClass('icon-add')) {
+      el.removeClass('icon-add');
+      el.addClass('icon-minimize');
+    } else {
+      el.removeClass('icon-minimize');
+      el.addClass('icon-add');
+    }
+    angular.element('#topLevel').slideToggle();
+  }
+</script>
+<style>
+  .highlighter > .timeline-panel {
+    background-color: lightgreen;
+    transition: background 300ms;
+  }
+</style>

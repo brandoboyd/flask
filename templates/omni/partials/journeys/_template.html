@@ -1,0 +1,39 @@
+{% from "_macros/journeys.facets.html" import render_journeysFacets -%}
+
+
+<div class="col-sm-2 sidebar" style="padding-top: 20px;">
+  {{render_journeysFacets()}}
+</div>
+
+
+<div class="col-md-10 col-md-offset-2">
+  <h1>{% block journeys_tpl_title %}{% endblock %}</h1>
+
+  <hr/>
+
+  <div class="row form-group" style="margin-bottom: 20px;">
+    <div class="col-md-3">
+      <span style="line-height: 25px;">
+        Journey Type
+      </span>
+      <select class="form-control pull-left"
+              ng-model="filters.journey_type"
+              ng-change="updateFacets()"
+              ng-options="jt as jt.display_name for jt in journey_types_list">
+      </select>
+    </div>
+    <div class="col-md-9">
+      <div class="row">
+        {% block journeys_tpl_right_filter %}{% endblock %}
+      </div>
+    </div>
+  </div>
+
+  {% block journeys_tpl_body %}{% endblock %}
+
+  <div class="spinner-container" style="position:absolute;top:45%;left:50%;z-index:1000" ng-show="loading">
+    <div class="spin-circle"></div>
+    <div class="spin-inner-circle"></div>
+  </div>
+
+</div>

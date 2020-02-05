@@ -1,0 +1,21 @@
+{% raw %}
+<h1>{{ vm.currentReportOption.title }}</h1>
+<hr/>
+
+<div class="row">
+  <div class="col-md-3">
+    <span style="line-height: 25px">Reports</span>
+    <select ng-model="vm.currentReportOption.id"
+            ng-change="vm.onReportOptionChange()"
+            ng-options="obj.id as obj.title for obj in vm.reportOptions"
+            class="form-control">
+    </select>
+  </div>
+</div>
+
+<div id="chartTrends"
+     class="analysis-card"
+     style="width:100%;height: 420px;margin-top:20px;min-height:420px;border:1px solid #e4e9f0;padding:15px;">
+  <chart chart-data="vm.chart.data" settings="vm.chart.settings"></chart>
+</div>
+{% endraw %}

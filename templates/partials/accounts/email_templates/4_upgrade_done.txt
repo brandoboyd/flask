@@ -1,0 +1,18 @@
+New features are coming your way! Cloud is updated
+Dear Valued Customer,
+
+Genesys Journey Optimization Team has finished updating Journey Optimization Cloud Environment.
+
+The following changes have been made: _LINK TO NEW FEATURES/CHANGES/FIXES if post-downtime or unplanned maintenance to docs.genesys.com public wiki_
+
+As always, Genesys Customer Care is available to answer any questions you may have. If you have service issues after the service event, please contact Genesys Customer Care by opening a case in the My Support Portal, or call Customer Care at:
+North America (USA and Canada)
++506-674-6767 (International)
++888-369-5555 (Toll-free, N. America only)
+Europe, Middle, East, Africa
++44 (0) 127-645-7002 (International)
+Asia Pacific
++61-7-3368-6868 (International)
+
+Best Regards,
+Genesys Journey Optimization Operations Team

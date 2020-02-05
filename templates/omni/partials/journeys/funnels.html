@@ -1,0 +1,35 @@
+{% extends "omni/partials/journeys/_template.html" %}
+
+{% block journeys_tpl_title %}
+Journeys Funnels
+{% endblock %}
+
+{% block journeys_tpl_right_filter %}
+<div class="col-sm-4">
+  <span style="line-height: 25px;">
+        Funnels
+  </span>
+  <select ng-show="!!funnels.length"
+          ng-model="currentFunnelId"
+          ng-change="funnelSelected()"
+          ng-options="obj.id as obj.name for obj in funnels"
+          class="form-control">
+  </select>
+  <select ng-hide="!!funnels.length" class="form-control">
+    <option>No funnel detected</option>
+  </select>
+</div>
+{% endblock %}
+
+{% block journeys_tpl_body %}
+<div class="row">
+  <div class="col-sm-12">
+    <div class="funnel-chart analysis-card">
+      <svg style="width:100%;height:350px" ng-show="chartData.length" class="stacked-bar-chart clickable-x-axis"></svg>
+      <div class="alert alert-info text-center" ng-hide="chartData.length">
+        <i class='icon-alert-triangle'></i> No Data Available
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

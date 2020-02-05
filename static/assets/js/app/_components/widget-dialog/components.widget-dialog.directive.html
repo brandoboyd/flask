@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <div class="clearfix">
+        <h3 class="pull-left">Add to Dashboard</h3>
+        <a class="close pull-right"
+           ng-click="close(result)">
+            <span class="icon-close"></span>
+        </a>
+    </div>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-sm-3" for="widgetTitle">Widget Name <span class="asterisk">*</span></label>
+            <div class="col-sm-9">
+                <input type="text" id="widgetTitle" ng-model="widget.title" autofocus="autofocus" class="form-control" ng-keyup="$event.keyCode == 13 ? save() : null">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3" for="widgetDescription">Description</label>
+            <div class="col-sm-9">
+                <textarea id="widgetDescription" ng-model="widget.description" class="form-control" rows="5"></textarea>
+            </div>
+        </div>
+        <!--<div class="form-group">-->
+            <!--<label class="control-label col-sm-3" for="dashboardType">Dashboard Type</label>-->
+            <!--<div class="col-sm-9">-->
+                <!--<select class="form-control"-->
+                        <!--ng-model="dashboardTypeId"-->
+                        <!--ng-options="item.id as item.display_name for item in dashboards.types"-->
+                        <!--ng-change="dashboardTypeSelect();">-->
+                    <!--<option value="">Select a dashboard type</option>-->
+                <!--</select>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="form-group">
+            <label class="control-label col-sm-3" for="dashboardName">Dashboard</label>
+            <div class="col-sm-9">
+                <select class="form-control"
+                        ng-model="widget.dashboard_id"
+                        ng-options="item.id as item.title for item in dashboardList">
+                    <option value="">Select one of mixed typed dashboards</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button ng-click="close(result)" class="btn btn-default">Cancel</button>
+    <button ng-click="save(result)" class="btn btn-primary" ng-disabled="!widget.title">Save</button>
+</div>

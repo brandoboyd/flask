@@ -1,0 +1,50 @@
+<style>
+    table {
+        margin-top: 20px;
+    }
+    thead th {
+        vertical-align: middle !important;
+    }
+    td ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Occupancy</th>
+                <th>English <br />fluency</th>
+                <th>Seniority</th>
+                <th>Skills</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="a in agents">
+                {% raw %}
+                <td>{{a.agent_full_name}}</td>
+                <td>{{a.agent_full_name}}</td>
+                <td>{{a.agent_age}}</td>
+                <td>{{a.agent_gender}}</td>
+                <td>{{a.agent_occupancy}}</td>
+                <td>{{a.agent_english_fluency}}</td>
+                <td><strong>{{a.seniority}}</strong></td>
+                <td>
+                    <ul>
+                        <li ng-repeat="s in a.agent_skillset">{{s}}</li>
+                    </ul>
+                </td>
+                {% endraw %}
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

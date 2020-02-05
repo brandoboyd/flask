@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SignUp Wizard</title>
+    <!-- Use LATEST folder to always get the latest version-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">-->
+    <!--<link rel="stylesheet" href="/static/assets/js/plugins/other/_others/select2-3.4.6/select2.css">-->
+    <!--<link rel="stylesheet" href="/static/assets/css/select2-bootstrap3.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="/static/assets/js/app/wizard/wizard.css">-->
+    <!--<link rel="stylesheet" href="/static/assets/vendor/font-awesome/css/font-awesome.css">-->
+    <link rel="shortcut icon" href="/static/assets/img/gen_logomark_16px_col.ico">
+
+    <style>
+        * :not([class^='icon']) {
+            font-family: Roboto, Arial, sans-serif !important;
+        }
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+        .popover {
+            max-width:360px !important;
+            z-index: 2000;
+        }
+        .select2-search-field {
+            min-width:100%;
+        }
+
+        section p {
+            color: #333;
+            text-align: justify;
+            font-size: 22px;
+            line-height: 40px;
+            font-weight: 300;
+        }
+    </style>
+
+</head>
+<body class="fuelux" ng-app="signup">
+
+<div class="container" ng-controller="selfSignUpCtrl">
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <h3><img src="/static/assets/img/gs-logo.png" /></h3>
+            <hr style="border-color:black"/>
+        </div>
+    </div>
+
+    {% block body %} {% endblock %}
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-route.min.js"></script>-->
+<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min.js"></script>-->
+<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-sanitize.min.js"></script>-->
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
+
+{#-- Angular Sup Libs --#}
+<!--<script src="/static/assets/js/plugins/other/_others/select2-3.4.6/select2.min.js"></script>-->
+<!--<script src="/static/assets/js/libs/angular-ui/modules/select2.js"></script>-->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+
+<script src="/static/assets/js/app/signup/signup.module.js"></script>
+<script src="/static/assets/js/app/signup/signup.controller.js"></script>
+
+</body>
+</html>

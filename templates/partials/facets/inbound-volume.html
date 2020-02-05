@@ -1,0 +1,5 @@
+{% from "_macros/facets.html"           import facet_languages-%}
+{% from "_macros/filter.html"          import smart_tags_filter with context -%}
+
+{{ facet_languages() }}
+{{ smart_tags_filter() }}

@@ -1,0 +1,108 @@
+    <div class="modal-dialog" id="supervisor-chat">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px;">
+                <button type="button"
+                        class="close"
+                        ng-click="dismissChat(agent, false)">
+                    <span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title">Chat with {{agent.customer.customer_full_name}}</h5>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="row">
+
+
+
+
+                        <form role="form"
+                              class="input-append">
+                            <div class="col-sm-10">
+                            <input type="text"
+                                   placeholder="Enter message"
+                                   style="width:100%; display:inline-block;"
+                                   ng-model="message"
+                                   name="message"
+                                   id="message"
+                                   class="form-control"
+                                   ng-keypress="typing($event, agent.roomId)"
+                                   on-focus="focus(true)"
+                                   on-blur="focus(false)"/>
+                            </div>
+                            <div class="col-sm-2">
+                            <button class="btn btn-default pull-right"
+                                    ng-click="send(agent)">Send
+                            </button>
+                            </div>
+                        </form>
+
+                        <ul ng-if="agent.isTyping" class="help-block unstyled" style="list-style:none">
+                            <li><small>{{agent.typer}} is typing</small></li>
+                        </ul>
+
+                    </div>
+                    <div class="row" style="margin-top:10px">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default"
+                                 ng-class="{'panel-danger' : agent.summary.sentiment_score == -1}">
+                                <div class="panel-heading">
+                                    <span class="btn btn-xs btn-link" ng-click="showConvo(summary)">
+                                        Chat Summary
+                                    </span>
+
+                                    <strong class="pull-right"
+                                            ng-hide="agent.roomId"
+                                            style="font-size:9px;
+                                                   padding:5px">{{agent.summary.customers[0].customer_seniority}}</strong>
+                                </div>
+                                <div class="panel-body">
+                                    <button class="btn btn-xs btn-link pull-left"
+                                            title="Show topics"
+                                            ng-disabled="!agent.summary.topics.length"
+                                            ng-init="isClosed = true"
+                                            ng-click="isClosed=!isClosed">
+                                        <span ng-if="isClosed"><i class="fa fa-plus-square"></i></span>
+                                        <span ng-if="!isClosed"><i class="fa fa-minus-square"></i></span>
+                                    </button>
+                                    <div style="margin-left:27px">
+                                        <span class="label label-default pull-left"
+                                              style="margin:5px;
+                                                     font-size:9px"
+                                              ng-bind="tag.display_name"
+                                              ng-repeat="tag in agent.summary.tags"></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div style="margin-left:27px"
+                                         ng-show="!isClosed">
+                                        <span class="label label-info pull-left"
+                                              style="margin:5px"
+                                              ng-bind="topic[0]"
+                                              ng-repeat="topic in agent.summary.topics"></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="true">
+                        <div style="overflow-y:auto;
+                                    margin-top: 10px;
+                                    border-radius:4px;
+                                    height:150px;
+                                    border:1px solid #E5E5E5;"
+                             scroll-bottom="agent.messages">
+
+                            <table class="table table-condensed table-striped">
+                                <tr ng-repeat="message in agent.messages track by $index"
+                                    ng-class="{dark: $index % 2 === 0}">
+                                    <td>
+                                        <strong>{{message.sender}}:&nbsp;</strong>
+                                        <span>{{message.body}}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

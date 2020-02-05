@@ -1,0 +1,57 @@
+{%- macro render_agents() -%}
+
+  <table class="table table-bordered table-striped table-condensed s-table-common">
+    <thead>
+      <tr>
+        <th sorter data-predicate="first_name+last_name" data-title="Name"></th>
+        <th asorter data-predicate="" data-title="Industries">Industries</th>
+        <th sorter data-predicate="age" data-title="Age"></th>
+        <th sorter data-predicate="location" data-title="Location"></th>
+        <th sorter data-predicate="sex" data-title="Gender"></th>
+        <th sorter data-predicate="occupancy" data-title="Occupancy"></th>
+        <th sorter data-predicate="english_fluency" data-title="English Fluency"></th>
+        <th asorter data-predicate="" data-title="Skills">Skills</th>
+        <th asorter data-predicate="" data-title="Customers">Customers</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr
+        ng-repeat="item in agents | orderBy : table.sort.predicate : table.sort.reverse"
+        >
+        <td>{{ "item.first_name + ' ' + item.last_name" |ng }}</td>
+        <td>
+          <a href="#"
+            ng-bind-html="{{'item.customer_industries | countUniqueIndustries'|ng}}"
+            popover-html-unsafe="{{'item.customer_industries | unwrapAsHtml'|ng}}"
+            popover-placement="right"
+            popover-trigger="mouseenter"
+            >
+          </a>
+        </td>
+        <td ng-bind-html="item.age"></td>
+        <td ng-bind-html="item.location"></td>
+        <td ng-bind-html="item.sex"></td>
+        <td ng-bind-html="item.occupancy + '%'"></td>
+        <td ng-bind-html="item.english_fluency"></td>
+        <td>
+          <a href="#"
+            ng-bind-html="item.skillset.length"
+            popover-html-unsafe="{{'item.skillset | unwrapAsHtml'|ng}}"
+            popover-placement="left"
+            popover-trigger="mouseenter"
+            >
+          </a>
+        </td>
+        <td>
+          <a ng-href="/omni/customers/agent/{{'item.id'|ng}}" target="_blank"
+             title="Click to see customers whom this agent interacted with."
+             ng-bind-html="item.customers_count"
+             >
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endmacro %}

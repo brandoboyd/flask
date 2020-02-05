@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <div class="clearfix">
+    <h2 class="pull-left">Synchronization errors</h2>
+    <a class="close pull-right" ng-click="$close()">
+      <span class="icon-close"></span>
+    </a>
+  </div>
+</div>
+
+<div class="modal-body">
+    <div ng-jsoneditor=""
+         style="width: 100%; height: 100%;"
+         ng-model="data.errors"
+         options="data.options"></div>
+</div>
+
+<div class="modal-footer">
+    <button ng-click="$dismiss()" class="btn btn-default">Close</button>
+</div>

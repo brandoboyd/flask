@@ -1,0 +1,161 @@
+{% raw %}
+<h3 style="margin-left: 10%;">
+    {{title == 'Create' ? 'New' : 'Update'}} Customer Segment
+</h3>
+{% endraw %}
+
+<a href="#/customer_segments">
+    <button class="btn btn-default btn-xs" style="position: absolute;top:0" tooltip-placement="top" tooltip="All Customer Segments">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+
+<hr>
+
+<div class="alert alert-info" ng-show="formState.isSaved">
+  The customer segments settings have been saved. <br />
+  You can keep editing this tag or you can <a class="link" ng-click="createNewSegment()">create a new one.</a>
+</div>
+
+{% macro customer_segment_form() %}
+  <form name="form" class="form-horizontal" novalidate>
+    <fieldset>
+
+      <div class="form-group" ng-class="{'has-error': form.title.$dirty && form.title.$invalid || form.title.$overflow}">
+        <label class="col-sm-3 control-label" for="title">Name <span class="asterisk">*</span>
+        </label>
+        <div class="col-sm-9">
+          <input type="text" id="title" name="title" class="form-control" required
+                 placeholder="Customer segment names need to be unique per account"
+                 ng-model="item.display_name"
+                 my-maxlength="17">
+          <span class="help-block error"
+                ng-show="form.title.$dirty && form.title.$invalid">Segment name is required
+          </span>
+          <span class="help-block error"
+                ng-show="form.title.$overflow">Segment name should be a maximum of 17 characters
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="{'has-error': form.description.$dirty && form.description.$invalid}">
+        <label class="col-sm-3 control-label" for="description">Description</label>
+        <div class="col-sm-9">
+          <input type="text" id="description" name="description" class="form-control"
+                 placeholder="Describe the reason behind the creation of this customer segment"
+                 ng-model="item.description"
+                 >
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="locations">Locations</label>
+        <div class="col-sm-9">
+          <input id="locations" class="form-control"
+                 placeholder="Type a keyword/search term and hit tab"
+                 ui-select2="{
+                   multiple: true,
+                   simple_tags: true,
+                   tags: []
+                 }"
+                 ng-model="item.locations"
+                 >
+          </input>
+          <div class="q-sign" style="position:absolute; right:-4px; top: 4px"
+               tooltip-placement="left"
+               tooltip-trigger="mouseenter"
+               tooltip="A customer profile must contain any of these locations in order for the segment to be applied.">
+            <span class="icon-iw-active-circle-question"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" style="position:relative;">
+        <label class="col-sm-3 control-label" for="age">Age</label>
+        <div class="col-sm-7" style="padding-left: 22px;">
+          <slider ng-model="item.age_range"
+                        id="age"
+                        style="padding: 15px 0"
+                        min="16" max="100" step="1"
+                        slider-tooltip="hide" range="true"></slider>
+        </div>
+        <div class="col-sm-2">
+          <input type="text" class="pull-right input-sm"
+                 style="width: 95px"
+                 ng-value="item.age_range.join(' - ')"
+                 disabled="disabled">
+        </div>
+        <div class="q-sign" style="position:absolute; right:-4px; top: 4px"
+               tooltip-placement="left"
+               tooltip-trigger="mouseenter"
+               tooltip="A customer's age must be in this range in order for the segment to be applied.">
+            <span class="icon-iw-active-circle-question"></span>
+          </div>
+      </div>
+
+      <div class="form-group" style="position:relative;">
+        <label class="col-sm-3 control-label" for="account_balance">Account Balance</label>
+        <div class="col-sm-7" style="padding-left: 22px;">
+          <slider ng-model="item.account_balance_range"
+                        id="account_balance"
+                        style="padding: 15px 0"
+                        precision="0"
+                        min="1000" step="1000" max="100000"
+                        slider-tooltip="hide" range="true"></slider>
+          </div>
+        <div class="col-sm-2">
+          <input type="text" class="pull-right input-sm"
+                 style="width: 95px"
+                 ng-value="item.account_balance_range.join(' - ')"
+                 disabled="disabled">
+        </div>
+        <div class="q-sign" style="position:absolute; right:-4px; top: 4px"
+               tooltip-placement="left"
+               tooltip-trigger="mouseenter"
+               tooltip="A customer's account balance must be in this range in order for the segment to be applied.">
+            <span class="icon-iw-active-circle-question"></span>
+          </div>
+      </div>
+
+      <div class="form-group" style="position: relative;">
+        <label class="col-sm-3 control-label" for="num_calls">Number of Calls</label>
+        <div class="col-sm-7" style="padding-left: 22px;">
+          <slider ng-model="item.num_calls_range"
+                        id="num_calls"
+                        style="padding: 15px 0"
+                        precision="0"
+                        min="0" step="1" max="100"
+                        slider-tooltip="hide" range="true"></slider>
+        </div>
+        <div class="col-sm-2">
+          <input type="text" class="pull-right input-sm"
+                 style="width: 95px"
+                 ng-value="item.num_calls_range.join(' - ')"
+                 disabled="disabled">
+        </div>
+        <div class="q-sign" style="position:absolute; right:-4px; top: 4px"
+               tooltip-placement="left"
+               tooltip-trigger="mouseenter"
+               tooltip="A customer's number of calls must be in this range in order for the segment to be applied.">
+            <span class="icon-iw-active-circle-question"></span>
+          </div>
+      </div>
+
+      <div class="form-group form-actions">
+        <div class="col-sm-offset-3 col-sm-4">
+          <button type="button" class="btn btn-primary"
+                  ng-click="save()"
+                  ng-disabled="!form.$valid"
+                  >{{"title"|ng}}
+          </button>
+        </div>
+      </div>
+
+    </fieldset>
+  </form>
+{% endmacro %}
+
+<div style="width:70%;">
+  {{ customer_segment_form() }}
+</div>

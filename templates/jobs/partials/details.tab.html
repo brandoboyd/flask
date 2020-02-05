@@ -1,0 +1,95 @@
+{% raw %}
+<h1>Jobs Details</h1>
+
+<hr/>
+
+<div class="spinner-container" style="position:fixed;top:45%;left:50%" ng-show="vm.loading">
+    <div class="spin-circle"></div>
+    <div class="spin-inner-circle"></div>
+</div>
+
+<div class="row form-group" style="margin-bottom: 20px;">
+  <div class="col-md-12">
+    <div class="pull-right btn-icon-group">
+      <div class="filter-block">
+        <search filter="vm.filters.name" placeholder-text="Search by name"></search>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row form-group">
+  <div class="col-md-12">
+    <div infinite-scroll='vm.loadMore()'
+         infinite-scroll-disabled='vm.loading'
+         style="margin-bottom: 10px;">
+      <table class="table table-default">
+        <thead>
+          <tr>
+            <th style="width:95px;">Actions</th>
+            <th sorter="vm.tableSorter" data-predicate="name" data-title="Name"></th>
+            <th sorter="vm.tableSorter" data-predicate="status" data-title="Status"></th>
+            <th sorter="vm.tableSorter" data-predicate="account" data-title="Account Name"></th>
+            <th sorter="vm.tableSorter" data-predicate="created_at" data-title="Created"></th>
+            <th sorter="vm.tableSorter" data-predicate="started_date" data-title="Started"></th>
+            <th sorter="vm.tableSorter" data-predicate="completion_date" data-title="Completed"></th>
+          </tr>
+        </thead>
+
+        <tbody ng-class="{'details-disabled': vm.loading}">
+          <tr ng-repeat="item in vm.jobs | filter:vm.filters | orderBy : vm.tableSorter.predicate : vm.tableSorter.reverse" style="height: 60px;">
+            <td>
+              <div class="btn-group btn-group-sm" style="width:62px" ng-if="item.enabled">
+                <button class="btn btn-default btn-sm"
+                        tooltip-placement="top"
+                        tooltip="Resume"
+                        ng-disabled="!item.canBeResumed"
+                        ng-click="vm.resumeJob(item)">
+                  <span class="fonticon icon-24-control-play success"></span>
+                </button>
+                <button class="btn btn-default btn-sm"
+                        tooltip-placement="top"
+                        ng-disabled="item.canBeResumed"
+                        tooltip="Drop From Queue"
+                        ng-click="vm.abandonJob(item)">
+                  <span class="fonticon icon-24-control-pause error"></span>
+                </button>
+              </div>
+            </td>
+            <td>
+              <span>{{ item.name }}</span>
+            </td>
+            <td>
+              <span>{{ item.status }}</span>
+            </td>
+            <td>
+              <span>{{ item.account_name }}</span>
+            </td>
+            <td>
+              <span ng-show="item.created_at">{{ (item.created_at * 1000 | date: medium) }}</span>
+              <span ng-hide="item.created_at">N/A</span>
+            </td>
+            <td>
+              <span ng-show="item.started_date">{{ (item.started_date * 1000 | date: medium) }}</span>
+              <span ng-hide="item.started_date">N/A</span>
+            </td>
+            <td>
+              <span ng-show="item.completion_date">{{ (item.completion_date * 1000 | date: medium) }}</span>
+              <span ng-hide="item.completion_date">N/A</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div ng-show="vm.jobs.length==0 && vm.loading==false" class="alert alert-info text-center">
+      <i class='icon-alert-triangle'></i> No Jobs
+    </div>
+  </div>
+</div>
+{% endraw %}
+
+<style>
+  .details-disabled {
+    opacity: 0.2
+  }
+</style>

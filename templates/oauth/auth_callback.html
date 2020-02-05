@@ -1,0 +1,17 @@
+{% extends "base_login.html" %}
+
+{% block body %}
+    <div class="span12">
+        {% if error %}
+            <p><b>Could not save token!</b></p>
+            <p/>
+            <p>There is a configuration error:</p>
+            <p style="color:red;">{{ error_message }}</p>
+        {% else %}
+            <p><b>Auth token saved successfully for channel: {{ channel_name }}</b></p>
+            <p></p>
+        {% endif %}
+        <p><a href="javascript:close();">Close popup</a></p>
+    </div>
+{% endblock %}
+

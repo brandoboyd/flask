@@ -1,0 +1,119 @@
+{
+  "name": "Ark Components",
+  "version": "1.0.0-31",
+  "main": [
+    "./scripts/ark-components.js",
+    "./scripts/ark-ui-bootstrap.js",
+    "./styles/ark-components.css"
+  ],
+  "ignore": [
+    "_config.yml"
+  ],
+  "dependencies": {
+    "jquery": {
+      "repository": "ag-thirdparty-prod",
+      "group_id": "com.jquery",
+      "name": "jquery",
+      "ext": "tar.gz",
+      "version": "2.1.0"
+    },
+    "json3": {
+      "repository": "ag-thirdparty-prod",
+      "group_id": "ark",
+      "name": "json3",
+      "ext": "tar.gz",
+      "version": "3.2.6"
+    },
+    "es5-shim": {
+      "repository": "ag-thirdparty-prod",
+      "group_id": "ark",
+      "name": "es5-shim",
+      "ext": "tar.gz",
+      "version": "2.1.0"
+    },
+    "underscore": {
+      "repository": "ag-thirdparty-prod",
+      "group_id": "ark",
+      "name": "underscore",
+      "ext": "tar.gz",
+      "version": "1.6.0"
+    },
+    "angular": {
+      "repository": "ag-thirdparty-prod",
+      "group_id": "ark",
+      "name": "angular",
+      "ext": "tar.gz",
+      "version": "1.2.16"
+    },
+    "angular-cookies": {
+      "repository": "ag-thirdparty-prod",
+      "group_id": "ark",
+      "name": "angular-cookies",
+      "ext": "tar.gz",
+      "version": "1.2.16"
+    },
+    "angular-sanitize": {
+      "repository": "ag-thirdparty-prod",
+      "group_id": "ark",
+      "name": "angular-sanitize",
+      "ext": "tar.gz",
+      "version": "1.2.16"
+    },
+    "ark-style": {
+      "group_id": "com.genesyslab.ark",
+      "name": "ark-style",
+      "ext": "tar.gz",
+      "version": "*"
+    }
+  },
+  "devDependencies": {
+    "angular-mocks": "1.2.16",
+    "angular-scenario": "1.2.16"
+  },
+  "authors": [
+    {
+      "name": "Jorge Barnaby",
+      "email": "jorge.barnaby@genesys.com",
+      "username": "camelot\\jbarnaby",
+      "publisher": true
+    },
+    {
+      "name": "Ark Developers",
+      "email": "arkdevelopers@genesys.com"
+    }
+  ],
+  "comments": "Reusable UI components basedon AngularJS, includes main components, Ark UI Bootstrap and Ark ngGrid.",
+  "src-repository": {
+    "type": "HG",
+    "url": "http://hg.genesyslab.com/hgweb.cgi/ark_components",
+    "project-root": "/"
+  },
+  "tag": "release-1.0.0-31",
+  "reviewers": [
+    {
+      "role": "Ark Team",
+      "name": "ARK Developers",
+      "email": "arkdevelopers@genesys.com"
+    },
+    {
+      "role": "UX",
+      "name": "Steven Gans",
+      "email": "steven.gans@genesys.com"
+    },
+    {
+      "role": "FOSS",
+      "name": "Alex Lee",
+      "email": "alex.lee@genesys.com"
+    }
+  ],
+  "_cacheHeaders": {
+    "ETag": "\"{SHA1{903608c0c0ab6619eb942f55ef63f7240fc3de32}}\"",
+    "Last-Modified": "Tue, 02 Jun 2015 06:08:17 GMT",
+    "Content-Length": "292885",
+    "Content-Type": "application/x-gzip"
+  },
+  "_release": "1.0.00031",
+  "_source": "http://ci-vm30.us.int.genesyslab.com:8200/nexus/service/local/repositories/ag-prod/content/com/genesyslab/ark/ark-components/1.0.00031/ark-components-1.0.00031.tar.gz",
+  "_target": "1.0.00031",
+  "_originalSource": "http://ci-vm30.us.int.genesyslab.com:8200/nexus/service/local/repositories/ag-prod/content/com/genesyslab/ark/ark-components/1.0.00031/ark-components-1.0.00031.tar.gz"
+}

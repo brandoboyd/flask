@@ -1,0 +1,96 @@
+{% raw %}
+<h3 style="margin-left: 30px;">
+    {{ item && item.name ? "Update " + "&ldquo;" + item.name + "&rdquo;" : "New " }} Funnel
+</h3>
+{% endraw %}
+
+<a href="#/funnels">
+    <button class="btn btn-default btn-xs" style="position: absolute;top:0" tooltip-placement="top" tooltip="All Funnels">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+
+<hr>
+
+<div class="alert alert-info" ng-show="formState.isSaved">
+    The funnel settings have been saved. <br />
+    You can keep editing this tag or you can <a class="link" ng-click="openNewForm()" >create a new one.</a>
+</div>
+
+<form name="funnelForm" class="form-horizontal" novalidate>
+    <fieldset>
+        <div class="form-group" ng-class="{'has-error': funnelForm.name.$dirty && funnelForm.name.$invalid}">
+            <label class="col-sm-2 control-label" for="name">Funnel Name
+                <span class="asterisk">*</span>
+            </label>
+            <div class="col-sm-4">
+                <input type="text" id="name" name="name" class="form-control" required
+                       placeholder=""
+                       ng-model="item.name">
+                <span class="help-block error"
+                      ng-show="funnelForm.name.$dirty && funnelForm.name.$invalid">Funnel name is required
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="journey_type">Journey Type
+                <span class="asterisk">*</span>
+            </label>
+            <div class="col-sm-4">
+                <select ng-model="item.journey_type"
+                        ng-change="journeyTypeChanged()"
+                        ng-options="jt.id as jt.display_name for jt in journeyTypes"
+                        id="journey_type"
+                        class="form-control"
+                        required>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="description">Description</label>
+            <div class="col-sm-4">
+                <input type="text" id="description" name="description" class="form-control"
+                       placeholder=""
+                       ng-model="item.description"
+                        >
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group" ng-repeat="step in stepItems">
+            <label class="col-sm-2 control-label">Step {{'{{$index + 1}}'}}</label>
+            <div class="col-sm-2">
+                <select ng-model="step.id"
+                        ng-options="js.id as js.display_name for js in journeyStages | filter:filterByJourneyType"
+                        class="form-control"></select>
+            </div>
+            <div class="col-sm-1">
+                <a class="btn btn-sm btn-default" tooltip-placement="top" tooltip="Remove Step" ng-click="removeStepItem($index)">
+                    <span class="fonticon icon-close-bold"></span></a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-2">
+                <button type="button" class="btn btn-default"
+                        ng-click="addStepItem()"
+                        ng-disabled="item.journey_type == null"
+                        ><span class="fonticon icon-add"></span>&nbsp;Add Step
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group form-actions">
+            <div class="col-sm-offset-2 col-sm-2">
+                <button type="button" class="btn btn-primary"
+                        ng-click="save()"
+                        ng-disabled="!funnelForm.$valid"
+                        >{{"title"|ng}}
+                </button>
+            </div>
+        </div>
+
+    </fieldset>
+</form>

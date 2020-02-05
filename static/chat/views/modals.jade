@@ -1,0 +1,22 @@
+#surveyModal
+   script(type="text/ng-template" id="app/templates/offerChatModal.html")
+      .modal-header
+         button.close(ng-click="close(false)")
+         h4.modal-title Offer
+      .modal-body
+         p {{ chat_offer_message }}
+      .modal-footer
+         input(type="text"
+               placeholder="Please state your problem"
+               style="max-width:300px;display:inline-block;float:left;"
+               ng-model="customerInitialMessage"
+               name="customerInitialMessage"
+               id="customerInitialMessage"
+               class="form-control"
+               ng-keypress="typing($event, user.inroom)"
+               on-focus="focus(true)"
+               on-blur="focus(false)"
+               focus-me="true")
+
+         button.btn.btn-default(ng-click="close(false, customerInitialMessage)") Dismiss
+         button.btn.btn-primary(ng-click="close(true, customerInitialMessage)" ng-disabled="!customerInitialMessage") Accept

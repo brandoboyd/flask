@@ -1,0 +1,394 @@
+{% from "_macros/facets.html" import facet_intentions, facet_message_type, facet_statuses%}
+
+{%- macro render_filter() %}
+<div style="padding:5px 10px">
+
+    {{ smart_tags_filter() }}
+
+{#--
+    <h5>Filter posts with these words</h5>
+    {{ filter_topics2(name="tags") }}
+
+    <h5>Skip posts with these words</h5>
+    {{ filter_skip_list() }}
+    <br />
+--#}
+    {{ facet_intentions() }}
+    
+    {{ facet_message_type() }}
+
+    {#--
+    <div ng-show="responseType == 'skipped' || responseType == 'pending'">
+    	{{ facet_statuses() }}
+    </div>
+    --#}
+
+    <hr />
+
+    {{ filter_threshold("Intention", "Intention Threshold") }}
+    {{ filter_threshold("Relevance", "Relevance Threshold") }}
+</div>
+{% endmacro -%}
+
+
+{% macro smart_tags_filter(open='false') %}
+<div class="panel panel-default facet-panel">
+    <div class="panel-heading">
+        <div class="panel-title row">
+            <div class="col-sm-11" style="padding-left: 35px;">
+                Smart Tags
+                <span data-original-title="Filter by a Smart Tag"
+                      ui-jq="tooltip"
+                      class="icon-iw-active-circle-question"></span></div>
+            <div class="col-sm-1 panel-expander">
+                <a ng-click = "toggleFilter('smart_tags')">
+                    <span ng-class="{false : 'icon-add', true : 'icon-minimize'}[filters.smart_tags.visible]"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% raw %}
+    <div class="panel-body"
+         ng-cloak
+         ng-show='filters.smart_tags.visible'>
+        <div style="border-bottom:1px solid #ccc;">
+            <label class="radio">
+                <input type="radio"
+                       class="ark-radiobtn"
+                       ng-model="smart_tag.selected"
+                       ng-disabled="is_facet_disabled"
+                       ng-value="" /><span></span>
+                <span>NO FILTERING</span>
+            </label>
+        </div>
+        <div>
+            <ul class="nav nav-list smart-tags-list">
+                <li ng-repeat="t in smart_tags">
+
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <label class="radio">
+                                <input type="radio"
+                                       class="ark-radiobtn"
+                                       ng-model="smart_tag.selected"
+                                       ng-disabled="is_facet_disabled"
+                                       ng-value="t" /><span></span>
+                                <span ng-bind="t.title"></span>
+                            </label>
+                        </div>
+                        <div class="col-sm-2 panel-expander" style="padding:5px 5px 0 0;">
+                            <span>
+                                <slr-smart-tags-modal smart-tag="t"></slr-smart-tags-modal>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    {% endraw %}
+</div>
+{% endmacro %}
+
+
+{% macro smart_tags_dropdown() %}
+    <select ng-model="smart_tag.selected"
+            ng-options="t.title for t in smart_tags"
+            style="width: 200px">
+    </select>
+{% endmacro %}
+
+
+
+{%- macro render_filter_posts() %}
+{# posts filter on listen page #}
+
+<div style="padding:10px">
+    <h5>Topics</h5>
+    {{ filter_topics2(name="terms") }}
+
+
+    {#
+    <h5>Skip List</h5>
+    {{ filter_skip_list() }}
+    #}
+
+    <h5>Post Filters</h5>
+    {{ filter_post_filters() }}
+
+    <hr style="margin:5px 0 10px 0"/>
+    {{ filter_intentions2() }}
+
+    <hr style="margin:5px 0 10px 0"/>
+    {{ filter_threshold("Intention", "Intention") }}
+</div>
+{% endmacro -%}
+
+
+{% macro filter_date_range() %}
+
+        <input type="text"
+               ui-date
+               ui-date-format="mm/dd/yy"
+               ng-model="dateRangeObj.from"
+               ng-change="changeDate()"
+               style="width:70px"/> -
+        <input type="text"
+               ui-date
+               ui-date-format="mm/dd/yy"
+               datecheck
+               ng-model="dateRangeObj.to"
+               ng-change="changeDate()"
+               style="width:70px" />
+
+{% endmacro %}
+
+{% macro filter_topics() %}
+    <input name="tags" id="tags" ui-select-tags style="width:145px" />
+{% endmacro %}
+
+
+{% macro filter_topics2(name="tags") %}
+    <div class="clear">
+        <input name="{{ name }}"
+               id="{{ name }}"
+               ui-select-tags2
+               ng-model="params.{{ name }}"
+               style="width:100%" />
+    </div>
+{% endmacro %}
+
+
+{% macro filter_skip_list() %}
+    <div class="clear">
+        <input name="skip_creative"
+               id="skip_creative"
+               ui-select-tags2
+               ng-model="params.skip_creative"
+               style="width:100%"/>
+    </div>
+{% endmacro %}
+
+
+{% macro filter_post_filters() %}
+    <label class="checkbox">
+        <input type="checkbox" class="ark-checkbox" ng-model="postFilterStatuses.unfiltered" ng-change="changePostFilterStatus()"><span></span>
+        <span class="label post-unfiltered">unfiltered</span>
+    </label>
+
+    <div ng-hide="postFilterStatuses.unfiltered">
+        <ul style="list-style-type: none; padding-left: 0; margin:0 0 20px;"
+            class="clearfix">
+            <li style="padding-left:0; float:left; width: 85px;"
+                ng-repeat="filterStatus in filterStatuses">
+                <label class="checkbox">
+                    <input type="checkbox"
+                           class="ark-checkbox"
+                           ng-model="postFilterStatuses[filterStatus]"
+                           ng-change="changePostFilterStatus()" /><span></span>
+                    <span class="label {{'post-{{filterStatus}}'}}">{{ '{{ filterStatus }}' }}</span>
+                </label>
+            </li>
+        </ul>
+    </div>
+{% endmacro %}
+
+
+{%- macro filter_threshold(intention_type, label) %}
+<div class="control-group threshold">
+    {% if label %}
+    <label class="control-label"
+           title="Move the dial toward 1.00 to see only posts with a higher degree of precision re {{ intention_type | lower }} classification"
+           style="width:auto;
+           margin-top:-2px">{{ label }}</label>
+    {% endif %}
+    <div class="controls" style="margin-left:auto">
+        <fieldset>
+            <input id="{{intention_type | lower }}_threshold_pl"
+                   ng-model="params.thresholds.{{ intention_type | lower }}"
+                   type="text"
+                   name="{{intention_type | lower }}_threshold_pl"
+                   class="input-mini"
+                   disabled="disabled"
+                   />
+            <div id="{{intention_type | lower }}_slider_pl"
+                 ui-slider
+                 ng-model="params.thresholds.{{ intention_type | lower }}"
+                 style="margin-left:10px"
+                 class="slider"></div>
+        </fieldset>
+    </div>
+</div>
+{% endmacro %}
+
+
+
+
+
+{%- macro filter_engage_intentions() %}
+<div class="clearfix">
+    <ul style="list-style-type: none; padding-left: 0; margin:0;">
+        <li ng-repeat="intention in intentions_filter">
+            <label class="checkbox">
+                {% raw %}
+                <input type="checkbox"
+                       ng-model="intention.enabled"
+                       ng-change="updateIntentions()"
+                       ng-value="intention.label" /><span></span>
+                <span class="label"
+                      ng-init="labelColor={backgroundColor:intention.color}"
+                      ng-style="labelColor"
+                      ng-bind="intention.display">Loading...</span>
+                {% endraw %}
+            </label>
+        </li>
+    </ul>
+</div>
+{% endmacro -%}
+
+
+{%- macro filter_intentions2() %}
+    <ul style="list-style-type: none; padding-left: 0; margin:0 0 20px;"
+        class="clearfix">
+        <li style="padding-left:0; float:left; width: 48%;"
+            ng-repeat="intention in intentions_filter">
+
+            <label class="checkbox">
+                <input type="checkbox"
+                       ng-model="intention.enabled"
+                       ng-change=changeIntention() /><span></span>
+                <span class="label {{'{{intention.label}}'}}">{{ '{{ intention.label }}' }}</span>
+            </label>
+        </li>
+    </ul>
+{% endmacro -%}
+
+
+{%- macro filter_date() %}
+{% raw %}
+<div class="pull-left">
+    <div style="margin-left:10px;" class="pull-right btn-group">
+        <button ng-repeat="button in dateRangeButtons"
+                ng-bind="button.type"
+                ng-click="setDateRange(button.type)"
+                ng-class="{active:button.enabled}"
+                class="btn btn-sm"
+                >Loading...</button>
+    </div>
+</div>
+{% endraw %}
+{% endmacro %}
+
+{%- macro filter_date_dropdown() %}
+{% raw %}
+
+    <div class="btn-group">
+        <button class="btn btn-default"><span ng-bind-html="currentDate">Loading...</span></button>
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+        <ul class="dropdown-menu pull-right">
+            <li ng-repeat= "button in dateRangeButtons"
+                ng-model = "button.type"
+                ng-click = "setDateRange(button.type)"><a href=""
+                ng-bind  = "button.type">Loading...</a></li>
+        </ul>
+    </div>
+
+{% endraw %}
+{% endmacro %}
+
+{% macro details_filter_bar() %}
+<form class="form-inline" style="margin-bottom:0">
+    <input type="text"
+           class="form-control"
+           placeholder="Search"
+           ng-model="post_search">
+    <a class="btn btn-sm btn-success"
+       ng-click="reload()"><span class="icon-refresh"></span></a>
+
+</form>
+{% endmacro %}
+
+{% macro tag_moderation_panel() %}
+<div class="tag-moderation-panel" ng-if="section.is_details"
+     ui-scrollfix="70">
+    {% if user.is_analyst %}
+    <div class="btn-group dropdown" style="display:inline-flex;">
+        <button class="btn btn-xs btn-default">
+            <label class="checkbox">
+                <input type="checkbox"
+                       class="ark-checkbox"
+                       value="all"
+                       ng-model ="master.checked"
+                       ng-change="toggleAll(master.checked)"
+                       ng-disabled="false" /><span></span>
+            </label>
+        </button>
+        <button class="btn btn-xs btn-default dropdown-toggle"
+                ng-disabled="selected_items.length == 0 || (submenu.action == 'response-volume' || submenu.action == 'response-time')"
+                data-toggle="dropdown">
+            <i class="icon-expand-down"></i>
+        </button>
+        <ul class="dropdown-menu text-left" role="menu">
+            <li role="presentation"><a href="" tabindex="-1" role="menuitem"
+                                       ng-click="actionableItems()">
+                <i class="icon-slide-fwd" style="font-size:14px;"></i> Mark Actionable</a></li>
+            <li role="presentation"><a href="" tabindex="-1" role="menuitem"
+                                       ng-click="rejectItems()">
+                <i class="icon-trash"></i> Mark Rejected</a></li>
+        </ul>
+    </div>
+    <div class="btn-group"
+         ng-show="posts.length && selected_items.length && smart_tags.length "
+         style="margin-left: 10px;display:inline-flex;">
+        <div class="dropdown">
+        {% raw %}
+        <button class="btn btn-sm btn-default dropdown-toggle"
+              data-toggle="dropdown"
+              tooltip-placement="top"
+              tooltip-append-to-body="true"
+              tooltip="Add a tag to {{selected_items.length | pluralize:{'sing':'post', 'pl':'posts'} }}">Add a Tag &hellip;
+            <span class="caret"></span>
+        </button>
+        {% endraw %}
+        <ul class="dropdown-menu text-left" role="menu">
+            <li ng-repeat="t in smart_tags" role="presentation">
+                <a href
+                   role="menuitem"
+                   tabindex="-1"
+                   ng-click="smart_tag.selected_moderation = t; addtagItems();">
+                   {{'{{ t.title}}'}}
+                </a>
+            </li>
+        </ul>
+        </div>
+        {% raw %}
+        <span ng-show="smart_tag.selected" style="margin-left:10px">
+            <a href=""
+               class="btn btn-xs btn-danger"
+               ng-click="removetagItems()"
+               tooltip-placement="top"
+               tooltip-append-to-body="true"
+               tooltip="Remove the tag from {{selected_items.length | pluralize:{'sing':'post', 'pl':'posts'} }}">
+                <span class="icon-small-close"></span> <span ng-bind="smart_tag.selected.title"></span>
+            </a>
+        </span>
+        {% endraw %}
+
+    </div>
+    <div class="pull-right btn-icon-group">
+        <div class="filter-block">
+            <select ng-controller="ChannelsBookmarksCtrl"
+                    ng-init="init('{{channel_type}}', '{{section}}')"
+                    ng-model="channel"
+                    class="form-control"
+                    style="width:100%"
+                    ng-options="c.title for c in channels"></select>
+        </div>
+        <div class="filter-block">
+            <search filter="post_search" ng-show="section.is_details" placeholder-text="Search"></search>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endmacro %}

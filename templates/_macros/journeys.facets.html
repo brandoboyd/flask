@@ -1,0 +1,207 @@
+{% from "_macros/dynamic.facets.html" import render_dynamicFacets -%}
+{%- macro render_journeysFacets() -%}
+
+
+<!--<div>-->
+    <!--<facet-panel facet-title="All Journey Types"-->
+                <!--facet-tooltip="Filter by a journey type"-->
+                <!--facet-is-all="facets.journey_types.all"-->
+                <!--facet-is-multi="false"-->
+                <!--facet-is-hidden="currentTab == 'crossfilter' || !facets.journey_types.visible || currentTab == 'funnels'"-->
+                <!--facet-selected="facets.journey_types.selected"-->
+                <!--facet-update-action="updateFacets"-->
+                <!--facet-options="facets.journey_types.list">Loading...</facet-panel>-->
+<!--</div>-->
+
+
+{{render_dynamicFacets()}}
+
+
+<h3 style="margin-bottom:20px;">
+    Static Facets
+</h3>
+
+
+<div>
+    <facet-panel facet-title="All Channels"
+                 facet-tooltip="View data by all or a selection of channels"
+                 facet-is-all="facets.channels.all"
+                 facet-is-multi="true"
+                 facet-is-hidden="!facets.channels.visible"
+                 facet-update-action="updateFacets"
+                 facet-options="facets.channels.list">Loading...</facet-panel>
+</div>
+
+
+<div>
+    <facet-panel facet-title="All Journey Tags"
+                facet-tooltip="View data by all or a selection of journey tags"
+                facet-is-all="facets.journey_tags.all"
+                facet-is-multi="true"
+                facet-is-hidden="!filters.journey_type"
+                facet-update-action="updateFacets"
+                facet-options="facets.journey_tags.list">Loading...</facet-panel>
+</div>
+
+
+<div>
+    <facet-panel facet-title="All Journey Stages"
+                facet-tooltip="View data by all or a selection of journey stages"
+                facet-is-all="facets.journey_stages.all"
+                facet-is-multi="true"
+                facet-is-hidden="!filters.journey_type || currentTab == 'crossfilter' || !facets.journey_stages.visible || currentTab == 'funnels'"
+                facet-update-action="updateFacets"
+                facet-options="facets.journey_stages.list">Loading...</facet-panel>
+</div>
+
+
+
+<div>
+    <facet-panel facet-title="All Journey Statuses"
+                facet-tooltip="View data by all or a selection of journey statuses"
+                facet-is-all="facets.journey_statuses.all"
+                facet-is-multi="true"
+                facet-is-hidden="$state.is('journeys.flow')"
+                facet-update-action="updateFacets"
+                facet-options="facets.journey_statuses.list">Loading...</facet-panel>
+</div>
+
+{#--
+
+<div>
+    <facet-panel facet-title="All Segments"
+                facet-tooltip="View data by all or a selection of journey segments"
+                facet-is-all="facets.segments.all"
+                facet-is-multi="true"
+                facet-is-hidden="currentTab == 'crossfilter' || !facets.segments.visible"
+                facet-update-action="updateFacets"
+                facet-options="facets.segments.list">Loading...</facet-panel>
+</div>
+
+<div>
+    <facet-panel facet-title="All NPS"
+                facet-tooltip="Net Promoter Score"
+                facet-is-all="facets.nps.all"
+                facet-is-multi="true"
+                facet-update-action="updateFacets"
+                facet-is-hidden="(currentTab == 'trends' && getActiveFilter(trendMetrics) == 'nps') || currentTab == 'crossfilter' || !facets.nps.visible"
+                facet-options="facets.nps.list">Loading</facet-panel>
+</div>
+--#}
+
+{% endmacro %}
+
+{%- macro render_dashoardFacets() -%}
+<div>
+    <facet-panel facet-title="All Journey Types"
+                facet-tooltip="Filter by a journey type"
+                facet-is-all="facets.journey_types.all"
+                facet-is-multi="false"
+                facet-is-hidden="!facets.journey_types.visible"
+                facet-selected="facets.journey_types.selected"
+                facet-update-action="updateFacets"
+                facet-options="facets.journey_types.list">Loading...</facet-panel>
+</div>
+
+<!--<div>-->
+    <!--<facet-panel facet-title="All Journey Stages"-->
+                <!--facet-tooltip="Journey Stages"-->
+                <!--facet-is-all="facets.journey_stages.all"-->
+                <!--facet-is-multi="true"-->
+                <!--facet-is-hidden="!facets.journey_types.selected || !facets.journey_stages.visible"-->
+                <!--facet-update-action="updateFacets"-->
+                <!--is-open="facets.journey_types.selected"-->
+                <!--facet-options="facets.journey_stages.list">Loading...</facet-panel>-->
+<!--</div>-->
+
+<div>
+    <facet-panel facet-title="All Journey Tags"
+                facet-tooltip="View data by all or a selection of journey tags"
+                facet-is-all="facets.journey_tags.all"
+                facet-is-multi="true"
+                facet-is-hidden="!facets.journey_tags.visible"
+                facet-update-action="updateFacets"
+                facet-options="facets.journey_tags.list">Loading...</facet-panel>
+</div>
+
+<div>
+    <facet-panel facet-title="All Smart Tags"
+                facet-tooltip="View data by all or a selection of smart tags"
+                facet-is-all="facets.smart_tags.all"
+                facet-is-multi="true"
+                facet-is-hidden="!facets.smart_tags.visible"
+                facet-update-action="updateFacets"
+                facet-options="facets.smart_tags.list">Loading...</facet-panel>
+</div>
+
+<div>
+    <facet-panel facet-title="All Channels"
+                facet-tooltip="View data by all or a selection of channels"
+                facet-is-all="facets.channels.all"
+                facet-is-multi="true"
+                facet-is-hidden="!facets.channels.visible"
+                facet-update-action="updateFacets"
+                facet-options="facets.channels.list">Loading...</facet-panel>
+</div>
+
+<div>
+    <facet-panel facet-title="All Journey Statuses"
+                facet-tooltip="View data by all or a selection of journey statuses"
+                facet-is-all="facets.journey_statuses.all"
+                facet-is-multi="true"
+                facet-is-hidden="$state.is('journeys.flow') || currentTab == 'crossfilter' || !facets.journey_statuses.visible"
+                facet-update-action="updateFacets"
+                facet-options="facets.journey_statuses.list">Loading...</facet-panel>
+</div>
+
+<div>
+    <facet-panel facet-title="All Segments"
+                facet-tooltip="View data by all or a selection of journey segments"
+                facet-is-all="facets.segments.all"
+                facet-is-multi="true"
+                facet-is-hidden="currentTab == 'crossfilter' || !facets.segments.visible"
+                facet-update-action="updateFacets"
+                facet-options="facets.segments.list">Loading...</facet-panel>
+</div>
+
+<div>
+    <facet-panel facet-title="All NPS"
+                facet-tooltip="Net Promoter Score"
+                facet-is-all="facets.nps.all"
+                facet-is-multi="true"
+                facet-update-action="updateFacets"
+                facet-is-hidden="getActiveFilter(trendMetrics) == 'nps' || getActiveFilter(trendGroupings) == 'nps' || currentTab == 'crossfilter' || !facets.nps.visible"
+                facet-options="facets.nps.list">Loading</facet-panel>
+</div>
+
+<div>
+    <facet-panel facet-title="All Industries"
+                facet-tooltip="View data by all or a selection of industries"
+                facet-is-all="facets.industries.all"
+                facet-is-multi="true"
+                facet-update-action="updateFacets"
+                facet-is-hidden="!facets.industries.visible"
+                facet-options="facets.industries.list">Loading</facet-panel>
+</div>
+
+<div>
+    <facet-panel facet-title="All Age Groups"
+                facet-tooltip="View data by all or a selection of age groups"
+                facet-is-all="facets.age_groups.all"
+                facet-is-multi="true"
+                facet-update-action="updateFacets"
+                facet-is-hidden="!facets.age_groups.visible"
+                facet-options="facets.age_groups.list">Loading</facet-panel>
+</div>
+
+<div>
+    <facet-panel facet-title="All Customer Statuses"
+                facet-tooltip="View data by all or a selection of customer statuses"
+                facet-is-all="facets.customer_statuses.all"
+                facet-is-multi="true"
+                facet-update-action="updateFacets"
+                facet-is-hidden="!facets.customer_statuses.visible"
+                facet-options="facets.customer_statuses.list">Loading</facet-panel>
+</div>
+
+{% endmacro %}

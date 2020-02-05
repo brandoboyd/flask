@@ -1,0 +1,55 @@
+
+<div ng-hide="facetIsHidden"
+     class="panel panel-default facet-panel">
+    <div class="panel-heading">
+        <div class="panel-title row">
+            <div class="col-sm-11 checkbox">
+                <label class="checkbox">
+                    <input type="checkbox"
+                           ng-model="isAllChecked"
+                           ng-disabled="isAllChecked"
+                           class="ark-checkbox"/>
+                    <span ng-show="facetIsMulti"></span>
+                    {{facetTitle}}
+                </label>
+
+                <div class="col-sm-1 panel-expander pull-right">
+                    <a ng-click="isOpen = !isOpen">
+                        <span ng-class="{'icon-add' : !isOpen, 'icon-minimize' : isOpen}"></span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="panel-body ng-cloak"
+             ng-show='isOpen'
+             ng-cloak>
+            <ul ng-if="facetIsMulti">
+                <li ng-repeat="t in facetOptions">
+                    <label class="checkbox">
+                        <input type="checkbox"
+                               class="ark-checkbox"
+                               ng-model="t.enabled"
+                               ng-change="updateFacet()"/><span></span>
+                        <span ng-bind="t.display || t.display_name">Loading...</span>
+                    </label>
+                </li>
+            </ul>
+
+            <ul ng-if="!facetIsMulti">
+                <li ng-repeat="t in facetOptions">
+                    <label class="radio">
+                        <input type="radio"
+                               class="ark-radiobtn"
+                               ng-value="t.id"
+                               ng-change="updateFacet()"
+                               ng-model="facet.selected"
+                        /><span></span>
+                        <span ng-bind="t.display || t.display_name">Loading...</span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

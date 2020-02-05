@@ -1,0 +1,16 @@
+Hold tight, we are working on it
+Dear Valued Customer,
+
+Genesys Journey Optimization Team is currently performing an unscheduled maintenance to upgrade/troubleshoot the Journey Optimization Cloud Environment.  We are currently working in the _REGION NAMES GO HERE_ region and you should expect an update from us within the next 2 hours in regards to this maintenance.
+
+As always, Genesys Customer Care is available to answer any questions you may have regarding this service event. If you have service issues after the service event, please contact Genesys Customer Care by opening a case in the My Support Portal, or call Customer Care at:
+North America (USA and Canada)
++506-674-6767 (International)
++888-369-5555 (Toll-free, N. America only)
+Europe, Middle, East, Africa
++44 (0) 127-645-7002 (International)
+Asia Pacific
++61-7-3368-6868 (International)
+
+Best Regards,
+Genesys Journey Optimization Operations Team

@@ -1,0 +1,31 @@
+{% raw %}
+  <div ng-if="selectedLayout.dashboardType == 'journeys' && showBreadcrumbs == true"
+    class="row dashboard-breadcrumbs">
+    <div class="col-sm-12">
+      <div ng-cloak class="select2-container-multi ng-cloak">
+
+        <div ng-repeat="(key, group) in breadcrumbs" class="breadcrumbs-group">
+          <ul class="select2-choices"
+              ng-show="group.list.length > 0">
+            <li style="padding-top:3px">
+              <span style="font-weight:bold">{{group.display_name}}:</span>
+            </li>
+            <li ng-repeat="item in group.list"
+                class="select2-search-choice"
+                style="line-height: 11px">
+              <span style="font-size: 11px" ng-bind="item.display_name"></span>
+              <a href=""
+                ng-click="removeCrossFilter(key, item.value)"
+                ng-class="{'not-clickable': selectedLayout.isDetailView}"
+                class="select2-search-choice-close"
+                tabindex="-1"></a>
+            </li>
+          </ul>
+        </div>
+
+        <button ng-click="resetCrossFilter(true)" class="btn btn-sm btn-default clear-filter-button">Clear Filter</button>
+
+      </div>
+    </div>
+  </div>
+{% endraw %}

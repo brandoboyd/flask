@@ -1,0 +1,56 @@
+#chatApp(ng-controller="ChatAppCtrl" ng-cloak)
+   #chatbox.modal-dialog(ng-show="visible")
+      .modal-content(draggable=".modal-header")
+         .modal-header(ng-class="{ expanded : isExpanded }")
+            h4.modal-title Chat
+            ul.pull-right
+               li
+                  a(href="")
+                     span.label(ng-class="{'label-success' : status==='online', 'label-important' : status==='offline'}")
+                         | {{ status }}
+               li
+                  a.chatbox-action-toggle(href="" ng-class="{ expanded : isExpanded }" slide-toggle=".chatbox-content" ng-click="toggleChatbox()" expanded="isExpanded")
+                     span.icon-double-angle-left
+
+         .modal-body(ng-show="isExpanded")
+            .chatbox-article(ng-show="false" ng-bind-html="renderHtml(articleContents)")
+
+            small.help-block.text-warning(ng-if="!joined") No agents available, please hang on...
+
+            .chatbox-content(ng-show="user.inroom")
+               div
+                  form.input-append(role="form" ng-show="user.owns || user.inroom")
+                     input(type="text"
+                        placeholder="Enter message"
+                        style="max-width:300px;display:inline-block;"
+                        ng-model="message"
+                        name="message"
+                        id="message"
+                        class="form-control"
+                        ng-keypress="typing($event, user.inroom)"
+                        on-focus="focus(true)"
+                        on-blur="focus(false)"
+                        focus-me="true")
+                     button.btn.btn-default.pull-right(ng-click="send()") Send
+
+                  small.help-block.text-warning(ng-if="error") {{ error.send }}
+
+               div(ng-show="messages.length > 0")
+                  div(style="overflow-y:auto; border-radius:4px; height:150px; border:1px solid #E5E5E5;", scroll-bottom="messages")
+                     table.table.table-condensed.table-striped
+                        tr(ng-repeat="message in messages track by $index" ng-class="{dark: $index % 2 === 0}")
+                           td
+                              strong {{message.sender}}:&nbsp;
+                              span {{ message.body }}
+                     a#bottom
+
+         .modal-footer(ng-show="isExpanded")
+            ul.help-block.unstyled(ng-if="isTyping" style="position:absolute;list-style:none;padding:0")
+               li
+                  small {{typer}} is typing
+            button.btn.btn-sm.btn-default(ng-click="endChatbox()") End Chat
+
+script(type="text/ng-template" id="app/templates/rating.html")
+   .rating
+      a(ng-repeat="star in stars" ng-mouseover="hover($index)" ng-mouseleave="stopHover()" ng-class="[starColor($index), getStarHalf($index)]" ng-click="setRating($index)")
+         i(ng-class="starClass(star, $index)")

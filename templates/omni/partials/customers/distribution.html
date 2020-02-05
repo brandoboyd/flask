@@ -1,0 +1,28 @@
+{% from "_macros/customers.facets.html" import render_customersFacets -%}
+{% from "_macros/dynamic.facets.html" import render_dynamicFacets -%}
+
+<div class="col-sm-2 sidebar">
+    {{render_dynamicFacets()}}
+</div>
+
+<div class="col-sm-10 col-sm-offset-2">
+    <h1>Customers Distribution</h1>
+
+    <hr/>
+    <div class="row">
+        <div class="col-sm-3">
+            <span style="line-height:25px">Plot By</span><br />
+            <select ng-model="selection.plot_by"
+                    class="form-control"
+                    ng-options="item.type for item in plot_by_options">
+                <option value="" ng-if="false"></option>
+            </select>
+        </div>
+    </div>
+
+    <div id="chartDistribution" class="analysis-card" style="margin-top: 20px;height:420px">
+        <chart chart-data='chartData'
+               settings='extra_settings'>
+        </chart>
+    </div>
+</div>

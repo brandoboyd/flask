@@ -1,0 +1,194 @@
+// custom: intentions colors
+
+@asksColor              : #38854d;
+@needsColor             : #0d89ab;
+@likesColor             : #ff9228;
+@problemColor           : #999999;
+@checkinsColor          : #333333;
+@apologyColor           : #6895d8;
+@recommendationColor    : #c26117;
+@gratitudeColor         : #97b539;
+@offerColor             : #58cecb;
+@junkColor              : #f5a7a2;
+@warningText:             #c09853;
+@warningBackground:       #fcf8e3;
+@successText:             #468847;
+@successBackground:       #dff0d8;
+
+.response .label {
+  background-color: #fff;
+  font-size:9px;
+  //color: #000;
+  padding: 0 2px;
+  font-weight: bold;
+  text-shadow: none;
+  border: 1px dotted;
+  border-radius: 3px;
+}
+
+.intention-labels .label, .response-scores .label {
+  text-transform: uppercase;
+}
+
+.response {
+  .asks {
+    border-color: lighten(@asksColor, 10%);
+    color: @asksColor;
+  }
+  .needs {
+    border-color: @needsColor;
+    color: @needsColor;
+  }
+
+  .likes {
+    border-color: @likesColor;
+    color: @likesColor;
+  }
+  .checkins {
+    border-color: @checkinsColor;
+    color: @checkinsColor;
+  }
+  .offer {
+    border-color: @offerColor;
+    color: @offerColor;
+  }
+  .gratitude {
+    border-color: @gratitudeColor;
+    color: @gratitudeColor;
+  }
+  .apology {
+    border-color: @apologyColor;
+    color: @apologyColor;
+  }
+  .recommendation {
+    border-color: @recommendationColor;
+    color: @recommendationColor;
+  }
+  .problem {
+    border-color: @problemColor;
+    color: @problemColor;
+  }
+  .junk, .Junk {
+    border-color: @junkColor;
+    color: @junkColor;
+  }
+}
+
+/*.response .hg {
+  color: #fff;
+}*/
+.response .label {
+  margin-right: 3px;
+}
+
+.response.post-rejected .label {
+  opacity: 0.7
+}
+
+.response.post-rejected .content {
+  opacity: 0.5
+}
+
+.response.post-disabled .label {
+  opacity: 0.2
+}
+
+.response.post-disabled .tweet {
+  opacity: 0.2
+}
+
+.response-scores .label {
+  display: inline;
+  padding: 2px
+}
+
+.ilbl {
+  padding: 3px;
+}
+
+.response .label-voted-up, .response .label-voted-down {
+  text-decoration: line-through;
+  background-image:  url('/static/assets/img/voting.png') !important;
+  background-repeat: no-repeat;
+  padding-left: 15px;
+}
+
+.post-content .label-voted-up, .post-content .label-voted-down {
+  text-decoration: none;
+}
+
+.label-voted-up {
+  background-position: 3px 5px;
+}
+.label-voted-down {
+  background-position: 3px -14px;
+}
+
+.post-content .label-voted-up {
+  background-position: 3px 6px;
+}
+
+.post-content .label-voted-down {
+  background-position: 3px -14px;
+}
+
+.int-asks {
+  background-color: lighten(@asksColor, 35%)
+}
+.int-needs {
+  background-color: lighten(@needsColor, 35%)
+}
+.int-likes {
+  background-color: lighten(@likesColor, 35%)
+}
+
+.int-checkins {
+  background-color: lighten(@checkinsColor, 35%)
+}
+.int-offer {
+  background-color: lighten(@offerColor, 35%)
+}
+.int-gratitude {
+  background-color: lighten(@gratitudeColor, 35%)
+}
+.int-apology {
+  background-color: lighten(@apologyColor, 35%)
+}
+.int-recommendation {
+  background-color: lighten(@recommendationColor, 35%)
+}
+.int-problem {
+  background-color: lighten(@problemColor, 10%)
+}
+.int-junk {
+  background-color: @junkColor;
+}
+.label {
+  cursor: pointer;
+}
+
+.label-plain {
+  background-color: #fff;
+  font-weight:normal;
+  border:1px dotted #ccc;
+  text-shadow: none;
+  color:#999;
+}
+
+.label-plain:hover, .label-plain:hover .score-dd {
+  color:#f90
+}
+
+.label .score-dd {
+  color:#fff;
+}
+
+.label-plain .score-dd {
+  color:#69c;
+}
+
+.node_term {
+  border-bottom: 1px solid #094acc;
+  cursor:pointer;
+  //color: #3a7cd8;
+}

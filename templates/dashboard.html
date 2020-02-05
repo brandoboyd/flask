@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "Dashboard - %s" % user.account.selected_app }}
+{% endblock %}
+
+{% set  ngApp="dashboard" %}
+
+{% block body %}
+
+<div class="container-fluid" ng-view style="padding-right: 0;padding-left: 0;"></div>
+
+
+{% endblock %}
+

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/static/assets/img/gen_logomark_16px_col.ico">
+    <!-- Le styles -->
+    <link href="https://sb.angel.com/css/angel.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://sb.angel.com/css/d_basic.css" type="text/css">
+    <link rel="stylesheet" href="https://sb.angel.com/css/main.css" type="text/css">
+    <!--<link href="/static/assets/css/bootstrap_231.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="/static/assets/css/ui-lightness/jquery-ui.css" type="text/css" media="all" />
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body style="background: #fff;">
+    <!--<div class="wrapper" style="margin-top: 0;">
+        <div class="container" style="margin-right: 0; margin-left:0;">
+            <div class="row" style="margin-top: 10px">
+                <div style="margin-left: 40px;" class="span6 offset2">-->
+                    <p>
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tbody>
+                                <tr>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <form action="" method="POST" id="login" target="_top">
+                                <input name="currentDomainCode" value="" type="hidden">
+                                <tbody>
+                                    <!--<tr>
+                                        <td class="regs2">
+                                            <input name="LOGGING_INTO_CALL_QUEUE" onclick="toggleCQMLoginInputDisplay(this);" type="checkbox">Log in as an Agent or Supervisor<br><br>
+                                            <input name="statelessCQCookie" value="true" type="hidden">
+                                            <div id="cqm-login-inputs" class="cqm-login-inputs-container" style="display:none">
+                                            <div class="cqm-login-label">
+                                                Site Number
+                                            </div>
+                                            <input style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVQ4EaVTO26DQBD1ohQWaS2lg9JybZ+AK7hNwx2oIoVf4UPQ0Lj1FdKktevIpel8AKNUkDcWMxpgSaIEaTVv3sx7uztiTdu2s/98DywOw3Dued4Who/M2aIx5lZV1aEsy0+qiwHELyi+Ytl0PQ69SxAxkWIA4RMRTdNsKE59juMcuZd6xIAFeZ6fGCdJ8kY4y7KAuTRNGd7jyEBXsdOPE3a0QGPsniOnnYMO67LgSQN9T41F2QGrQRRFCwyzoIF2qyBuKKbcOgPXdVeY9rMWgNsjf9ccYesJhk3f5dYT1HX9gR0LLQR30TnjkUEcx2uIuS4RnI+aj6sJR0AM8AaumPaM/rRehyWhXqbFAA9kh3/8/NvHxAYGAsZ/il8IalkCLBfNVAAAAABJRU5ErkJggg==&quot;); background-repeat: no-repeat; background-attachment: scroll; background-position: right center;" name="domainCode" value="" class="cqm-login-input-text" type="text"><br>
+                                            <div class="cqm-login-label">
+                                                Page Number
+                                            </div>
+                                                <input name="pageCode" value="" class="cqm-login-input-text" type="text">
+                                                <br><br>
+                                            </div>
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td class="regs2" height="24" valign="top"><b>Registered Email</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input autofocus="true" type="text" value="" id="email" name="email" size="30">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="regs2" height="28"><b>Password</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACIUlEQVQ4EX2TOYhTURSG87IMihDsjGghBhFBmHFDHLWwSqcikk4RRKJgk0KL7C8bMpWpZtIqNkEUl1ZCgs0wOo0SxiLMDApWlgOPrH7/5b2QkYwX7jvn/uc//zl3edZ4PPbNGvF4fC4ajR5VrNvt/mo0Gr1ZPOtfgWw2e9Lv9+chX7cs64CS4Oxg3o9GI7tUKv0Q5o1dAiTfCgQCLwnOkfQOu+oSLyJ2A783HA7vIPLGxX0TgVwud4HKn0nc7Pf7N6vV6oZHkkX8FPG3uMfgXC0Wi2vCg/poUKGGcagQI3k7k8mcp5slcGswGDwpl8tfwGJg3xB6Dvey8vz6oH4C3iXcFYjbwiDeo1KafafkC3NjK7iL5ESFGQEUF7Sg+ifZdDp9GnMF/KGmfBdT2HCwZ7TwtrBPC7rQaav6Iv48rqZwg+F+p8hOMBj0IbxfMdMBrW5pAVGV/ztINByENkU0t5BIJEKRSOQ3Aj+Z57iFs1R5NK3EQS6HQqF1zmQdzpFWq3W42WwOTAf1er1PF2USFlC+qxMvFAr3HcexWX+QX6lUvsKpkTyPSEXJkw6MQ4S38Ljdbi8rmM/nY+CvgNcQqdH6U/xrYK9t244jZv6ByUOSiDdIfgBZ12U6dHEHu9TpdIr8F0OP692CtzaW/a6y3y0Wx5kbFHvGuXzkgf0xhKnPzA4UTyaTB8Ph8AvcHi3fnsrZ7Wore02YViqVOrRXXPhfqP8j6MYlawoAAAAASUVORK5CYII=&quot;); background-repeat: no-repeat; background-attachment: scroll; background-position: right center;" type="password" value="" id="password" name="password" maxlength="20" size="22">
+                                            <button type="submit" value="submit">Log In</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <br>
+                                                <span class="regs2">
+                                                    <b>
+                                                        <a href="http://127.0.0.1:5000/passrestore" target="_parent">Forgot Password or PIN?</a>
+                                                    </b>
+                                                </span>
+                                            <br>
+                                            <input type="hidden" name="next" value="{{ next }}" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            {% with messages = get_flashed_messages() %}
+                                            {% if messages %}
+                                            <div class="alert alert-danger">
+                                                {% for message in messages %}
+                                                    {{ message }}
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                            {% endwith %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </form>
+                        </table>
+                    </p>    
+                            
+                
+                   <!--<form action="" id="login" method="POST" class="form-horizontal">
+                        <fieldset>
+                            <legend>Login</legend>
+                            <div class="control-group">
+                                <label class="control-label" for="email">Email</label>
+                                <div class="controls">
+                                    <input autofocus="true" type="text" value="" id="email" name="email" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="password">Password</label>
+                                <div class="controls">
+                                    <div class="input-append">
+                                        <input type="password" value="" id="password" name="password" /><button type="submit" value="submit" class="btn btn-default">Submit</button>
+                                    </div>
+                                    <p class="help-block"><a href="/passrestore">Forgot the password?</a></p>
+                                </div>
+                            </div>
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                    <div class="alert alert-error">
+                                        {% for message in messages %}
+                                            {{ message }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                        </fieldset>
+                        <input type="hidden" name="next" value="{{ next }}" />
+                </form>-->
+                <!--</div>
+            </div>
+        </div><!-- /container -->
+    <!--</div><!-- /wrapper -->
+</body>
+</html>

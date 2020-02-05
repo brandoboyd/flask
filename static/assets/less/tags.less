@@ -1,0 +1,41 @@
+#tagcloud span {
+  padding: 4px;
+}
+.tagcloud {
+  list-style:none;
+}
+.tagcloud li {
+  text-align: center;
+  list-style-type: none;
+  float: left;
+  border-radius:5px;
+  border: 2px solid transparent;
+  line-height:30px;
+  padding: 3px 5px 3px 5px;
+  margin: 2px
+}
+.tagcloud li:hover {
+  border-color: #2E69DB;
+}
+.widget .tagcloud li:hover {
+  border-color: transparent;
+}
+
+.maincloud li.active {
+  background-color: #2E69DB;
+  color: #fff;
+}
+
+.maincloud li.selected {
+  border-color: #ccc;
+}
+
+.subcloud li.active {
+  border-color: #d62b72;
+}
+
+.widget-tagcloud {
+  min-height: 230px;
+  height: 230px;
+  overflow-y: auto;
+}

@@ -1,0 +1,87 @@
+{% raw %}
+<div class="modal-header" style="text-align: center;">
+    <span class="fonticon icon-close" ng-click="$dismiss();" style="position: absolute;top: 30px;right: 50px;cursor:pointer;font-size: 14px;"></span>
+</div>
+<div class="modal-body">
+    <div class="container-fluid">
+        <div class="row">
+            <h1>New Widget for {{dashboard.title}}</h1>
+        </div>
+        <div class="row tap-form">
+            <!--<form name="createForm">-->
+                <!--<div class="col-xs-12" style="margin-bottom: 10px;">-->
+                    <!--<input type="text" class="form-control" placeholder="Enter Title" ng-model="widget.title">-->
+                <!--</div>-->
+                <!--<div class="col-xs-12" style="margin-bottom: 10px;">-->
+                    <!--<textarea ng-model="widget.description" placeholder="Enter Description" class="form-control" style="resize: vertical;"></textarea>-->
+                <!--</div>-->
+            <!--</form>-->
+
+            <div id="settings" class="carousel slide pull-left" style="margin-left:5px;width:100%" data-ride="carousel" data-interval="false">
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <div class="col-xs-12" ng-show="!isLoading">
+                            <div ng-if="!!widgetModels.length"
+                                 class="col-xs-12 widget-model-card"
+                                 ng-repeat="model in widgetModels"
+                                 ng-click="selectModel(model)"
+                                 data-target="#settings" role="button" data-slide="next">
+                                <h3>{{model.title}}</h3>
+                                <span>{{model.description}}</span>
+                                <br/>
+                                <span class="small-body" style="opacity: 0.5">{{model.created * 1000 | date}}</span>
+                            </div>
+                            <div ng-if="!widgetModels.length" style="margin-top:20px;text-align:center;font-size:14px">
+                                No widget models found
+                            </div>
+                        </div>
+                        <div class="spinner-container" ng-show="isLoading" style="margin:auto;">
+                            <div class="spin-circle"></div>
+                            <div class="spin-inner-circle"></div>
+                        </div>
+                    </div>
+                    <!--<div class="item">-->
+                        <!--<div class="col-xs-12">-->
+                            <!--<h2>Choose visualization:</h2>-->
+
+                            <!--<div class="col-xs-4" ng-repeat="v in visualizations">-->
+                                <!--<img ng-src="{{v.src}}" class="tpl-charts"-->
+                                     <!--tooltip-placement="top" tooltip="{{v.name}}" ng-click="selectVisualization(v)">-->
+                                <!--<span class="fonticon icon-tick success"-->
+                                      <!--ng-show="v.selected" style="position: absolute;margin-left: 10px;top: 0;"></span>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="item">
+                        <div class="col-xs-12">
+                            <form name="createForm">
+                                <div class="col-xs-12" style="margin-bottom: 10px;">
+                                    <input type="text" class="form-control" placeholder="Widget Title" ng-model="widget.title">
+                                </div>
+                                <div class="col-xs-12" style="margin-bottom: 10px;">
+                                    <textarea ng-model="widget.description" placeholder="Widget Description" class="form-control" style="resize: vertical;"></textarea>
+                                </div>
+                                <div class="col-xs-12">
+                                    <p>Settings</p>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="alert alert-danger" ng-show="hasJSONError">The widget settings can not be saved, please check the error.
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div ng-jsoneditor ng-model="jsonEditorObject.data" options="jsonEditorObject.options" style="height:300px"></json-editor>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default pull-left" ng-click="$dismiss()">Close</button>
+    <button type="button" class="btn btn-primary pull-right" ng-click="create()" ng-disabled="!isLastStep">Create</button>
+</div>
+{% endraw %}

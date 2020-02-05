@@ -1,0 +1,152 @@
+body {
+    background-color: #f5f5f5;
+
+}
+
+.fuelux .wizard {
+  *zoom: 1;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+  background-color: #f9f9f9;
+
+
+  min-height: 48px;
+  overflow: hidden;
+
+  position: fixed;
+  right: 10px;
+  top: 60px;
+  left: 10px;
+
+}
+.fuelux .wizard:before,
+.fuelux .wizard:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.fuelux .wizard:after {
+  clear: both;
+}
+.fuelux .wizard ul {
+  list-style: none outside none;
+  padding: 0;
+  margin: 0;
+  width: 4000px;
+}
+.fuelux .wizard ul.previous-disabled li.complete {
+  cursor: default;
+}
+.fuelux .wizard ul.previous-disabled li.complete:hover {
+  background: #f3f4f5;
+  color: #468847;
+  cursor: default;
+}
+.fuelux .wizard ul.previous-disabled li.complete:hover .chevron:before {
+  border-left-color: #f3f4f5;
+}
+.fuelux .wizard ul li {
+  float: left;
+  margin: 0;
+  padding: 0 20px 0 30px;
+  height: 46px;
+  line-height: 46px;
+  position: relative;
+  background: #ededed;
+  color: #999999;
+  font-size: 16px;
+  cursor: default;
+}
+.fuelux .wizard ul li .chevron {
+  border: 24px solid transparent;
+  border-left: 14px solid #d4d4d4;
+  border-right: 0;
+  display: block;
+  position: absolute;
+  right: -14px;
+  top: 0;
+  z-index: 1;
+}
+.fuelux .wizard ul li .chevron:before {
+  border: 24px solid transparent;
+  border-left: 14px solid #ededed;
+  border-right: 0;
+  content: "";
+  display: block;
+  position: absolute;
+  right: 1px;
+  top: -24px;
+}
+.fuelux .wizard ul li.complete, .fuelux .wizard ul li.complete a {
+  background: #f3f4f5;
+  color: #468847;
+}
+.fuelux .wizard ul li.complete:hover {
+  background: #e7eff8;
+  cursor: pointer;
+}
+.fuelux .wizard ul li.complete:hover .chevron:before {
+  border-left: 14px solid #e7eff8;
+}
+.fuelux .wizard ul li.complete .chevron:before {
+  border-left: 14px solid #f3f4f5;
+}
+.fuelux .wizard ul li.active {
+  background: #f1f6fc;
+  color: #3a87ad;
+}
+.fuelux .wizard ul li.active .chevron:before {
+  border-left: 14px solid #f1f6fc;
+}
+.fuelux .wizard ul li.active .badge {
+  background-color: #3a87ad;
+}
+.fuelux .wizard ul li .badge {
+  margin-right: 8px;
+}
+.fuelux .wizard ul li .badge-success {
+  background-color: #468847;
+}
+.fuelux .wizard ul li:first-child {
+  border-radius: 4px 0 0 4px;
+  padding-left: 20px;
+}
+.fuelux .wizard .actions {
+  z-index: 1000;
+  position: absolute;
+  right: 0;
+  line-height: 46px;
+  float: right;
+  padding-left: 15px;
+  padding-right: 15px;
+  vertical-align: middle;
+  background-color: #e5e5e5;
+  border-left: 1px solid #d4d4d4;
+}
+.fuelux .wizard .actions a {
+  line-height: 45px;
+  font-size: 12px;
+  margin-right: 8px;
+}
+.fuelux .wizard .actions .btn-prev span {
+  margin-right: 5px;
+}
+.fuelux .wizard .actions .btn-next span {
+  margin-left: 5px;
+}
+.fuelux .wizard .step-content {
+  border-top: 1px solid #D4D4D4;
+  padding: 10px;
+  float: left;
+  width: 100%;
+}
+.fuelux .wizard .step-content .step-pane {
+  display: none;
+}
+.fuelux .wizard .step-content .active {
+  display: block;
+}
+.fuelux .wizard .step-content .active .btn-group .active {
+  display: inline-block;
+}

@@ -1,0 +1,74 @@
+{% raw %}
+
+<h3 style="margin-left: 10%;">{{gallery.display_name}} Gallery</h3>
+<a href="#/gallery">
+    <button class="btn btn-default btn-xs" style="position: absolute;top:0" tooltip-placement="top" tooltip="All Galleries">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+
+<hr/>
+
+<div class="row">
+    <div class="col-md-12">
+        {% endraw %}
+        {% if user.is_staff or user.is_admin %}
+        <div class="pull-left">
+            <a ng-href='#/gallery/{{"gallery.id"|ng}}/widget_model/' class="btn btn-primary" tooltip-placement="top" tooltip="New Widget Model">
+                <span class="fonticon icon-add"> Add Widget Model</span>
+            </a>
+            <div class="pull-right btn-icon-group">
+                <button class="btn btn-default btn-icon"
+                        ng-disabled="!selected.length"
+                        ng-confirm
+                        action-text="Are you sure you want to delete?"
+                        action-function="remove()"
+                        action-button-text="Yes"
+                        cancel-button-text="No">
+                    <span class="fonticon icon-trash"></span>
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        <div class="pull-right">
+            <div class="filter-block">
+                <search filter="filters.title" placeholder-text="Search by Name"></search>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+        <table class="table table-default">
+            <thead>
+            <tr>
+                {% if user.is_staff or user.is_admin %}
+                <th style="width:47px;"></th>
+                {% endif %}
+                <th sorter data-predicate="title" data-title="Name"></th>
+                <th>Description</th>
+                <th>Created</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="model in gallery.widget_models | filter: filters | orderBy: table.sort.predicate: table.sort.reverse">
+                {% if user.is_staff or user.is_admin %}
+                <td>
+                    <label class="checkbox">
+                        <input type="checkbox" class="ark-checkbox" ng-model="model.selected" ng-change="selectModel(model)"><span></span>
+                    </label>
+                </td>
+                {% endif %}
+                {% raw %}
+                <td>
+                    <a class="link" ng-href="#/gallery/{{gallery.id}}/widget_model/{{model.id}}" tooltip-placement="top" tooltip="{{model.description}}" ng-bind="model.title"></a>
+                </td>
+                <td>{{model.description}}</td>
+                <td>{{model.created * 1000 | date }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endraw %}

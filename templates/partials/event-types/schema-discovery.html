@@ -1,0 +1,60 @@
+{% raw %}
+<div class="row discovery-tab">
+  <div class="col-md-12">
+    <div class="alert alert-info">
+      <span ng-show="entity.discovered_schema.length == 0">
+        <i class='icon-alert-triangle'></i> You have not created a schema yet.&nbsp;
+      </span>
+      <span ng-show="entity.discovered_schema.length > 0">
+        <i class='icon-alert-triangle'></i> You can re-discover schema.&nbsp;
+      </span>
+      <button
+        ng-click="showUploadDialog()"
+        class="btn btn-primary">Upload File
+      </button>
+    </div>
+  </div>
+
+  <div ng-if="entity.discovered_schema.length > 0" class="col-md-12">
+
+    <div class="row form-group">
+      <div class="col-md-12">
+        <div class="filter-block pull-right">
+          <search filter="flags.search" placeholder-text="Search"></search>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <table class="table table-default">
+        <thead>
+          <tr>
+            <th sorter="table.sort" data-predicate="name" data-title="Field Name"></th>
+            <th sorter="table.sort" data-predicate="type" data-title="Type"></th>
+            <th sorter="table.sort" data-predicate="cardinality" data-title="Cardinality"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="field in entity.discovered_schema | filter:flags.search | orderBy: table.sort.predicate: table.sort.reverse">
+            <td>
+              <span>{{field.name}}</span>
+            </td>
+            <td>
+              <span>{{field.type | toTitleCase}}</span>
+            </td>
+            <td>
+              <a class="link"
+                 ng-if="entity.cardinalities[field.name]"
+                 ng-click="showDetails(field.name, entity.cardinalities[field.name].values)"
+                 >{{entity.cardinalities[field.name].display_count}}</a>
+              <span
+                ng-if="!entity.cardinalities[field.name]"
+                >{{entity.cardinalities[field.name].display_count}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endraw %}

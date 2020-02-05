@@ -1,0 +1,130 @@
+extends ./template
+//- var user = {{data}}
+block title
+   title Product
+block css
+   link(rel="stylesheet", href="/chat/public/css/landing.css")
+block body
+   div.container(ng-controller="LandingPageCtrl")
+      include ./header
+         block navbars
+            ul.nav.navbar-nav.navbar-inverse#menus
+               li(ng-repeat="menu in menus", ng-class="{active:isActiveMenu(menu.target, menu.hasChild)}")
+                  a.dropdown-toggle(ng-if="menu.hasChild", data-toggle="dropdown") {{menu.title}}
+                     span.caret
+                  ul.dropdown-menu(role="menu", ng-if="menu.hasChild")
+                     li(ng-repeat="submenu in menu.submenus")
+                        a(ng-click="onClickMenu(submenu, $event)") {{submenu.title}}
+                  a(ng-if="!menu.hasChild", ng-click="onClickMenu(menu, $event)") {{menu.title}}
+            ul.nav.navbar-nav.navbar-right#accounts
+               li
+                  a(target="#" ng-click="") My Telecom Login
+               li
+                  a(target="#" ng-click="") My Cart
+               li
+                  a(target="#" ng-click="popupChatInvitation('How can we help?', false)" style="margin-right:30px;") Chat
+            ul.nav.navbar-nav.navbar-right
+               li
+                  img.thumbnail(src="/chat/public/images/no-photo.jpg" popover-template="userinfo-tpl.html" popover-placement="bottom" popover-trigger="mouseenter" style="margin-right:30px;")
+      .container
+         #prodReview.product-info(ng-if="isFAQ")
+            .row.col-sm-6
+               .form-group
+                  label(for="exampleInputEmail1") Search
+                  input(type="text" class="form-control" id="search_key" placeholder="Search" focus-me="true" ng-model="enteredValue")
+               button(type="button" class="btn btn-primary search_btn" ng-click="findValue(enteredValue)") Search
+               h3 Search Results
+               ul.searchFaqResult
+                  li(ng-repeat="result in searchFaqResults")
+                     h4 {{result.question}} ({{result.relevance.toFixed(2)}})
+                     p {{result.answer}}
+                     p.feedback Was it helpful:
+                        a.btn.btn-xs.btn-default(ng-click="feedbackFaq(result.id, 1, $event)") Yes
+                        a.btn.btn-xs.btn-default(ng-click="feedbackFaq(result.id, 0, $event)") No
+         div(ng-if="!isFAQ")
+            h2(ng-show="!isHome") {{category.title}}
+            #frontPage(ng-show="isHome")
+               .row
+                  img.banner(ng-src="{{landing.config.homeBanner}}")
+               .row.text-right
+                  button.btn.btn-lg.btn-primary(ng-click="toList()") Open up your World!
+            #list(ng-show="isList")
+               .row
+                  li.col-md-3(ng-repeat="item in category.items" ng-click="viewItem(item)")
+                     .item.text-center
+                        img(ng-src="{{item.thumbnail}}")
+                        h3 {{item.title}}
+                        p {{item.price}}
+            #tabs(ng-show="!isList && !isHome")
+               ul.nav.nav-tabs
+                  li(ng-repeat="tab in tabs", ng-class="{active:isActiveTab(tab.url)}", data-count="0")
+                     a(ng-click="onClickTab(tab, $event)") {{tab.title}}
+               #mainView
+                  div(ng-include="currentTab")
+               script(type="text/ng-template" id="product-info.html")
+                  #prodInfo.product-info
+                     .row
+                        .col-md-6
+                           img(src="{{product.img}}")
+                        .col-md-6
+                           .row
+                              h3 {{product.title}}
+                              p {{product.description}}
+                              hr
+                              ul.row
+                                 li.col-md-4(ng-repeat="pr in product.prices" ng-click="selectPricePlan(pr)")
+                                    label.row
+                                       input.col-md-1(type="radio" name="selPrice" value="{{pr.price}}" ng-checked="{{pr.selection}}")
+                                       p.col-md-11
+                                          span {{pr.sign}}{{pr.price}}
+                                          <br>{{pr.comment}}
+                              hr
+                              .row.sale
+                                 .col-md-6
+                                    h3 {{product.selPricePlan.sign}}{{product.selPricePlan.price}}
+                                    p {{product.selPricePlan.comment}}
+                                 .col-md-6
+                                    button.btn.btn-lg.btn-danger(ng-click="addToCart(product)") Add to cart
+                              hr
+                              a.row(ng-click="popupChatInvitation('How can we help?', false)") Need help ordering?
+                              a.row(ng-click="showAccessories()") Accessories
+                              a.row(ng-click="showBundles()") Bundles
+
+               script(type="text/ng-template" id="product-specification.html")
+                  #prodSpec.product-info
+                     .row
+                        p {{product.description}}
+               script(type="text/ng-template" id="product-review.html")
+                  #prodReview.product-info
+                     h4 Excellent image stabilization, but thats about it!
+                     p October 19, 2014
+                     br
+                     p Bought this camcorder for the size and image stabilization which is excellent, however the clear image zoom, is not very clear when fully zoomed in. Why can not we get more optical zoom with a viewfinder? 30x or even 20x? What is the problem Sony? Backlight compensation not good with this camcorder. Also optional external mic is necessary as the built in mic has very low volume. Never had a use for the projector, you can leave that off and give me more optical zoom. I am willing to pay more for more optical zoom, just need a small size camcorder with a viewfinder that has a decent amount of zoom and a decent image with the same image stabilization.
+
+               script(type="text/ng-template" id="userinfo-tpl.html")
+                  if !isAnonymous
+                     div.userInfo(style="min-width:150px;")
+                        ul(style="list-style: none;")
+                           li #{user.name}
+                           li #{user.sex}
+                           li #{user.age}
+                           li #{user.location}
+                  else
+                     div.userInfo(style="width:120px")
+                        ul
+                           li Anonymous
+
+
+
+      include ./chat.jade
+      include ./survey.jade
+      include ./modals.jade
+block scripts
+   script(src="/chat/public/js/landing-controller.js")
+   script(type="text/javascript").
+      var customerId = '#{user.id}';
+      var isAnonymous = #{isAnonymous};
+      var SOCKET_DOMAIN = '#{socketDomain}';
+      $(function () {
+         $('[data-toggle="tooltip"]').tooltip();
+      });

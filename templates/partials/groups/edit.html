@@ -1,0 +1,226 @@
+{%- macro group_edit_details(u) %}
+<style>
+    li.select2-search-field, li.select2-search-field > input {
+        width:250px !important;
+    }
+</style>
+<form name="groupForm" class="form-horizontal" ng-disabled="group.perm=='r'" ng-hide="fullChannelList && !fullChannelList.length">
+    <fieldset>
+
+        <div class="form-group" ng-class="{'has-error': groupForm.groupName.$error.required && groupForm.groupName.$dirty}">
+            <label class="col-sm-2 control-label" for="name">Group Name&nbsp;<span class="asterisk">*</span></label>
+            <div class="col-sm-7">
+                <input type="text"
+                       class="form-control"
+                       id="name"
+                       name="groupName"
+                       ng-model="group.name"
+                       ng-required="true"
+                       ng-disabled="group.perm=='r'"
+                       placeholder="Group names need to be unique per account">
+                <span ng-show="groupForm.groupName.$error.required && groupForm.groupName.$dirty"
+                      class="help-block error">Group name is required</span>       
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="description">Description</label>
+            <div class="col-sm-7">
+                    <textarea class="form-control"
+                              id="description"
+                              rows="3"
+                              ng-model="group.description"
+                              ng-disabled="group.perm=='r'"
+                              placeholder="Short description to better identify the group"></textarea>
+
+            </div>
+        </div>
+
+        {% if user.current_account.account_type != "GSE" or user.current_account.selected_app != 'GSE' %}
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="smart_tags">Smart Tag Access</label>
+            <div class="col-sm-7">
+                {% raw %}
+                <ui-select id="smart_tags" multiple ng-model="chosenGroupSmartTag" theme="select2" ng-disabled="group.perm=='r'"
+                           class="form-control" on-select="addChannelTag($item)" on-remove="removeChannelTag($item)">
+                    <ui-select-match placeholder="Select the smart tags to which this group will be given access">{{$item.title}}</ui-select-match>
+                    <ui-select-choices repeat="o in fullSmartTags | propsFilter: {id: $select.search, title: $select.search}">
+                        <div ng-bind-html="o.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                {% endraw %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <div class="col-sm-12">
+                <nav class="navbar navbar-switch-default" role="navigation" style="margin-left: 10%;">
+                    <ul class="nav navbar-nav" id="businessHourTabs">
+                        <li class="active"><a data-target="#roles" data-toggle="tab">Roles & Users&nbsp;&nbsp;&nbsp;</a></li>
+                        <li><a data-target="#channels" data-toggle="tab">Channels & Smart Tags&nbsp;&nbsp;&nbsp;</a></li>
+                        {% if u.account.selected_app == 'Journey Analytics' %}
+                        <li><a data-target="#journeytypes" data-toggle="tab">Journey Types & Journey Tags&nbsp;&nbsp;&nbsp;</a></li>
+                        <li><a data-target="#funnels" data-toggle="tab">Funnels&nbsp;&nbsp;&nbsp;</a></li>
+                        {% elif u.account.selected_app == 'Predictive Matching' %}
+                        <li><a data-target="#predictors" data-toggle="tab">Predictors&nbsp;&nbsp;&nbsp;</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% raw %}
+                <div class="tab-content" style="margin-top: 20px;z-index: 1000;">
+                    <div class="tab-pane active" id="roles">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="roles-tags">Roles</label>
+                            <div class="col-sm-7">
+                                <ui-select id="roles-tags" multiple ng-model="chosen.groupRoles" theme="select2" ng-disabled="group.perm=='r'"
+                                           class="form-control" on-select="addSelectTag($item, chosen.groupRoles)" on-remove="removeSelectTag($item, chosen.groupRoles)">
+                                    <ui-select-match placeholder="Group's user roles">{{$item.value}}</ui-select-match>
+                                    <ui-select-choices repeat="o in fullGroupRoles | propsFilter: {id: $select.search, value: $select.search}">
+                                        <div ng-bind-html="o.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="users">Users</label>
+                            <div class="col-sm-7">
+                                <ui-select id="users" multiple ng-model="chosen.groupUsers" theme="select2" ng-disabled="group.perm=='r'"
+                                           class="form-control" on-select="addSelectTag($item, chosen.groupUsers)" on-remove="removeSelectTag($item, chosen.groupUsers)">
+                                    <ui-select-match placeholder="Group's users">{{$item.email}}</ui-select-match>
+                                    <ui-select-choices repeat="o in fullUserList | propsFilter: {id: $select.search, email: $select.search}">
+                                        <div ng-bind-html="o.email | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="channels">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="channels">Channels&nbsp;<span class="asterisk">*</span></label>
+                            <div class="col-sm-7">
+                                <ui-select id="channels" multiple ng-model="chosen.groupChannel" theme="select2" ng-disabled="group.perm=='r'"
+                                           class="form-control" on-select="addChannelGroup($item)" on-remove="removeChannelGroup($item)">
+                                    <ui-select-match placeholder="Group's channels">{{$item.title}}</ui-select-match>
+                                    <ui-select-choices repeat="o in fullChannelList | propsFilter: {id: $select.search, title: $select.search}">
+                                        <div ng-bind-html="o.title | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="smart_tags">Smart Tags</label>
+                            <div class="col-sm-7">
+                                <ui-select id="smart_tags" multiple ng-model="chosen.groupSmartTag" theme="select2" ng-disabled="group.perm=='r'"
+                                           class="form-control" on-select="addSelectTag($item, chosen.groupSmartTag)" on-remove="removeSelectTag($item, chosen.groupSmartTag)">
+                                    <ui-select-match placeholder="Group's smart tags per channel">{{$item.title}}</ui-select-match>
+                                    <ui-select-choices repeat="o in selectedChannelSmartTags | propsFilter: {id: $select.search, title: $select.search}">
+                                        <div ng-bind-html="o.title | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="predictors">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="roles">Predictors</label>
+                            <div class="col-sm-7">
+                                <ui-select id="roles" multiple ng-model="chosen.groupPredictors" theme="select2" refreshDelay="500" ng-disabled="group.perm=='r'"
+                                           class="form-control" on-select="addSelectTag($item, chosen.groupPredictors)" on-remove="removeSelectTag($item, chosen.groupPredictors)">
+                                    <ui-select-match placeholder="Group's predictors">{{$item.name}}</ui-select-match>
+                                    <ui-select-choices repeat="o in fullPredictorsList | propsFilter: {id: $select.search, name: $select.search}">
+                                        <div ng-bind-html="o.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="funnels">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="roles">Funnels</label>
+                            <div class="col-sm-7">
+                                <ui-select id="roles" multiple ng-model="chosen.groupFunnels" theme="select2" refreshDelay="500" ng-disabled="group.perm=='r'"
+                                           class="form-control" on-select="addSelectTag($item, chosen.groupFunnels)" on-remove="removeSelectTag($item, chosen.groupFunnels)">
+                                    <ui-select-match placeholder="Group's funnels">{{$item.name}}</ui-select-match>
+                                    <ui-select-choices repeat="o in fullFunnelsList | propsFilter: {id: $select.search, name: $select.search}">
+                                        <div ng-bind-html="o.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="journeytypes">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="roles">Journey Types</label>
+                            <div class="col-sm-7">
+                                <ui-select id="roles" multiple ng-model="chosen.groupJourneyTypes" theme="select2" refreshDelay="500" ng-disabled="group.perm=='r'"
+                                           class="form-control" on-select="addJourneyType($item)" on-remove="removeJourneyType($item)">
+                                    <ui-select-match placeholder="Group's journey types">{{$item.display_name}}</ui-select-match>
+                                    <ui-select-choices repeat="o in fullJourneyTypesList | propsFilter: {id: $select.search, display_name: $select.search}">
+                                        <div ng-bind-html="o.display_name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="roles">Journey Tags</label>
+                            <div class="col-sm-7">
+                                <ui-select id="roles" multiple ng-model="chosen.groupJourneyTags" theme="select2" refreshDelay="500" ng-disabled="group.perm=='r'"
+                                           class="form-control" on-select="addSelectTag($item, chosen.groupJourneyTags)" on-remove="removeSelectTag($item, chosen.groupJourneyTags)">
+                                    <ui-select-match placeholder="Group's journey tags per journey type">{{$item.journey_tag_full_name}}</ui-select-match>
+                                    <ui-select-choices repeat="o in selectedJourneyTypeTags | propsFilter: {id: $select.search, journey_tag_full_name: $select.search}">
+                                        <div ng-bind-html="o.journey_tag_full_name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group form-actions">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="button" class="btn btn-primary" ng-click="save()"
+                        ng-disabled="saveButtonDisabled()">{{title == 'New' ? 'Create' : 'Update'}}</button>
+            </div>
+        </div>
+        {% endraw %}
+    </fieldset>
+</form>
+<div ng-show="fullChannelList && !fullChannelList.length" class="alert alert-info text-center">
+    <i class='icon-alert-triangle'></i> There are no channels configured. Please add channels before configuring a group.<br/><br/>
+    <a href="#/new_channel" class="btn btn-primary"><span class="fonticon icon-add"></span> Add Channel</a>
+</div>
+{% endmacro -%}
+
+{% raw %}
+<h3 style="margin-left: 30px">
+    {{ group && group.name ? "Update " + "&ldquo;" + group.name + "&rdquo;" : "New" }} Group
+</h3>
+{% endraw %}
+
+<a href="#/groups/">
+    <button class="btn btn-default btn-xs" tooltip-placement="top" tooltip="All Groups" style="position: absolute;top:0;">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+<hr/>
+
+
+<div ng-switch="mode">
+    <div ng-switch-when="edit">
+        {# group edit mode #}
+        <div class="tab-content">
+            {{ group_edit_details(user) }}
+        </div>
+    </div>
+
+    <div ng-switch-default>
+        {# group create mode #}
+        {{ group_edit_details(user) }}
+    </div>
+</div>
+

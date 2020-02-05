@@ -1,0 +1,14 @@
+<div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" id="dropdownMenu1" type="button" data-toggle="dropdown">
+        <span ng-bind="cDate">Loading...</span>
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
+        <li ng-repeat= "button in dateRangeButtons"
+            role="presentation"
+            ng-model="button.type"
+            ng-click="setDateRange(button.type)">
+            <a href role="menuitem" tabindex="-1" ng-bind="button.type">Loading...</a>
+        </li>
+    </ul>
+</div>

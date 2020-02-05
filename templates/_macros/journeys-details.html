@@ -1,0 +1,39 @@
+{%- macro render_journeys() -%}
+
+<table class="table table-bordered table-striped table-condensed s-table-common">
+    <thead>
+    <tr>
+        <th sorter data-predicate="first_name+last_name" data-title="Name"></th>
+        <th sorter data-predicate="first_name+last_name" data-title="Status"></th>
+        <th sorter data-predicate="industry" data-title="Segments"></th>
+        <th sorter data-predicate="industry" data-title="Type"></th>
+        <th sorter data-predicate="industry" data-title="NPS"></th>
+        <th sorter data-predicate="industry" data-title="Effort"></th>
+        <th sorter data-predicate="industry" data-title="Start Date"></th>
+        <th sorter data-predicate="industry" data-title="End Date"></th>
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr ng-repeat="item in journeys | orderBy : table.sort.predicate : table.sort.reverse">
+        <td>
+            <a ng-href="/omni/journeys/{{'item.id'|ng}}">
+                <span ng-bind-html="item.customer_name"></span>
+            </a>
+        </td>
+        <td><span ng-bind="item.status"></span></td>
+        <td><ul style="margin:0; padding:0; list-style: none">
+            <li ng-repeat="segment in  item.segment_names" ng-bind="segment"></li>
+        </ul></td>
+        <td><span ng-bind="getJourneyType(item.journey_type_id)"></span></td>
+        <td><span ng-bind="item.nps_score || 'N/A' "></span></td>
+        <td><span ng-bind="item.total_effort + ' events' || 'N/A' "></span></td>
+        <td><span ng-bind="(item.start_date*1000 | date : medium)"></span></td>
+        <td><span ng-bind="(item.end_date*1000 | date : medium)"></span></td>
+
+    </tr>
+    </tbody>
+</table>
+
+{% endmacro %}

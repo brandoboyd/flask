@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "Inbox - %s" % user.account.selected_app }}
+{% endblock %}
+
+{% from "_macros/filter.html" import render_filter, filter_date_dropdown %}
+{% from "_macros/responses.html" import render_responses with context %}
+{% from "_macros/modals.html" import render_modal %}
+{% set  ngApp="engage"  %}
+{% block body %}
+<div ng-controller="ResponsesCtrl">
+
+<div class="container-fluid">
+    <div class="inbox-top-bar">
+        <div class="container-fluid">
+            <div class="row top-filter-bar">
+                <div class="col-sm-3 col-xs-12">
+                    <select ng-model="channel"
+                            class="form-control"
+                            ng-options="c.title for c in channels">
+                    </select>
+                </div>
+                <div class="col-sm-3 col-xs-12 no-gutter">
+                    <div ng-class="{'col-xs-1' : smart_tag.selected, 'col-xs-0' : !smart_tag.selected}">
+                        <a  href=''
+                            class="btn btn-default btn-xs ng-cloak"
+                            data-original-title='Clear selection'
+                            ui-jq="tooltip"
+                            ng-show="smart_tag.selected"
+                            ng-click="smart_tag.selected=''"
+                            style="margin-top:5px;"><span class="icon-close-bold"></span></a>
+                    </div>
+                    <div ng-class="{'col-xs-9' : smart_tag.selected, 'col-xs-12' : !smart_tag.selected}">
+                        <select class="form-control"
+                                ng-model="smart_tag.selected"
+                                ng-options="t.title for t in smart_tags">
+                            <option value="">Filter by Tag</option>
+                        </select>
+                    </div>
+                    <div ng-class="{'col-xs-2' : smart_tag.selected, 'col-xs-0' : !smart_tag.selected}">
+                        <slr-smart-tags-modal smart-tag="smart_tag.selected"></slr-smart-tags-modal>
+                    </div>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <style>.form-control li.select2-search-field {height: 30px;}</style>
+                    <select ng-cloak
+                            class="form-control"
+                            ui-select2
+                            multiple="multiple"
+                            ng-model="params.languages">
+                        {% raw %}
+                        <option value="{{ lang.code }}" ng-repeat="lang in channel.langs">{{ lang.title }}</option>
+                        {% endraw %}
+                    </select>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Filter results"
+                           ng-model="search.$">
+                </div>
+            </div>
+            <div class="row top-action-bar">
+                <div class="col-sm-6 col-xs-6"
+                     style="min-height:40px">
+                    <div class="row" style="padding:8px 0 9px 0;">
+                        <div class="col-sm-6 col-xs-4">
+                            <div class="btn-group">
+                                <button class="btn btn-xs btn-default">
+                                    <label class="checkbox">
+                                        <input type="checkbox"
+                                               value="all"
+                                               ng-model="master"
+                                               ng-disabled="responseType == 'posted'"
+                                               class="ark-checkbox" /><span></span>
+                                    </label>
+                                </button>
+                                <button class="btn btn-default btn-xs dropdown-toggle"
+                                        ng-disabled="responseType == 'posted'"
+                                        data-toggle="dropdown">
+                                    <span class="icon-expand-down"></span>
+                                </button>
+                                <ul class="dropdown dropdown-menu">
+                                    <li><a href="#" ng-click="skipResponse()"
+                                           ng-hide="responseType == 'skipped' || responseType == 'posted'"><span class="icon-control-skip-next"></span> Skip</a></li>
+                                    <li><a href="#" ng-click="rejectResponse()"
+                                           ng-hide="responseType == 'rejected' || responseType == 'posted'"><span class="icon-trash"></span> Reject</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-8">
+                            <div class="btn-group text-left" style="margin-top:-2px; margin-right:3px;">
+                                <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span class="icon-expand-down"></span></button>
+                                <ul class="dropdown dropdown-menu">
+                                    <li ng-class="{active:(responseType=='pending')}">
+                                        <a href="" ng-click="fetchResults('pending')">Pending</a></li>
+                                    <li ng-class="{active:(responseType=='review')}"
+                                        ng-show="shouldShowReview()">
+                                        <a href=""  ng-click="fetchResults('review')">Review</a></li>
+                                    <li ng-class="{active:(responseType=='rejected')}">
+                                        <a href="" ng-click="fetchResults('rejected')">Rejected</a></li>
+                                    <li ng-class="{active:(responseType=='posted')}">
+                                        <a href="" ng-click="fetchResults('posted')">Replied</a></li>
+                                    <li ng-class="{active:(responseType=='retweeted')}">
+                                        <a href="" ng-show="channel.platform == 'Twitter'" ng-click="fetchResults('retweeted')">Retweeted</a></li>
+                                    <li ng-class="{active:(responseType=='skipped')}">
+                                        <a href="" ng-click="fetchResults('skipped')">Skipped</a></li>
+                                    <li ng-class="{active:(responseType=='filtered')}">
+                                        <a href="" ng-click="fetchResults('filtered')">Filtered</a></li>
+                                </ul>
+                            </div>
+                            <span ng-bind="responseHeaders[responseType] + ' POSTS'" style="text-transform:uppercase"></span>
+                            <span class="badge"
+                                  ng-bind="results.length"
+                                  ng-class="{true : 'badge-success', false : ''}[results.length > 0]"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xs-6">
+                    <div class="col-sm-11 col-xs-8 text-center">PROPOSED RESPONSES</div>
+                    <div class="col-sm-1 col-xs-4">
+                        <a class="btn btn-success btn-xs pull-right"
+                           ng-click="reloadBatch()"><span class="icon-refresh"></span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row inbox-container">
+        <div class="col-sm-12">
+            <div style="margin-top:5px">
+                {{ render_responses() }}
+            </div>
+        </div>
+    </div>
+        {{ render_modal(id="matchableModal", title="Review all the matches", type="all_matches") }}
+        {{ render_modal(id="userProfileModal", title="User Profile", type="user_profile") }}
+    </div>
+</div>
+{% endblock %}

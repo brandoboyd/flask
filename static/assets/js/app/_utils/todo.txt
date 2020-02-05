@@ -1,0 +1,15 @@
+- utils.date-is-greater-than.directive -- should be removed,
+                    when ark-components' timepicker is implemented instead of ui-timepicker
+
+- utils.ui-slider.directive -- should be removed, and replaced with ARK slider
+
+
+Most of directives are used only once, and their logic are very specific, need to transfer to Controller
+
+!!!TODO!!!
+- utils.post-smart-tags.directive
+- utils.remove-smart-tag.directive
+- utils.tag-assignment.directive
+- utils.ui-smart-tags2
+- utils.ui-conversations.directive
+- utils.ui-user-history.directive

@@ -1,0 +1,17 @@
+{#
+<div class="modal-header">
+    <h4></h4>
+    <a class="close pull-right"
+       ng-click="close(false)">×</a></div>
+</div>
+#}
+{% raw %}
+<div class="modal-body">
+    <p style="font-size: 1.1em;font-weight: bold">Are you sure you want to export data for the channel '{{ data.channel.title }}' filtered by</p><br>
+    <p ng-repeat="item in table"><b>{{ item.title }}:</b> {{ item.value }}<!--<span ng-show="$last"> ?</span>--></p>
+</div>
+<div class="modal-footer">
+    <button ng-click="close(false)" class="btn btn-default">No</button>
+    <button ng-click="close(true)" class="btn btn-primary">Yes</button>
+</div>
+{% endraw %}

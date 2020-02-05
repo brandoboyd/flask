@@ -1,0 +1,7 @@
+{{username}} has shared {{object_type}}s with you:
+
+{% for title, link in objs %}
+  * "{{title}}"
+    To see this {{object_type}}, click on the below {{link}}: 
+{% endfor %}
+

@@ -1,0 +1,341 @@
+{%- macro render_share_dialog(scope='bookmark') -%}
+{#<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>#}
+
+<div ng-controller="ACLCtrl" ng-init="shareDialogScope='{{ scope }}'" ng-cloak>
+    {% raw %}
+    <style>
+    .select-perm { width: auto; }
+    </style>
+<div ng-model="modalShown" class="modal">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>{{ sharingTitle() }}</h3>
+    </div>
+    <div class="modal-body">
+
+        <ul class="nav nav-tabs">
+            <li ng-class="css_tab('users')"><a href=""  ng-click="switchTab('users')">Users</a></li>
+            <li ng-class="css_tab('groups')"><a href="" ng-click="switchTab('groups')">Groups</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane" id="share_dialog_users" ng-class="css_tab('users')">
+
+                <form class="form" name="shareForm">
+                    <input type="hidden" ng-repeat="o in objectIds" name="objectId">
+
+                        <div style="max-height: 170px;overflow: auto;">
+                            <table class="table-striped table-condensed">
+                                <tr ng-repeat="u in usersAndPermsList|orderBy:'email'">
+                                    <td>{{ u.email }}</td>
+                                    <td>
+                                        <select ng-hide="u.perm=='s'" ng-model="u.perm" ng-options="o.id as o.name for o in editPermsList" ng-change="u.isChanged=true" class="select-perm"></select>
+                                        <span ng-show="u.perm=='s'">SuperUser (perms cannot be changed)</span>
+                                    </td>
+                                    <td><span ng-show="u.isChanged">(not saved)</span></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                </form>
+
+                <form class="form form-horizontal">
+                    <fieldset>
+                        <legend>Add people</legend>
+                        <small>You can add multiple email addresses (separated by commas).</small><br />
+                        <textarea required rows="2" ng-model="newUsers" style="width:300px;"></textarea>
+                        <select required ng-model="addPermission" ng-options="o.id as o.name for o in addPermsList" class="select-perm">
+                        </select>
+                        <button class="btn btn-default" ng-click="addPeople()"><i class="icon-plus">&nbsp;</i>Add</button>
+                    </fieldset>
+                </form>
+
+            </div>
+
+            <div class="tab-pane" id="share_dialog_groups" ng-class="css_tab('groups')">
+
+                <table class="table-striped table-condensed">
+                    <tr ng-repeat="g in groupsAndPermsList">
+                        <td>{{ g.name }}</td>
+                        <td>
+                            <select ng-model="g.perm" ng-options="o.id as o.name for o in editPermsList" ng-change="g.isChanged=true" class="select-perm"></select>
+                        </td>
+                        <td><span ng-show="g.isChanged">(not saved)</span></td>
+                    </tr>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <a ng-click="shareAndSave()" class="btn btn-primary">Share & Save</a>
+        <a ng-click="modalShown=false" class="btn btn-default">Close</a>
+    </div>
+</div>
+    {% endraw %}
+</div>
+{%- endmacro -%}
+
+
+{%- macro render_default_outbound_channels_dialog(account=None, ui_modal=True) -%}
+    {% if ui_modal %}
+    {% set cls='modal' %}
+    {% else %}
+    {% set cls='inline' %}
+    {% endif %}
+
+    <div ng-controller="OutboundChannelsCtrl">
+        {% if ui_modal %}
+        <input type="hidden" ng-model="accountId" value="{{ account_id if account else '' }}">
+        {% endif %}
+
+        <div {% if ui_modal %}ng-model="modalShown"{% endif %} class="{{ cls }}">
+
+            <div class="{{ cls }}-header">
+                {% if ui_modal %}
+                <a class="close" data-dismiss="modal">×</a>
+                {% endif %}
+                {% raw %}
+                <h1>{{ header }}</h1>
+                <hr />
+                {% endraw %}
+            </div>
+
+            <div class="{{ cls }}-body">
+                {% raw %}
+                <form class="form" name="ocForm">
+                    
+                    <div style="max-height: 270px;overflow: auto;" ng-if="!noDefaultOutboundChannels">
+                        <table class="table table-default">
+                            <thead><th>Platform</th><th>Default Channel</th></thead>
+                            <tbody>
+                            <tr ng-repeat="(platform, options) in defaultOutboundChannels">
+                                <td>{{ platform }}</td>
+                                <td>
+                                    <select ng-model="selectedChannels[platform]" ng-options="ch.id as ch.title for ch in options" class="form-control">
+                                        <option value="">None</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </form>
+                <h2 ng-if="noDefaultOutboundChannels">No Outbound Channels</h2>
+                {% endraw %}
+            </div>
+
+            <div class="{{ cls }}-footer">
+                <a ng-click="updateOutboundChannelDefaults(accountId)" ng-disabled="noDefaultOutboundChannels" class="btn btn-primary"><i class="icon-ok" ng-show="state=='loaded'"></i>Update</a>
+                {% if ui_modal %}
+                    <a ng-click="modalShown=false" class="btn btn-default">Close</a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if ui_modal %}
+            <a ng-click="modalShown=true" class="btn btn-default"><i class="icon-list"></i>Default Outbound Channels</a>
+        {% endif %}
+    </div>
+{%- endmacro -%}
+
+
+{%- macro render_account_create_update_dialog() -%}
+    {#<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>#}
+    {% raw %}
+    <div ng-model="modalShown" class="modal">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>{{ {'create':'Create new account', 'edit':'Set new account name'}[action] }}</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form" name="accountForm">
+                <div class="row" style='margin-left:20px;'>
+                    <div class="control-group pull-right"
+                        ng-show="notInternalAccount && account.package != 'Trial'">
+                        <label ng-show="notInternalAccount">Package Options</label>
+                        <span id="bronze_span"
+                              ng-cloak
+                              ng-show="show_pricing_package_details.Bronze"
+                              class="help-block animate-show"
+                              style="margin-left:3px; margin-top:9px">Cost: $500 p/m<br>
+                                                            Volume: 5000 Inbound Posts<br>
+                                                            Storage: Data is stored for 3 months</span>
+                        <span id="silver_span"
+                              ng-cloak
+                              ng-show="show_pricing_package_details.Silver"
+                              class="help-block animate-show"
+                              style="margin-left:3px; margin-top:9px">Cost: $2000 p/m<br>
+                                                            Volume: 25000 Inbound Posts<br>
+                                                            Storage: Data is stored for 3 months</span>
+                        <span id="gold_span"
+                              ng-cloak
+                              ng-show="show_pricing_package_details.Gold"
+                              class="help-block animate-show"
+                              style="margin-left:3px; margin-top:9px">Cost: $5000 p/m<br>
+                                                            Volume: 75000 Inbound Posts<br>     
+                                                            Storage: Data is stored for 6 months</span>
+                        <span id="platinum_span"
+                              ng-cloak
+                              ng-show="show_pricing_package_details.Platinum"
+                              class="help-block animate-show"
+                              style="margin-left:3px; margin-top:9px">Cost: $10000 p/m<br>
+                                                            Volume: 200000 Inbound Posts<br>
+                                                            Storage: Data is stored for 13 months</span>
+
+                    </div>
+                    <div class="control-group">
+                    
+                <label for="acct_name">Account name <span class="asterisk">*</span></label>
+                <input ng-model="account.name"
+                       name="accountName" 
+                       type="text"
+                       ng-minlength="2"  
+                       my-maxlength="20"
+                       id="acct_name" 
+                       ng-required="true"
+                       required
+                       autofocus>
+
+                <span class="help-block error"
+                      ng-show="accountForm.accountName.$error.minlength && accountForm.accountName.$dirty">
+                      Account name must be 2-20 characters long</span>
+                <span class="help-block error"
+                      ng-show="accountForm.accountName.$overflow">
+                      Account name must be 2-20 characters long</span>
+                    </div>
+            {%endraw%}
+            {% if user.is_staff %}
+
+                <div class="control-group">
+                    <label class="control-label" for="accountType">Account Type</label>
+                    <div class="controls">
+                        <select ng-model="account.account_type"
+                                name="accountType"
+                                id="accountType"
+                                ng-options="o.value as o.label for o in accountTypeOptions">
+                        </select>
+                    </div>
+                </div>
+                    
+                    <div class="control-group"
+                        ng-show="account.account_type != 'GSE'"
+                        >
+                        <label class="control-label" for="pricingPackage">Pricing Package</label>
+                        <div class="controls">
+                            <select ng-model="account.package"
+                                    name="pricingPackage"
+                                    id="pricingPackage">
+                                <option value="Internal">Internal</option>
+                                <option value="Bronze">Bronze</option>
+                                <option value="Silver">Silver</option>
+                                <option value="Gold">Gold</option>
+                                <option value="Platinum">Platinum</option>        
+                                <option value="Trial">Trial</option>
+                            </select>
+                        
+                        </div>
+                    </div>
+
+                
+                <div class="control-group animate-show"
+                    style="padding-left:0!important;"
+                    ng-cloak
+                    ng-if="notInternalAccount && account.account_type != 'GSE'">
+                    <label class="control-label" for="endDate">Expires</label>
+                    <input type="text"
+                       ui-jq="datepicker"
+                       name="endDate"
+                       ui-options="options.end_date"
+                       {# check-account-end-date="account" #}
+                       ng-model="account.end_date"
+                       placeholder="Choose a Date"/>
+                    {#
+                    <span class="help-block error"
+                          ng-show="accountForm.endDate.$error.checkAccountEndDate">
+                        You need to set expire date for the account
+                    </span>
+                    #}
+                    <span class="help-block error"
+                          ng-show="isExpired(account)">
+                        Account is not active any more
+                    </span>
+                </div>
+            </div>
+
+        {% endif %}
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <a class="btn btn-primary"
+               ng-click="accountForm.$invalid || save()"
+               ng-disabled="accountForm.$invalid">Save</a>
+            <a ng-click="modalShown=false" class="btn-cancel">Cancel</a>
+        </div>
+    </div>
+
+
+{%- endmacro -%}
+
+
+{%- macro render_password_reset_dialog() %}
+
+    <div ui-modal ng-model="modalShown" id="reset-pwd-modal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <div class="clearfix">
+                        <a class="close pull-right" ng-click="close(result)">
+                            <span class="icon-close"></span>
+                        </a>
+                        <h3>Reset password for {{ '{{ email }}'}}</h3>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    {% include 'partials/configure/password.html' %}
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-default" ng-click="modalShown=false">Cancel</button>
+                    <button
+                            type="submit"
+                            value="Update"
+                            class="btn btn-primary"
+                            ng-click="resetPassword()"
+                            ng-disabled="passwordResetForm.$invalid">Change password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro -%}
+
+{%- macro render_agent_setup_dialog() %}
+    <div ng-controller="UserEditCtrl">
+    <div ng-model="userEditModalShown" class="modal" ng-cloak>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+                    <h3>{{ '{{ user.email }}' }}</h3>
+                </div>
+                <div class="modal-body">
+                    {% include 'partials/configure/user.html' %}
+
+                    <div class="alert alert-danger" ng-show="errorMessage&&errorMessage.length">{{ '{{ errorMessage }}' }}</div>
+                </div>
+
+                <div class="modal-footer">
+                    <a ng-click="userEditModalShown=false" class="btn">Close</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+{% endmacro -%}

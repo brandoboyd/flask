@@ -1,0 +1,45 @@
+<style>
+    input[type='text'] {
+        width: 345px !important;
+    }
+</style>
+<div class="row" style="margin-top: 20px">
+    <div class="span7">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Channel:</label>
+                <div class="controls">
+                    <select ng-model="channel" ng-options="c.title for c in channels">
+                        <option>Loading...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="display_name">Display Name:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="customer_segment.display_name" id="display_name"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="precondition">Precondition:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="customer_segment.precondition" id="precondition"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="acceptance_rule">Acceptance Rule:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="customer_segment.acceptance_rule" id="acceptance_rule"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <a class="btn btn-default" ng-click="createSegment()">Create</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+

@@ -1,0 +1,10 @@
+
+Currently, all REST methods are prototypes, so it supports the immutable single calls
+
+Basically this models.rest should be changed to $resource or Restangular,
+ but the backend API end-points should be standardized first, e.g. have the prefix,
+ and support "RESTful" pattern
+
+
+ -- response
+ -- channels/tracking-channel

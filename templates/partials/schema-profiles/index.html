@@ -1,0 +1,37 @@
+{% raw %}
+<div class="configure-schema-header">
+    <h1>{{pageTitle}} <button class="btn btn-default btn-sm"
+                              ng-if="profile.discovered_schema"
+                              ng-confirm
+                              tooltip-placement="top" tooltip="Delete"
+                              action-text="When you delete the profile, all of the data associated with that profile will be lost. Are you sure you want to delete?"
+                              action-function="deleteProfile(item)"
+                              action-button-text="Yes"
+                              cancel-button-text="No">
+        <span class="fonticon icon-trash"></span>
+    </button></h1>
+    <hr/>
+    <div ng-show="profile" class="topright-status">
+      <span class="icon-alert-octo error" ng-show="profile.sync_status!='IN_SYNC'" ></span>
+      <span class="icon-alert-octo success" ng-show="profile.sync_status=='IN_SYNC'" ></span>
+      &nbsp;{{profile.status_display}}
+
+    </div>
+</div>
+
+<div class="configure-schema">
+    <nav class="navbar navbar-switch-default" role="navigation">
+        <ul class="nav navbar-nav" data-tabs="tabs" id="tabs">
+            <li ng-repeat="tab in profileTabs" ng-class="{'active': tab.active}" ng-click="onSelectTab(tab)">
+                <a data-target="#{{tab.name}}" data-toggle="tab">{{tab.name}}</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="tab-content">
+        <div class="tab-pane" ng-repeat="tab in profileTabs" ng-class="{'active': tab.active}" id="{{tab.name}}">
+            <div ng-include="tab.templateUrl"></div>
+        </div>
+    </div>
+</div>
+
+{% endraw %}

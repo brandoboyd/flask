@@ -1,0 +1,9 @@
+<h3>{{ "{{ title }}" }}
+    <a class="btn btn-success pull-right" href="#/single_event_tags/all">All Single Event Tags</a>
+</h3>
+<hr />
+
+{% from "_macros/multi_channel_tags.html" import single_event_tag_form with context %}
+<div style="width:650px">
+{{ single_event_tag_form() }}
+</div>

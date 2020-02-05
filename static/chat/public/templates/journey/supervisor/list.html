@@ -1,0 +1,33 @@
+<div>
+    <h3>Supervisor Dashboard</h3>
+    <div ng-if="!agents_first.length">
+        No agents yet...
+    </div>
+    <div ng-if="agents_first.length">
+        <tabset>
+            <tab ng-repeat="agent in agents_first"
+                 select="selectAgent(agent.id)">
+                <tab-heading tab-blink connection="agent">
+                    <span ng-bind="agent.name"></span>
+                    <a ng-click="removeAgent(agent.id)" href=''><i class="glyphicon glyphicon-remove"></i></a>
+                </tab-heading>
+                <div ui-view></div>
+            </tab>
+
+
+
+            <!-- Single button -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    All Agents <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li ng-repeat="agent in agents_rest"><a href="#"><span ng-bind="agent.name"></span></a></li>
+                </ul>
+            </div>
+
+
+        </tabset>
+    </div>
+</div>
+<modal visible="showModal" title=""></modal>

@@ -1,0 +1,102 @@
+{% extends "omni/partials/journeys/_template.html" %}
+
+{% block journeys_tpl_title %}
+Journeys Details
+{% endblock %}
+
+{% block journeys_tpl_right_filter %}
+<div class="pull-right btn-icon-group">
+  <div class="filter-block">
+    <search filter="filters.journey_type_name" placeholder-text="Search by Type"></search>
+  </div>
+</div>
+{% endblock %}
+
+{% block journeys_tpl_body %}
+<div class="row form-group">
+  <div class="col-md-12">
+    <div infinite-scroll='loadMore()'
+         infinite-scroll-disabled='loading'
+         style="margin-bottom: 10px;">
+      {% raw %}
+
+      <table class="table table-default">
+        <thead>
+        <tr>
+          <th ng-if="journeys.journey_attributes_header"
+              ng-repeat="title in journeys.journey_attributes_header"
+              data-title="{{title}}">{{title}}</th>
+          <th ng-repeat="title in journeys.table_header"
+              data-title="{{title}}">{{title}}</th>
+
+
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr ng-repeat="item in journeys.table_data">
+
+          <td ng-if="journeys.journey_attributes_header"
+              ng-repeat="key in journeys.journey_attributes_header">
+
+            <div ng-if="_.isArray(item.journey_attributes[key])">
+
+              <span ng-repeat="i in item.journey_attributes[key]">
+                {{ i }}<span ng-if="!$last">,</span>
+              </span>
+            </div>
+
+            <span ng-if="!_.isArray(item.journey_attributes[key])">
+                {{item.journey_attributes[key] }}
+            </span>
+
+          </td>
+
+          <td ng-repeat="key in journeys.table_header">
+
+            <div ng-switch="key">
+              <div ng-switch-when="journey_tags" class="select2-container-multi">
+                <ul class="select2-choices"
+                    style="background:none; border:none"
+                    ng-repeat="tag in item[key] | _:'unique' "
+                    omni-smart-tag="tag"
+                    target-facet="facets.journey_tags.list"
+                    resolve-tag-name="getJourneyTagName(tag)">
+                </ul>
+
+              </div>
+
+              <span ng-switch-when="journey_type_name"
+                    class="link"
+                    ng-bind="item[key]"
+                    journey-timeline="{{item}}"
+                    journey-timeline-params="{{getTimelineParams(item)}}"></span>
+
+              <span ng-switch-when="start_date" ng-bind="(item[key] * 1000 | date : medium)"></span>
+              <span ng-switch-when="end_date" ng-bind="(item[key] * 1000 | date : medium)"></span>
+              <span ng-switch-default>{{item[key]}}</span>
+            </div>
+
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+
+
+      {% endraw %}
+    </div>
+    <div ng-show="!journeys.table_data.length && !loading" class="alert alert-info text-center">
+      <i class='icon-alert-triangle'></i> No Journeys
+    </div>
+  </div>
+</div>
+
+<style>
+  .select2-container-multi .select2-choices .select2-search-choice.active {
+    background-color: #4AC764;
+    color: #112311;
+  }
+</style>
+{% endblock %}

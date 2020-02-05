@@ -1,0 +1,371 @@
+/*!
+ * Ark Graphs v1.0.0-0 (2015-08-27)
+ * http://ark.genesys.com
+ * Copyright (c) 2015 Ark Team at Genesys; License: MIT
+ */
+.ark-graphs-tooltip {
+  box-shadow: 7px 7px 12px -9px #777777;
+  background-color: #fff;
+}
+.ark-graphs-tooltip tbody tr .name {
+  font-size: 12px;
+  padding-top: 1px;
+  padding-right: 6px;
+  padding-bottom: 1px;
+  padding-left: 6px;
+  background-color: #fff;
+  border-right: 1px dotted #aaa;
+}
+.ark-graphs-tooltip tbody tr .name span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+}
+.ark-graphs-tooltip tbody tr .value {
+  padding-top: 1px;
+  padding-right: 6px;
+  padding-bottom: 1px;
+  padding-left: 6px;
+  float: right;
+}
+.ark-graphs-tooltip.ark-graphs-multi-line-graph-tooltip {
+  opacity: 1;
+  background: #FFFFFF;
+  border: #F0F0F0 solid 1px;
+  /*&:after {
+      content: '';
+      position: absolute;
+      border-style: solid;
+      border-width: 10px 0 10px 10px;
+      border-color: transparent #FFFFFF;
+      display: block;
+      width: 0;
+      z-index: 1;
+      right: -10px;
+      top: 50%;
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      border-style: solid;
+      border-width: 10px 0 10px 10px;
+      border-color: transparent #F0F0F0;
+      display: block;
+      width: 0;
+      z-index: 0;
+      right: -11px;
+      top: 50%;
+    }*/
+}
+.ark-graphs-tooltip.ark-graphs-multi-line-graph-tooltip thead .header {
+  padding-left: 10px;
+  font-weight: 300;
+  font-size: 14px;
+}
+.ark-graphs-tooltip.ark-graphs-multi-line-graph-tooltip tbody tr .color span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.ark-graphs-tooltip.ark-graphs-multi-line-graph-tooltip tbody tr .value span {
+  font-weight: bold;
+}
+.ark-graphs-tooltip.ark-graphs-multi-line-graph-tooltip tbody tr .label span {
+  padding-right: 15px;
+  font-weight: normal;
+}
+
+.icon-alert-circle {
+  position: relative;
+  top: -1px;
+}
+.ark-graphs-bar-tooltip {
+  box-shadow: 7px 7px 12px -9px #777777;
+  background-color: #fff;
+}
+.ark-graphs-bar-div {
+  margin-left: auto;
+  margin-right: auto;
+}
+.ark-graphs-bar-div .ark-graphs-bar-legend {
+  position: relative;
+}
+.ark-graphs-bar-div .ark-graphs-bar-legend .ark-graphs-bar-legend-text {
+  position: relative;
+  height: 18px;
+}
+.ark-graphs-bar-div .ark-graphs-bar-legend .ark-graphs-bar-legend-text span {
+  position: absolute;
+}
+.ark-graphs-bar-div .ark-graphs-bar-legend .ark-graphs-bar-legend-text span.letters {
+  left: 0px;
+  font-family: Roboto;
+  font-style: normal;
+  fill: #666F7A;
+  font-weight: 700;
+}
+.ark-graphs-bar-div .ark-graphs-bar-legend .ark-graphs-bar-legend-text span.metric-name {
+  left: 0px;
+}
+.ark-graphs-bar-div .ark-graphs-bar-legend .ark-graphs-bar-legend-text span.data {
+  right: 20px;
+}
+.ark-graphs-bar-div .ark-graphs-bar-legend .ark-graphs-bar-legend-text span.font-icon {
+  right: 0px;
+}
+
+.ark-graphs-donut-tooltip {
+  box-shadow: 7px 7px 12px -9px #777777;
+  background-color: #fff;
+}
+.ark-graphs-donut-div {
+  margin-left: auto;
+  margin-right: auto;
+}
+.ark-graphs-donut-div .ark-graphs-donut-svg .ark-graphs-donut-middle-label {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 32px;
+}
+.ark-graphs-donut-div .ark-graphs-donut-svg .ark-graphs-label-group .ark-graphs-donut-label-value.out {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+}
+.ark-graphs-donut-div .ark-graphs-donut-svg .ark-graphs-label-group .ark-graphs-donut-label-name.out {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 400;
+  fill: #666F7A;
+  font-weight: bold;
+}
+.ark-graphs-donut-div .ark-graphs-donut-legend {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ark-graphs-donut-div .ark-graphs-donut-legend .ark-graphs-donut-legend-text {
+  position: relative;
+  height: 18px;
+}
+.ark-graphs-donut-div .ark-graphs-donut-legend .ark-graphs-donut-legend-text span {
+  position: absolute;
+}
+.ark-graphs-donut-div .ark-graphs-donut-legend .ark-graphs-donut-legend-text span.letters {
+  left: 0px;
+  font-family: Roboto;
+  font-style: normal;
+  fill: #666F7A;
+  font-weight: 700;
+}
+.ark-graphs-donut-div .ark-graphs-donut-legend .ark-graphs-donut-legend-text span.metric-name {
+  left: 0px;
+}
+.ark-graphs-donut-div .ark-graphs-donut-legend .ark-graphs-donut-legend-text span.data {
+  right: 20px;
+}
+.ark-graphs-donut-div .ark-graphs-donut-legend .ark-graphs-donut-legend-text span.font-icon {
+  right: 0px;
+}
+
+.ark-graphs-gauge-tooltip {
+  box-shadow: 7px 7px 12px -9px #777777;
+  background-color: #fff;
+}
+.ark-graphs-gauge-div {
+  margin-left: auto;
+  margin-right: auto;
+}
+.ark-graphs-gauge-div .ark-graphs-gauge-svg .ark-graphs-gauge-middle-label {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 300;
+}
+.ark-graphs-gauge-div .ark-graphs-gauge-legend {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ark-graphs-gauge-div .ark-graphs-gauge-legend .ark-graphs-gauge-legend-text {
+  position: relative;
+  height: 18px;
+}
+.ark-graphs-gauge-div .ark-graphs-gauge-legend .ark-graphs-gauge-legend-text span {
+  position: absolute;
+}
+.ark-graphs-gauge-div .ark-graphs-gauge-legend .ark-graphs-gauge-legend-text span.letters {
+  left: 0px;
+  font-family: Roboto;
+  font-style: normal;
+  fill: #666F7A;
+  font-weight: 700;
+}
+.ark-graphs-gauge-div .ark-graphs-gauge-legend .ark-graphs-gauge-legend-text span.metric-name {
+  left: 0px;
+}
+.ark-graphs-gauge-div .ark-graphs-gauge-legend .ark-graphs-gauge-legend-text span.data {
+  right: 20px;
+}
+.ark-graphs-gauge-div .ark-graphs-gauge-legend .ark-graphs-gauge-legend-text span.font-icon {
+  right: 0px;
+}
+
+.ark-graphs-line-graph-tooltip {
+  box-shadow: 7px 7px 12px -9px #777777;
+  background-color: #fff;
+}
+.ark-graphs-line-graph-tooltip tbody .header {
+  background-color: #aaa;
+  font-size: 12px;
+  padding-top: 1px;
+  padding-right: 5px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  text-align: left;
+  color: #FFF;
+}
+.ark-graphs-line-graph-div {
+  margin-left: auto;
+  margin-right: auto;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-svg .ark-graphs-line-graph-svg-inner .ark-graphs-line-graph-brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-svg .ark-graphs-line-graph-svg-inner .ark-graphs-line-graph-container .ark-graphs-line-graph-data .ark-graphs-line-graph-dataLines .selected {
+  stroke: #EA516B;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-svg .ark-graphs-line-graph-svg-inner .ark-graphs-line-graph-container .ark-graphs-line-graph-data .ark-graphs-line-graph-circles .selected {
+  fill: #EA516B;
+  fill-opacity: 1;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-svg .ark-graphs-line-graph-svg-inner .ark-graphs-line-graph-container .ark-graphs-line-graph-data .ark-graphs-line-graph-text .selected :first-child {
+  fill: #EA516B;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-svg .ark-graphs-line-graph-svg-inner .ark-graphs-line-graph-container .ark-graphs-line-graph-y-axis-guidelines {
+  font-family: Roboto;
+  font-style: normal;
+  font-size: 12;
+  font-weight: 400;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-svg .ark-graphs-line-graph-svg-inner .ark-graphs-line-graph-container .ark-graphs-line-graph-x-axis-guidelines .selected {
+  stroke: #EA516B;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-svg .ark-graphs-line-graph-svg-inner .ark-graphs-line-graph-container .ark-graphs-line-graph-x-axis .selected {
+  stroke: #EA516B;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-svg .ark-graphs-line-graph-svg-inner .ark-graphs-line-graph-x-tick-group .selected {
+  fill: #EA516B;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-svg .ark-graphs-line-graph-svg-inner .ark-graphs-line-graph-x-label {
+  font-family: Roboto;
+  font-style: normal;
+  fill: #666F7A;
+  font-weight: bold;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-svg .ark-graphs-line-graph-svg-inner .ark-graphs-line-graph-y-label {
+  font-family: Roboto;
+  font-style: normal;
+  fill: #666F7A;
+  font-weight: bold;
+}
+.ark-graphs-line-graph-div .ark-graphs-line-graph-legend .ark-graphs-line-graph-legend-text div.color {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.ark-graphs-multi-line-graph-svg path {
+  stroke-width: 2;
+  fill: none;
+}
+.ark-graphs-multi-line-graph-svg .axis path,
+.ark-graphs-multi-line-graph-svg .axis line {
+  fill: none;
+  stroke: lightgrey;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.ark-graphs-multi-line-graph-svg .axis text {
+  stroke: lightgrey;
+}
+.ark-graphs-multi-line-graph-svg .ark-graphs-multi-line-graph-hover-line {
+  stroke: black;
+  stroke-width: 1;
+  opacity: 0.6;
+}
+.ark-graphs-multi-line-graph-svg .ark-graphs-multi-line-graph-overlay {
+  fill: none;
+  pointer-events: all;
+}
+.ark-graphs-multi-line-graph-svg .ark-graphs-multi-line-graph-threshold-lines line {
+  opacity: 0.9;
+}
+.ark-graphs-multi-line-graph-threshold-icon-container {
+  position: relative;
+}
+.ark-graphs-multi-line-graph-threshold-top-icon {
+  position: absolute;
+}
+.ark-graphs-multi-line-graph-legend-container a:hover {
+  text-decoration: none;
+  cursor: pointer;
+  border-bottom: 1px solid black;
+}
+.ark-graphs-multi-line-graph-legend-container a.selected {
+  border-bottom: 1px solid #2E69DB !important;
+}
+.ark-graphs-multi-line-graph-legend-container .color {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.ark-graphs-multi-line-graph-legend-container .value {
+  margin-right: 5px;
+  font-weight: bold;
+}
+.ark-graphs-multi-line-graph-legend-container .label {
+  padding-right: 10px;
+  font-weight: normal;
+}
+
+.ark-graphs-spark-line-div .ark-graphs-spark-line-legend-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ark-graphs-spark-line-legend {
+  position: relative;
+  height: 24px;
+  line-height: 24px;
+}
+.ark-graphs-spark-line-legend .ark-graphs-spark-line-legend-text {
+  position: relative;
+  height: 18px;
+}
+.ark-graphs-spark-line-legend .ark-graphs-spark-line-legend-text span {
+  position: absolute;
+}
+.ark-graphs-spark-line-legend .ark-graphs-spark-line-legend-text span.metric-name {
+  left: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ark-graphs-spark-line-legend .ark-graphs-spark-line-legend-text span.data {
+  right: 20px;
+}
+.ark-graphs-spark-line-legend .ark-graphs-spark-line-legend-text span.font-icon {
+  right: 0px;
+}

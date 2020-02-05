@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "Reports - %s" % user.account.selected_app }}
+{% endblock %}
+
+{%- from "_macros/filter.html"          import filter_date_dropdown,
+details_filter_bar,
+filter_threshold,
+tag_moderation_panel,
+smart_tags_filter   with context -%}
+
+{% from "_macros/posts.html"            import render_posts        with context -%}
+{% from "_macros/plotter.html"          import render_plot                      -%}
+{% from "_macros/facets.html"           import render_facet_tags                -%}
+
+
+{% set ngApp = "reports" %}
+
+
+{% block body %}
+
+<div class="container-fluid" ng-controller="ReportsCtrl">
+    <div class="row">
+        {% raw %}
+        <ul class="nav nav-tabs fixed-nav" style="left:0">
+            <li ng-class="{ active: ( tab_options.type == 'time') }">
+                <a href="" ng-click="getTrends()">
+                    <span class="icon-bar-graph-variable-2"></span> Trends
+                </a>
+            </li>
+            <li ng-class="{ active: ( tab_options.type == 'share'), disabled : tabStatus.disabled }">
+                <a href=""
+                   ng-click="getDistribution()"
+                   tooltip="{{distributionDisabledTooltip}}">
+                    <span class="icon-agent-status-ready-partial"></span> Distribution
+                </a>
+            </li>
+            <li ng-class="{ active: ( tab_options.type == 'topics'), disabled : tabStatus.isTopicsDisabled }">
+                <a href=""
+                   ng-click="getTopicCloud()"
+                   tooltip="{{topicsDisabledTooltip}}">
+                    <span class="icon-cloud-b"></span> Topic&nbsp;Cloud
+                </a>
+            </li>
+            <li ng-class="{ active: ( tab_options.type == 'details') }">
+                <a href="" ng-click="getDetails()">
+                    <span class="icon-chat-oval-multi"></span> Details
+                </a>
+            </li>
+        </ul>
+        {% endraw %}
+
+        <div class="fixed-nav" style="right: 25px;">
+            <div class="btn-group pull-right"
+                 ng-cloak
+                 ng-show="widget">
+                <a href=""
+                   widget-dialog
+                   data-widget="widget"
+                   data-settings="getStoredTrendParams()"
+                   ui-jq="tooltip"
+                   data-original-title="Update: {{'{{widget.title}}'}}"
+                   class="btn btn-xs btn-warning">
+                    <span class="icon-dash" style="font-size:15px"></span>
+                </a>
+                {% raw %}
+                <a ng-click="removeWidget()"
+                   class="btn btn-xs btn-default"
+                   ui-jq="tooltip"
+                   data-original-title="Cancel widget edit mode">
+                    <span class="icon-small-close" style="font-size:15px"></span></a>
+                {% endraw %}
+            </div>
+            <a href=""
+               ng-cloak
+               ng-hide="widget"
+               widget-dialog
+               data-widget="widget"
+               data-settings="getStoredTrendParams()"
+               ui-jq="tooltip"
+               data-original-title="Add to Dashboard"
+               class="btn btn-xs btn-default">
+                <span class="icon-dash" style="font-size:15px"></span></a>
+
+            <div>
+                <date-range-dropdown current-date="currentDate"
+                                     is-all-options-shown="isAllOptionsShown()"></date-range-dropdown>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:40px;">
+        <span class="fonticon icon-circle-arrow-up to-top-scroller" to-top-scroller style="display: none"></span>
+
+        <div class="col-md-12 no-sides-padding">
+            <div class="tab-content" style="overflow: visible;">
+                <div class="tab-pane"
+                     ng-class="{active:tab_options.type}">
+                    <div ng-switch on="tab_options.type">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-2 sidebar side-tabs-container no-sides-padding"
+                                     style="margin-top:20px;padding-top: 0">
+                                    <ul class="nav nav-side-tabs">
+                                        <li ng-class="{ active: ( submenu.action == 'call-quality') }">
+                                            <a href="" style="cursor: not-allowed">Call Quality</a>
+                                        </li>
+                                        <li ng-class="{ active: ( submenu.action == 'inbound-volume') }">
+                                            <a href="#/inbound-volume">Inbound Volume</a>
+                                        </li>
+                                        <li ng-class="{ active: ( submenu.action == 'top-topics') }">
+                                            <a href="#/trending-topics">Trending Topics</a>
+                                        </li>
+                                        <li ng-class="{ active: ( submenu.action == 'missed-posts') }">
+                                            <a href="#/missed-posts">Missed Posts</a>
+                                        </li>
+                                        <li ng-class="{ active: ( submenu.action == 'response-time') }">
+                                            <a href="#/response-time">Response Time</a>
+                                        </li>
+                                        <li ng-class="{ active: ( submenu.action == 'response-volume') }">
+                                            <a href="#/response-volume">Response Volume</a>
+                                        </li>
+                                        <li ng-class="{ active: ( submenu.action == 'sentiment') }">
+                                            <a href="#/sentiment">Sentiment</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-3 col-md-offset-2 sidebar" style="margin-top: 10px;">
+                                    <div ng-include="getFacetURL()"></div>
+                                </div>
+
+                                <div class="col-md-7 col-md-offset-5">
+                                    <h1 style="text-transform: capitalize;">{{"submenu.description"|ng}}
+                                        <span class="icon-iw-active-circle-question"
+                                              style="color:#454a53"
+                                              tooltip-placement="bottom"
+                                              tooltip-trigger="mouseenter"
+                                              tooltip="{{'submenu.tooltip'|ng}}"></span>
+                                    </h1>
+
+                                    {{ render_facet_tags() }}
+
+                                    <div class="row form-group" style="margin-top:20px">
+                                        <div class="btn-icon-group col-md-6 col-md-offset-6">
+                                            <div class="filter-block pull-right">
+                                                <search filter="post_search"
+                                                        ng-show="tab_options.type === 'details'  && posts.length > 0"
+                                                        control="reload"
+                                                        placeholder-text="Search"></search>
+                                                <search filter="search"
+                                                        ng-show="tab_options.type === 'topics'"
+                                                        placeholder-text="Search"></search>
+                                            </div>
+                                            <div class="filter-block pull-right" ng-controller="ChannelsCtrl">
+                                                <select ng-model="channel"
+                                                        class="form-control"
+                                                        ng-options="c.title for c in channels">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div ng-switch-when="details">
+                                        {{ render_posts(type=section, multi_select=True, tag_moderation=True) }}
+                                    </div>
+                                    <div ng-switch-default>
+                                        <div ng-include="getPlotterURL()"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

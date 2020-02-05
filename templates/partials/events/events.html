@@ -1,0 +1,61 @@
+<div>
+    <h1>Event Logs</h1>
+
+    <div class="pull-right" style="margin-top: -35px;">
+        <date-range-dropdown on-change="loadEvents(dates)"></date-range-dropdown>
+    </div>
+</div>
+
+<hr />
+
+<form role="form" ng-submit="loadEvents()" style="margin-bottom: 20px;">
+    <fieldset>
+        <div class="row" ng-show="events && events.length">
+            <div class="col-md-12">
+                <search class="pull-right" filter="filters.title" placeholder-text="Search by Name"></search>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<div class="alert alert-danger"
+     ng-show="noEventsAlert">
+     No Event Logs found
+</div>
+
+{% raw %}
+   <table class="table table-default"
+          ng-show="events && events.length"
+          ng-init="orderByPredicate='time';orderByReverse=true">
+       <thead>
+            <tr>
+                <th><a style="width: 100%;display: block;" ng-click="orderByPredicate='title';orderByReverse=!orderByReverse">Name<span class="pull-right"><i class="icon-caret-up" ng-show="orderByPredicate=='title'&&orderByReverse"></i><i class="icon-caret-down" ng-show="orderByPredicate=='title'&&!orderByReverse"></i></span></a></th>
+                <th><a style="width: 100%;display: block;" ng-click="orderByPredicate='time';orderByReverse=!orderByReverse">Created<span class="pull-right"><i class="icon-caret-up" ng-show="orderByPredicate=='time'&&orderByReverse"></i><i class="icon-caret-down" ng-show="orderByPredicate=='time'&&!orderByReverse"></i></span></a></th>
+                <th> User </th>
+                <th> Note </th>
+            </tr>
+       </thead>
+       <tbody>
+           <tr ng-repeat="event in events  | orderBy: orderByPredicate: orderByReverse" id="{{label.id}}">
+               <td>
+                   <a href="#/event/view/{{event.id}}" class="link">{{ event.title }}</a>
+               </td>
+               <td class="nowrap">{{ event.time | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+               <td class="nowrap"> <span>{{event.user}}</span></td>
+               <td class="nowrap"> <span>{{event.note}}</span></td>
+           </tr>
+       </tbody>
+   </table>
+   <div class="center" ng-show="events.length>0">
+       <pagination
+               class="pagination-sm"
+               ng-model="filters.currentPage"
+               ng-change="setPage()"
+               total-items="size"
+               items-per-page="filters.limit"
+               max-size="maxSize"
+               boundary-links="true"
+               num-pages="pages"></pagination>
+    </div>
+{% endraw %}
+

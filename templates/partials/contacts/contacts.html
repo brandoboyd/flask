@@ -1,0 +1,74 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h4>Contacts</h4>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-sm-5">
+        <label>Filter by</label>
+        <div class="form-inline">
+            <input type="text"
+                   ng-model="filters.search"
+                   ng-change="searchUsers()"
+                   class="span5"
+                   placeholder="User" />
+
+        </div>
+    </div>
+
+    <div class="col-sm-3">
+        <label>By Channel</label>
+        <select ng-model="filters.channel"
+                class="span3"
+                ng-options="o.id as o.title for o in channels"
+                ng-change="filterUsers()">
+                <option value="">-- All --</option>
+        </select>
+    </div>
+    <div class="col-sm-3">
+        <label>By Platform</label>
+        <select ng-model="filters.platform"
+                ng-change="filterUsers()"
+                class="span3">
+            <option value="">-- All --</option>
+            <option>Twitter</option>
+            <option>Facebook</option>
+        </select>
+    </div>
+    <div class="col-sm-1">
+        <div ng-show="filters.search || filters.channel || filters.platform">
+        <label>&nbsp;</label>
+        <button class="btn btn-success"
+                ng-click="clear()">Clear</button>
+        </div>
+    </div>
+</div>
+<br />
+{% raw %}
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-striped">
+            <thead>
+                <th>Users</th>
+                <th>Threads</th>
+                <th>Channels</th>
+                <th>Topics</th>
+            </thead>
+            <tbody>
+            <tr ng-repeat="contact in contacts | filter:filters.search">
+                <td>
+                    <a ng-href="#/threads/{{contact.id}}">
+                        {{ contact.screen_name }}
+                    </a>
+                </td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endraw %}

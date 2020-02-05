@@ -1,0 +1,104 @@
+{% from "./_macros/configure.html" import configure_filters, channels_form %}
+
+<h3 style="margin-left: 30px">New Channel</h3>
+<a href="#/channels">
+    <button class="btn btn-default btn-xs" style="position: absolute;top:0" tooltip-placement="top" tooltip="All Channels">
+        <span class="fonticon icon-arrow-left"></span>
+    </button>
+</a>
+<hr />
+
+<!--
+<div class="alert alert-info"
+     ng-show="isNoChannels"
+     style="max-width:550px">
+    <h4>Welcome to Genesys Analytics!</h4 >
+    <p>As a first step, please go ahead and setup a Twitter channel to track
+    and analyze Twitter data related to your company or product, see bellow.
+    <a class="link" target="_blank" href="https://docs.genesys.com/Documentation/TXT/Current/SocialAnalytics/Welcome">Click here for help</a></p>
+</div>
+-->
+
+<form class="form-horizontal" name="ChannelForm">
+    <fieldset>
+        {% raw %}
+        <div class="form-group" ng-class="{'has-error': ChannelForm.channelType.$error.required && ChannelForm.channelType.$dirty}">
+            <label class="col-sm-2 control-label" for="channel_type">Channel Type <span class="asterisk">*</span></label>
+            <div class="col-sm-4">
+                <select class="form-control"
+                        id="channel_type"
+                        name="channelType"
+                        ng-model="channel_type"
+                        ng-options="c.key as c.title for c in channel_types"
+                        ng-disabled="channel.type || account.is_locked"
+                        ng-required="true">
+                    <option value="">-- choose a channel type --</option>
+                </select>
+                <span ng-show="ChannelForm.channelType.$error.required && ChannelForm.channelType.$dirty"
+                      class="help-block error">Channel type is required</span>
+            </div>
+            <div style="float: left;margin-top: 0.3em">
+                <div class="q-sign"
+                     tooltip-placement="right"
+                     tooltip-trigger="mouseenter"
+                     tooltip="There are 'Account' and 'Service' type channels in the dropdown. First, select 'Account' type channel and log in to the corresponding account. Then, proceed to configure the 'Service' type channel, and specify the data you want retrieved.">
+                    <i class="icon-iw-active-circle-question"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': ChannelForm.channelName.$error.minlength && ChannelForm.channelName.$dirty || ChannelForm.channelName.$error.required && ChannelForm.channelName.$dirty}"
+        >
+            <label class="col-sm-2 control-label" for="input01">Channel Name <span class="asterisk">*</span></label>
+            <div class="col-sm-4">
+                <input type="text"
+                       class="form-control"
+                       name="channelName"
+                       ng-model="channel_name"
+                       ng-disabled="account.is_locked"
+                       ng-required="true"
+                       ng-minlength="2"
+                       id="input01"
+                       placeholder="Channel name must be at least 2 characters long">
+                   <span ng-show="ChannelForm.channelName.$error.minlength && ChannelForm.channelName.$dirty"
+                         class="help-block error">Channel name must be at least 2 characters long</span>
+                   <span ng-show="ChannelForm.channelName.$error.required && ChannelForm.channelName.$dirty"
+                         class="help-block error">Channel name is required</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="textarea">Description</label>
+            <div class="col-sm-4">
+                <textarea ng-model="channel_description"
+                          placeholder="Short description to better identify the channel"
+                          ng-disabled="account.is_locked"
+                          class="form-control"
+                          id="textarea"
+                          rows="3"></textarea>
+            </div>
+        </div>
+        {% endraw %}
+    </fieldset>
+</form>
+
+{{ channels_form('create', user) }}
+{#{{ configure_filters('create') }}#}
+
+<form class="form-horizontal">
+    <div class="form-group form-actions">
+        <div class="col-sm-offset-2 col-sm-4"
+             ng-show="!channel_id">
+            <button class="btn btn-primary"
+                    ng-disabled="!(channel_name.length >= 2 && channel_type != null) || account.is_locked"
+               		ng-click="create()">Create
+            </button>
+        </div>
+
+        <div class="col-sm-offset-2 col-sm-4"
+             ng-show="channel.type && (channel.type != 'EnterpriseTwitterChannel' || channel.twitter_handle)">
+            <button class="btn btn-primary" 
+                    ng-disabled="ChannelForm.$invalid || ChannelUpdateForm.$invalid || !isChannelTypeValid() || account.is_locked"
+                    ng-click="update()">Update
+            </button>
+        </div>
+    </div>
+</form>

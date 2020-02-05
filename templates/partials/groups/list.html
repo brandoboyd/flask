@@ -1,0 +1,95 @@
+<h1>Groups</h1>
+
+<hr/>
+
+<div class="row form-group" style="margin-bottom: 20px;">
+    <div class="col-md-12">
+        <div class="pull-left">
+            {% if user.is_staff or user.is_admin %}
+            <a href ng-click="create()" class="btn btn-primary">
+                <span class="fonticon icon-add"></span>&nbsp;Add Group</a>
+
+            <div class="pull-right btn-icon-group no-responsiveness" style="margin-left: 10px;">
+                <button ng-hide="group.perm=='r'"
+                        ng-disabled="!selected.length"
+                        ng-confirm
+                        action-text="When you delete a group members of that group will lose access to the data shared within the group. Are you sure you want to delete?"
+                        action-function="delete()"
+                        action-button-text="Yes"
+                        cancel-button-text="No"
+                        class="btn btn-default btn-icon" tooltip-placement="top" tooltip="Delete">
+                    <span class="fonticon icon-trash"></span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+        <div class="pull-right">
+            <div class="filter-block">
+                <search class="pull-right" filter="filters.name" placeholder-text="Search by Name"></search>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-default" ng-show="groups && groups.length" ng-init="orderByPredicate='name'">
+            <thead>
+            <tr>
+                {% if user.is_staff or user.is_admin %}
+                <th style="width:47px;"></th>
+                {% endif %}
+                <th sorter data-predicate="name" data-title="Name"></th>
+                <th>Description</th>
+                <th>Created</th>
+                <th>Users</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="group in groups | filter:filterPredicate | filter:filters | orderBy: table.sort.predicate: table.sort.reverse">
+                {% if user.is_staff or user.is_admin %}
+                {% raw %}
+                <td>
+                    <label class="checkbox">
+                        <input ng-hide="group.perm=='r'"
+                               type="checkbox"
+                               class="ark-checkbox"
+                               value="{{ item.id }}"
+                               ng-change="select(group)"
+                               ng-model="group.is_selected"/><span></span>
+                    </label>
+                </td>
+                {% endraw %}
+                {% endif %}
+
+                {% if user.is_staff or user.is_admin %}
+                {% raw %} <td><a ng-click="edit(group)" class="link">{{ group.name }}</a></td>{% endraw %}
+                {% else %}
+                {% raw %}<td>{{ group.name }}</td>{% endraw %}
+                {% endif %}
+
+                {% raw %}
+                <td>{{ group.description}}</td>
+                <td>{{ group.created_at | date }}</td>
+
+                <td>
+                    <span class="badge badge-primary"
+                          ng-show="group.users_total && group.perm!='r'"
+                          tooltip-placement="top" tooltip="Number of users who have access to group">
+                        <div ng-show="group.perm=='r'">{{ group.users_total }}</div>
+                    </span>
+                    <span class="badge badge-primary"
+                          ng-show="group.members_total"
+                          tooltip-placement="top" tooltip="Number of group members">
+                        <a style="color:#fff;" ng-click="showUsers(group)">{{ group.members_total }}</a>
+                    </span>
+                </td>
+                {% endraw %}
+            </tr>
+            </tbody>
+        </table>
+        <div ng-show="groups && !groups.length" class="alert alert-info text-center">
+            <i class='icon-alert-triangle'></i> No Groups
+        </div>
+    </div>
+</div>

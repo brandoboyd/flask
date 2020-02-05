@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "Configure - %s" % user.account.selected_app }}
+{% endblock %}
+
+{% set ngApp = 'slr.configure'%}
+
+
+{% block body %}
+{% from "./_macros/settings.html" import render_settings %}
+<div>{% include "flashes.html" %}</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 no-sides-padding">
+            <div class="pull-left configure-area" ng-controller="NavCtrl" ng-style="{height: getScrollHeight() + 'px'}">
+                <div slimscroll="layout.slimscroll" style="width:210px;position: fixed;" ng-style="{height: getScrollHeight() + 'px'}">
+                    <div class="side-tabs-container no-sides-padding" style="min-width: 185px;">
+                        <ul class="nav nav-side-tabs">
+                            {{ render_settings(u) }}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-white btn-sm toggle-btn" toggle-responsive-menu=".toggle-menu" style="left: 5px;top: 32px;">
+                <span class="fonticon icon-menu-hamburger"></span>
+            </button>
+            <ul class="dropdown-menu nav-tabs-dropdown-menu dropdown-menu-pull-left toggle-menu" style="top: 60px;" role="menu">
+                {{ render_settings(u) }}
+            </ul>
+            <div class="pull-left right-side" style="margin:10px 0 30px 0;padding-left:4%;">
+                <div class="vertical-divider" style="left:210px;"></div>
+                <div ng-view style="position:relative;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

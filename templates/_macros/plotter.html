@@ -1,0 +1,29 @@
+{% macro render_plot(height='300') %}
+<div>
+    <div class="clearfix">
+        <div class="pull-left" style="margin-top:-70px"
+             ng-show="isPlotByVisible">
+            <span style="line-height: 25px">Plot by</span>
+
+            <select class="form-control"
+                    ng-model="options.currentPlotBy"
+                    ng-options="item.type for item in plot_filters">
+                <option value="" ng-if="false"></option>
+            </select>
+        </div>
+    </div>
+    <div class="analysis-card" style="height: 420px;">
+        <chart chart-data='chartData'
+               ng-if="_.isArray(chartData)"
+               settings='extra_settings'>
+        </chart>
+
+        <div class="spinner-container" style="margin:150px auto" ng-if="_.isString(chartData)">
+            <div class="spin-circle"></div>
+            <div class="spin-inner-circle"></div>
+        </div>
+
+    </div>
+</div>
+{% endmacro %}
+

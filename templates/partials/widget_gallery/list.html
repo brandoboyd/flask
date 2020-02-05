@@ -1,0 +1,51 @@
+{% from "./_macros/filter.html"    import filter_intentions,
+filter_date_dropdown,
+filter_topics,
+filter_threshold -%}
+
+<h1>Widgets Gallery</h1>
+
+<hr/>
+
+<div class="row form-group" ng-show="galleries.length" style="margin-bottom: 20px;">
+    <div class="col-md-12">
+        <div class="pull-left">
+            <!-- Actions -->
+        </div>
+        <div class="pull-right">
+            <div class="filter-block">
+                <search filter="filters.display_name" placeholder-text="Search by Name"></search>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% raw %}
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-default" ng-show="galleries.length">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Created</th>
+                <th>Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="gallery in galleries | filter:filters">
+                <td>
+                    <a href="#/gallery/{{gallery.id}}" ng-click="select(gallery)" class="link">{{gallery.display_name}}</a>
+                </td>
+                <td>{{gallery.created * 1000 | date }}</td>
+                <td>{{gallery.type}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-info text-center" ng-show="!galleries.length">
+            <i class='icon-alert-triangle'></i> No Widgets Galleries
+        </div>
+    </div>
+</div>
+{% endraw %}
+{% from '_macros/dialogs.html' import render_share_dialog %}
+{{ render_share_dialog(scope="channels") }}

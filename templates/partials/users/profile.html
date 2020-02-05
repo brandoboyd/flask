@@ -1,0 +1,103 @@
+
+<h1>Password Reset</h1>
+<hr />
+
+<form name="userProfileForm" class="form-horizontal">
+    <fieldset>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="firstname">First name <span class="asterisk">*</span></label>
+            <div class="col-sm-4">
+                <input type="text"
+                       id="firstname"
+                       ng-model="user.first_name"
+                       ng-readonly="user.is_only_agent"
+                       class="input-block-level form-control"
+                       placeholder="First name">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="lastname">Last name <span class="asterisk">*</span></label>
+            <div class="col-sm-4">
+                <input type="text"
+                       id="lastname"
+                       ng-model="user.last_name"
+                       ng-readonly="user.is_only_agent"
+                       class="input-block-level form-control"
+                       placeholder="Last name">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Email <span class="asterisk">*</span></label>
+            <div class="col-sm-4">
+                <input type="text"
+                       class="input-block-level form-control"
+                       id="email"
+                       ng-model="user.email"
+                       ng-readonly="user.is_only_agent"
+                       placeholder="Only one email per account allowed">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="password">New Password <span class="asterisk">*</span></label>
+
+            <div class="col-sm-4">
+                <input type="password"
+                       name="password"
+                       id="password"
+                       class="input-block-level form-control"
+                       ng-model="user.password" 
+                       ng-minlength="8"
+                       ng-maxlength="18"
+                       required strongpassword/>
+
+                <span style="font-weight:normal;
+                      color:#F52A59;"
+                      class="error"
+                      ng-show="userProfileForm.password.$error.minlength">Password must be at least 8 characters long.</span>
+                <span class="error"
+                      style="font-weight:normal;
+                      color:#F52A59;"
+                      ng-show="userProfileForm.password.$error.maxlength">Max password length is 18 characters.</span>
+                <span style="font-weight:normal;
+                      color:#F52A59;"
+                      class="error"
+                      ng-show="userProfileForm.password.$error.strongpassword && userProfileForm.$dirty">The password is weak.
+                            <a class="link" ng-click="viewDetails()">Details</a></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2"
+                   for="password_confirm">Confirm Password <span class="asterisk">*</span></label>
+            <div class="col-sm-4">
+                <input type="password"
+                       name="password_confirm"
+                       id="password_confirm"
+                       class="input-block-level form-control"
+                       ng-model="user.passwordConfirm" 
+                       ng-minlength="8"
+                       ng-maxlength="18"
+                       equalsto="user.password"
+                       required />
+                <span class="help-block error"
+                      ng-show="user.password != user.passwordConfirm">Passwords are not equal</span>
+            </div>
+        </div>
+
+        <div class="form-group form-actions">
+          <div class="col-sm-offset-2 col-sm-4">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-disabled="userProfileForm.$pristine"
+                      ng-click="cancelEdition()">Cancel</button>
+            <button type="button"
+                    class="btn btn-primary"
+                    ng-disabled="userProfileForm.$invalid"
+                    ng-click="saveProfile()">Update</button>
+          </div>
+        </div>
+    </fieldset>
+</form>

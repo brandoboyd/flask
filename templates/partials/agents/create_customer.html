@@ -1,0 +1,109 @@
+<style>
+    .control-group input[type='text']{
+        width: 345px !important;
+    }
+</style>
+<div class="row" style="margin-top: 20px">
+    <div class="span7">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Channel:</label>
+                <div class="controls">
+                    <select ng-model="channel"
+                            ng-options="c.title for c in channels">
+                        <option>Loading...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="first_name">First Name:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="customer.first_name" id="first_name"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="last_name">Last Name:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="customer.last_name" id="last_name"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="age">Age:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="customer.age" id="age"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="sex">Sex:</label>
+                <div class="controls">
+                    <select id="sex"
+                            ng-model="customer.sex"
+                            class="input-block-level">
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="seniority">Seniority:</label>
+                <div class="controls">
+                    {% raw %}
+                    <select id="seniority"
+                            ui-select2
+                            ng-model="customer.seniority"
+                            class="input-block-level">
+                        <option value="{{ o.id }}" ng-repeat="o in options.customer_seniority">{{ o.title }}</option>
+                    </select>
+                    {% endraw %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="location">Location:</label>
+                <div class="controls">
+                    {% raw %}
+                    <select id="location"
+                            ui-select2
+                            ng-model="customer.location"
+                            class="input-block-level">
+                        <option value="{{ o.id }}" ng-repeat="o in options.location_labels">{{ o.title }}</option>
+                    </select>
+                    {% endraw %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="num_calls">Number of calls:</label>
+                <div class="controls">
+                    <input type="text" value="" ng-model="customer.num_calls" id="num_calls"/>
+                </div>
+            </div>
+{#            <div class="control-group">#}
+{#                <label class="control-label" for="account_balance">Account balance:</label>#}
+{#                <div class="controls">#}
+{#                    <input type="text" value="" ng-model="customer.account_balance" id="account_balance"/>#}
+{#                </div>#}
+{#            </div>#}
+            <div class="control-group">
+                <label class="control-label" for="call_intent">Call intent:</label>
+                <div class="controls">
+                    {% raw %}
+                    <select id="call_intent"
+                            ui-select2
+                            ng-model="customer.call_intent"
+                            class="input-block-level">
+                        <option value="{{ o.title }}"
+                                ng-repeat="o in options.intent">{{ o.title }}</option>
+                    </select>
+                    {% endraw %}
+
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <a class="btn btn-default"
+                       ng-click="createCustomer()">Create</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+{% extends "omni/partials/journeys/_template.html" %}
+
+{% block journeys_tpl_title %}
+Journeys Distribution
+{% endblock %}
+
+{% block journeys_tpl_right_filter %}
+<div class="col-md-4">
+  <span style="line-height:25px">Metric</span><br />
+  
+  <select ng-model="filters.metric"
+          class="form-control"
+          ng-options="item.type for item in metric_options">
+    <option value="" ng-if="false"></option>
+  </select>
+</div>
+
+<div class="col-md-4">
+  <span style="line-height:25px">Plot By</span><br />
+
+  <select ng-model="filters.group_by"
+          class="form-control"
+          ng-options="item.type for item in group_by_options">
+      <option value="" ng-if="false"></option>
+  </select>
+</div>
+{% endblock %}
+
+{% block journeys_tpl_body %}
+<div id="chartDistribution" class="analysis-card" style="margin-top: 20px;height: 420px;">
+  <chart chart-data='data'
+         settings='extra_settings'>
+  </chart>
+</div>
+{% endblock %}

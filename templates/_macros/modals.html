@@ -1,0 +1,187 @@
+{% from "_macros/responses.html" import stat_label, action_button %}
+{% macro render_modal(id, title, type) %}
+<div class="modal" id="{{id}}" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><div class="clearfix">
+                <a class="close pull-right" data-dismiss="modal">
+                    <span class="icon-close"></span>
+                </a>
+
+                {{ render_modal_header(type, title) }}
+            </div></div>
+
+            <div class="modal-body" >
+                <div id="modal-content">
+                    {{ render_modal_content(type) }}
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                {{ render_modal_footer(type) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+
+{% macro render_modal_header(type, title) %}
+    {% if type == 'all_matches' %}
+
+        <h3 class="pull-left">{{title}}</h3>
+
+    {% elif type == 'reply' %}
+
+        <h3 class="pull-left">{{title}} {% raw %} @{{user_profile.user}} {% endraw %}</h3>
+
+    {% else %}
+
+        <h3 class="pull-left">{{title}} : {% raw %} {{user_profile.user}} {% endraw %}</h3>
+
+    {% endif %}
+{% endmacro %}
+
+
+
+
+{% macro render_modal_footer(type) %}
+
+    {% if type == 'reply' %}
+        <span id="textarea_counter" style="" ng-bind="replyCountRemaining">140</span>&nbsp;
+        <button class="btn" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-success"
+            ng-click="postCustomReply(post , replyChannel, replyContent)"
+            ng-disabled="!btnSendReplyEnabled">
+            Post</button>
+    {% else %}
+        <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro render_post(type) %}
+
+{% if type == 'reply' %}
+<div class="tweet" style="background:#eeeeee;">
+{% else %}
+<div class="tweet" style="background:#eeeeee;">
+{% endif %}
+    <div class="content">
+        {% raw %}
+        <div class="stream-item-header">
+            <small class="time">
+                <span class="_timestamp js-short-timestamp" ng-bind="post.created_at | date"></span>
+            </small>
+            <a class="account-group">
+                <div class="avatar">
+                    <img ng-src="{{ post.profile_image_url || default_profile_url }}" alt="{{ post.user.name }}">
+                </div>
+                <strong class="fullname" ng-bind-html="post.screen_name || '<br />'">Loading...</strong>
+            </a>
+        </div>
+        <p class="js-tweet-text" ng-bind-html="post.text"></p>
+        {% endraw %}
+    </div>
+</div>
+
+{% endmacro %}
+
+{% macro render_matchables(type) %}
+
+<form class="form-search" style="margin: 10px 0">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-7">
+                <input type="text" class="form-control" style="margin-bottom: 0" ng-model="searchTerm">
+            </div>
+            <div class="col-sm-3">
+                <select ng-options="o for o in limitOptions" ng-model="limit" class="form-control"></select>
+            </div>
+            <div class="col-sm-2" style="padding:2px 20px 0 15px;text-align:right;">
+                <a class="btn btn-sm btn-success" ng-click="fetchMatchables()"><i class="icon-refresh"></i></a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div style="max-height: 295px; overflow-y: auto">
+    <table class="table table-condensed">
+
+        <tbody>
+        <tr ng-repeat="item in allMatchables | orderBy:'match.matchable.stats.relevance':true | filter:searchTerm">
+            <td>
+                {#
+                <div style="padding:2px" ng-hide="isEditMode">
+                    <span class="label label-plain">Relevance: <span ng-bind="item.matchable.stats.relevance" class="score-dd"></span></span>
+                </div>
+                #}
+                <div style="padding:15px 0;">
+                    <div response-message="item"></div>
+                    <div style="margin-top:5px;" class="pull-right" ng-hide="isEditMode">
+                        <a href=""
+                           class    = 'btn btn-xs btn-default'
+                           ng-click = 'postResponseCreateCase(item, post.response_id)'
+                           ng-show  = 'caseButtonVisibility(dialogScope)'>
+                            Post&nbsp;&amp;&nbsp;Create Case</a>
+                        <a href=""
+                           class    = 'btn btn-xs btn-success'
+                           ng-click = 'postResponse(item, post.response_id,"public")'
+                           ng-show = "allMatchesShowPost(item)">
+                            <!-- ng-show = 'response.has_both_pub_and_dm || item.message_type == 0'> -->
+                            Post</a>
+
+                        <a href=""
+                           class = 'btn btn-xs btn-success'
+                           ng-click = 'postResponse(item, post.response_id, "direct")'
+                           ng-show = 'item.message_type == 1'>
+                            DM</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endmacro %}
+
+{% macro render_modal_content(type) %}
+
+{{ render_post(type) }}
+
+{% if type == 'reply' %}
+    <div style="margin:15px 0 10px 0;">
+        <div class="row form-group">
+            <div class="col-sm-6">
+                <p style="margin-top:5px;">Select channel to reply from:</p>
+            </div>
+            <div class="col-sm-6">
+                <select ng-model="replyChannel" class="form-control" ng-options="channel as channel.title for channel in channelsList"
+                    ng-change="onReplyInputsChange()"></select>
+            </div>
+        </div>
+        <div class="row no-gutter" style="border:1px solid #d3d3d3; padding:5px; margin:0;">
+            <div class="col-sm-3" style="padding:15px 5px;">
+                @<span class="fullname" ng-bind-html="post.screen_name" style="cursor:no-drop;"></span>
+            </div>
+            <div class="col-sm-6">
+                <textarea id="replyTextarea" ng-model="replyContent" class="form-control"
+                        placeholder="Select which Twitter channel you want to use, type a reply, and send."
+                        ng-change="onReplyInputsChange()"
+                        style="border:none; height:4em; outline:none !important; -webkit-box-shadow:none; -moz-box-shadow:none; box-shadow:none; resize: none;">
+                </textarea>
+            </div>
+            <div class="col-sm-3" style="padding:15px 5px;">
+                <span ng-bind-html="signature" style="cursor:no-drop;"></span>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% if type == 'all_matches' %}
+{{ render_matchables(type) }}
+{% endif %}
+
+{% endmacro %}
